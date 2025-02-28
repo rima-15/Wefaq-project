@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details - Project Management Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar will be loaded here -->
+        <main class="main-content">
+            <!-- Header will be loaded here -->
+            <div class="project-content">
+                <div class="project-tabs">
+                    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+                    <button class="tab-btn" data-tab="tasks">Tasks</button>
+                    <button class="tab-btn" data-tab="files">Files</button>
+                </div>
+
+                <div class="tab-content">
+                    <div id="dashboard" class="tab-pane active">
+                        <div class="dashboard-grid">
+                            <div class="card">
+                                <h3>Work Distribution</h3>
+                                <canvas id="workDistributionChart"></canvas>
+                            </div>
+                            <div class="card">
+                                <h3>Task Completion Progress</h3>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 65%">65%</div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <h3>Upcoming Deadlines</h3>
+                                <ul class="deadline-list">
+                                    <!-- Deadlines will be dynamically added here -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tasks" class="tab-pane">
+                        <div class="tasks-header">
+                            <h2>Project Tasks</h2>
+                            <div class="task-actions">
+                                <button class="btn-icon edit" title="Edit Tasks">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-primary" id="addTask">
+                                    <i class="fas fa-plus"></i> Add Task
+                                </button>
+                            </div>
+                        </div>
+                        <div class="tasks-list">
+                            <table class="tasks-table">
+                                <thead>
+                                    <tr>
+                                        <th>Task Name</th>
+                                        <th>Assigned Member</th>
+                                        <th>Status</th>
+                                        <th>Deadline</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Design User Interface</td>
+                                        <td>
+                                            <div class="member">
+                                                <img src="Wefaq.jpg" alt="Sarah" class="member-avatar">
+                                                <span>Sarah</span>
+                                            </div>
+                                        </td>
+                                        <td><span class="status-badge completed">Completed</span></td>
+                                        <td>Mar 5, 2025</td>
+                                        <td class="actions">
+                                            <button class="btn-icon delete" title="Delete Task">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Implement Authentication</td>
+                                        <td>
+                                            <div class="member">
+                                                <img src="Wefaq.jpg" alt="John" class="member-avatar">
+                                                <span>John</span>
+                                            </div>
+                                        </td>
+                                        <td><span class="status-badge in-progress">In Progress</span></td>
+                                        <td>Mar 10, 2025</td>
+                                        <td class="actions">
+                                            <button class="btn-icon delete" title="Delete Task">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Database Setup</td>
+                                        <td>
+                                            <div class="member">
+                                                <img src="Wefaq.jpg" alt="Mike" class="member-avatar">
+                                                <span>Mike</span>
+                                            </div>
+                                        </td>
+                                        <td><span class="status-badge pending">Pending</span></td>
+                                        <td>Mar 15, 2025</td>
+                                        <td class="actions">
+                                            <button class="btn-icon delete" title="Delete Task">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Testing and QA</td>
+                                        <td>
+                                            <div class="member">
+                                                <img src="Wefaq.jpg" alt="Emma" class="member-avatar">
+                                                <span>Emma</span>
+                                            </div>
+                                        </td>
+                                        <td><span class="status-badge not-started">Not Started</span></td>
+                                        <td>Mar 20, 2025</td>
+                                        <td class="actions">
+                                            <button class="btn-icon delete" title="Delete Task">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="files" class="tab-pane">
+                        <div class="files-header">
+                            <h2>Project Files</h2>
+                            <button class="btn btn-primary" id="uploadFile">
+                                <i class="fas fa-upload"></i> Upload File
+                            </button>
+                        </div>
+                        <div class="files-grid">
+                            <!-- Files will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/components.js"></script>
+    <script>
+        // Initialize tabs
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons and panes
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabPanes.forEach(p => p.classList.remove('active'));
+
+                    // Add active class to clicked button and corresponding pane
+                    btn.classList.add('active');
+                    const tabId = btn.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
