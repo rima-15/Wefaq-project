@@ -857,15 +857,16 @@ input[type="tel"]::placeholder {
 
 .auth-container {
     width: 100%;
-    max-width: 400px;
-    padding: 1rem;
+    max-width: 500px;
+    padding: 2rem;
+    margin: 0 auto;
 }
 
 .auth-card {
-    background: white;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     padding: 2.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
@@ -1820,25 +1821,6 @@ select {
     text-align: right;
 }
 
-.forgot-password {
-    color: #666;
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-
-.forgot-password:hover {
-    color: var(--primary-color);
-}
-
-.features-section {
-    padding: 4rem 5%;
-    background: #fff;
-}
-
-.testimonials-section {
-    padding: 4rem 5%;
-    background: #f8f9fa;
-}
 
 .dashboard-page .navbar,
 .project-page .navbar,
@@ -2008,4 +1990,325 @@ select {
 
 .logout-btn:hover {
     background-color: rgba(220, 53, 69, 0.1);
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    margin: 0 auto;
+}
+
+.auth-card {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem;
+}
+
+.auth-form {
+    margin-top: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(144, 150, 222, 0.2);
+}
+
+.btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--white);
+    box-shadow: 0 2px 4px rgba(144, 150, 222, 0.3);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(144, 150, 222, 0.4);
+}
+
+.auth-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: var(--dark-gray);
+}
+
+.auth-footer a {
+    color: var(--primary-color);
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.auth-footer a:hover {
+    color: var(--primary-dark);
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.logo img {
+    max-width: 120px;
+    height: auto;
+}
+
+.radio-group {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.radio-label input[type="radio"] {
+    width: auto;
+    margin-right: 0.5rem;
+}
+
+.radio-label input[type="radio"] {
+    width: auto;
+    margin-right: 0.5rem;
+}
+
+/* Inbox Page Styles */
+.inbox-page .main-content {
+    padding: 2rem;
+}
+
+.inbox-container {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-top: 1.5rem;
+}
+
+.inbox-filters {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    gap: 1rem;
+}
+
+.messages-list {
+    padding: 1rem;
+}
+
+.message-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.3s ease;
+}
+
+.message-item:last-child {
+    border-bottom: none;
+}
+
+.message-item:hover {
+    background-color: var(--primary-light);
+}
+
+.message-item.unread {
+    background-color: rgba(144, 150, 222, 0.05);
+}
+
+.message-icon {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-right: 1rem;
+    min-width: 40px;
+    text-align: center;
+}
+
+.message-content {
+    flex: 1;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.message-header h3 {
+    font-size: 1rem;
+    margin: 0;
+    color: var(--text-color);
+}
+
+.message-time {
+    font-size: 0.875rem;
+    color: var(--dark-gray);
+}
+
+.message-content p {
+    margin: 0;
+    color: var(--dark-gray);
+    font-size: 0.9rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Update navbar positioning for inbox page */
+.inbox-page .navbar {
+    position: relative;
+}
+
+/* Inbox Page Styles */
+.inbox-container {
+    padding: 2rem;
+}
+
+.inbox-section {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.section-header h2 {
+    font-size: 1.25rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-color);
+}
+
+.section-header i {
+    color: var(--primary-color);
+}
+
+.notification-count {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.messages-list {
+    padding: 0;
+}
+
+.message-item {
+    display: flex;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.3s ease;
+}
+
+.message-item:last-child {
+    border-bottom: none;
+}
+
+.message-item.unread {
+    background-color: rgba(144, 150, 222, 0.05);
+}
+
+.message-item:hover {
+    background-color: rgba(144, 150, 222, 0.1);
+}
+
+.message-icon {
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+}
+
+.message-icon i {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+}
+
+.message-content {
+    flex: 1;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.message-header h3 {
+    font-size: 1rem;
+    margin: 0;
+    color: var(--text-color);
+}
+
+.message-time {
+    font-size: 0.875rem;
+    color: var(--dark-gray);
+}
+
+.message-content p {
+    margin: 0 0 1rem 0;
+    color: var(--dark-gray);
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.action-buttons .btn-outline {
+    border: 1px solid var(--border-color);
+}
+
+.action-buttons .btn-outline:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
 }
