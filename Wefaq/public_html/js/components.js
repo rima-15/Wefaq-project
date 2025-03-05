@@ -99,6 +99,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         </a>
                     </li>
                     <li>
+                        <a href="inbox.html">
+                            <i class="fas fa-inbox"></i>
+                            <span>Inbox</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="profile.html">
                             <i class="fas fa-user"></i>
                             <span>Profile</span>
