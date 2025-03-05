@@ -1827,7 +1827,6 @@ select {
 .community-page .navbar {
     position: relative;
 }
-
 /* Project Page */
 .project-header {
     display: flex;
@@ -1836,93 +1835,47 @@ select {
     margin-bottom: 2rem;
 }
 
-.project-tabs {
+.project-tabs {/*Done*/
     display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 10px;
+    justify-content: center; /* Center the tabs */
+    gap: 0; /* Remove gap between tabs */
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0; /* Add a subtle line under the tabs */
+    background-color: #f8f8f8; /* Light background for the tab bar */
+    padding: 0 20px; /* Add padding to the sides */
 }
 
-.tab-btn {
-    padding: 0.75rem 1.5rem;
+.tab-btn {/*Done*/
+    flex: 1; /* Make tabs stretch to fill the width */
+    padding: 15px 20px; /* Larger padding for longer tabs */
     border: none;
-    background: none;
+    background-color: transparent; /* Transparent background */
+    color: #9096DE; /* Soft blue color */
+    font-size: 16px; /* Medium font size */
+    font-weight: 500; /* Medium font weight */
     cursor: pointer;
-    font-weight: 600;
-    color: var(--dark-gray);
-    border-bottom: 2px solid transparent;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease; /* Smooth hover effect */
+    border-bottom: 3px solid transparent; /* Add a bottom border for active state */
+    text-align: center; /* Center text in tabs */
 }
 
-.tab-btn:hover {
-    background-color: #f5f5f5;
+.tab-btn.active {/*Done*/
+    color: #EED442; /* Active tab color (soft yellow) */
+    border-bottom: 3px solid #EED442; /* Highlight active tab with a bottom border */
 }
 
-.tab-btn.active {
-    color: var(--primary-color);
-    background-color: #f0f7ff;
-    font-weight: 500;
-    border-bottom-color: var(--primary-color);
+.tab-btn:hover {/*Done*/
+    background-color: #e6e1f7; /* Light purple hover background */
+    color: #7a80c9; /* Darker blue text on hover */
 }
 
 .project-content {
     padding: 20px;
 }
 
-.project-header h1 {
-    margin-bottom: 10px;
-    color: #333;
-}
 
-.project-deadline {
-    color: #666;
-    font-size: 0.9em;
-}
 
-.project-description {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-}
-
-.project-description h2 {
-    margin-bottom: 15px;
-    color: #333;
-}
-
-.project-sections {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-.project-sections .card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.section-header h2 {
-    color: #333;
-    margin: 0;
-}
-
-.tasks-list, .files-list {
-    min-height: 200px;
-}
-
-.project-link {
+.project-link {/*?*/
     display: flex;
     align-items: center;
     padding: 10px 15px;
@@ -1931,11 +1884,11 @@ select {
     transition: background-color 0.3s;
 }
 
-.project-link:hover {
+.project-link:hover {/*?*/
     background-color: rgba(0,0,0,0.05);
 }
 
-.project-link i {
+.project-link i {/*?*/
     margin-right: 10px;
     color: #666;
 }
@@ -1948,11 +1901,120 @@ select {
     display: block;
 }
 
-.project-sections {
+.dashboard-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+    align-items: stretch;
 }
+
+.chart-box {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+}
+
+canvas {
+    max-width: 100% !important;
+    height: 250px !important;
+}
+.file-section {
+    background: white;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.upload-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 10px 20px;
+    background: var(--primary-color); /* Use the primary color */
+    color: var(--white); /* White text */
+    border: none;
+    border-radius: var(--border-radius); /* Use the same border radius */
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.upload-btn:hover {
+    background-color: var(--primary-dark); /* Darker shade on hover */
+}
+.file-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    display: none; /* Hide the table initially */
+}
+
+.file-table.visible {
+    display: table; /* Show the table when the class is added */
+}
+.file-table th,
+.file-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.file-table th {
+    font-weight: 500;
+    color: #666;
+    background-color: #f9f9f9;
+}
+
+.file-table th:first-child {
+    border-top-left-radius: 8px;
+}
+
+.file-table th:last-child {
+    border-top-right-radius: 8px;
+}
+
+.file-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.file-table tr:last-child td {
+    border-bottom: none;
+}
+
+.file-table a {
+    color: var(--primary-color); /* Use the primary color for links */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease;
+}
+
+.file-table a:hover {
+    color: var(--primary-dark); /* Darker shade on hover */
+    text-decoration: underline; /* Add underline on hover */
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    color: #666;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-btn:hover {
+    color: #dc3545;
+}/*End Of Project Page */
 
 .community-page {
     padding: 1rem 2rem;

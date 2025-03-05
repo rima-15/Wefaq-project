@@ -6,169 +6,381 @@
     <title>Project Details - Project Management Platform</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 </head>
 <body>
-    <div class="dashboard-container">
-        <!-- Sidebar will be loaded here -->
-        <main class="main-content">
-            <!-- Header will be loaded here -->
-            <div class="project-content">
-                <div class="project-tabs">
-                    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
-                    <button class="tab-btn" data-tab="tasks">Tasks</button>
-                    <button class="tab-btn" data-tab="files">Files</button>
+
+<div class="dashboard-container">
+    <main class="main-content">
+        <div class="project-content">
+            <!-- Improved Tabs -->
+            <div class="project-tabs">
+                <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+                <button class="tab-btn" data-tab="tasks">Tasks</button>
+                <button class="tab-btn" data-tab="files">Files</button>
+            </div>
+
+            <div class="tab-content">
+                <div id="dashboard" class="tab-pane active">
+                    <div class="dashboard-grid">
+                        <!-- Work Distribution Chart -->
+                        <div class="card chart-box">
+                            <h3>Work Distribution</h3>
+                            <canvas id="workDistributionChart"></canvas>
+                        </div>
+
+                        <!-- Task Completion Progress Chart -->
+                        <div class="card chart-box">
+                            <h3>Task Completion Progress</h3>
+                            <canvas id="taskCompletionChart"></canvas>
+                        </div>
+
+                        <!-- Remaining Time to Deadline Chart -->
+                        <div class="card chart-box">
+                            <h3>Remaining Time to Deadline</h3>
+                            <canvas id="deadlineChart"></canvas>
+                            <div class="chart-legend">
+                                <span style="color: #9096DE;">■ Days Gone</span>
+                                <span style="color: #EED442;">■ Days Left</span>
+                            </div>
+                        </div>
+
+                        <!-- Team Member Contribution Chart (Horizontal Bar Chart) -->
+                        <div class="card chart-box">
+                            <h3>Team Member Contribution</h3>
+                            <canvas id="teamContributionChart"></canvas>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="tab-content">
-                    <div id="dashboard" class="tab-pane active">
-                        <div class="dashboard-grid">
-                            <div class="card">
-                                <h3>Work Distribution</h3>
-                                <canvas id="workDistributionChart"></canvas>
-                            </div>
-                            <div class="card">
-                                <h3>Task Completion Progress</h3>
-                                <div class="progress-bar">
-                                    <div class="progress" style="width: 65%">65%</div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <h3>Upcoming Deadlines</h3>
-                                <ul class="deadline-list">
-                                    <!-- Deadlines will be dynamically added here -->
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="tasks" class="tab-pane">
-                        <div class="tasks-header">
-                            <h2>Project Tasks</h2>
-                            <div class="task-actions">
-                                <button class="btn-icon edit" title="Edit Tasks">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-primary" id="addTask">
-                                    <i class="fas fa-plus"></i> Add Task
-                                </button>
-                            </div>
-                        </div>
-                        <div class="tasks-list">
-                            <table class="tasks-table">
-                                <thead>
-                                    <tr>
-                                        <th>Task Name</th>
-                                        <th>Assigned Member</th>
-                                        <th>Status</th>
-                                        <th>Deadline</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Design User Interface</td>
-                                        <td>
-                                            <div class="member">
-                                                <img src="Wefaq.jpg" alt="Sarah" class="member-avatar">
-                                                <span>Sarah</span>
-                                            </div>
-                                        </td>
-                                        <td><span class="status-badge completed">Completed</span></td>
-                                        <td>Mar 5, 2025</td>
-                                        <td class="actions">
-                                            <button class="btn-icon delete" title="Delete Task">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Implement Authentication</td>
-                                        <td>
-                                            <div class="member">
-                                                <img src="Wefaq.jpg" alt="John" class="member-avatar">
-                                                <span>John</span>
-                                            </div>
-                                        </td>
-                                        <td><span class="status-badge in-progress">In Progress</span></td>
-                                        <td>Mar 10, 2025</td>
-                                        <td class="actions">
-                                            <button class="btn-icon delete" title="Delete Task">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Database Setup</td>
-                                        <td>
-                                            <div class="member">
-                                                <img src="Wefaq.jpg" alt="Mike" class="member-avatar">
-                                                <span>Mike</span>
-                                            </div>
-                                        </td>
-                                        <td><span class="status-badge pending">Pending</span></td>
-                                        <td>Mar 15, 2025</td>
-                                        <td class="actions">
-                                            <button class="btn-icon delete" title="Delete Task">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Testing and QA</td>
-                                        <td>
-                                            <div class="member">
-                                                <img src="Wefaq.jpg" alt="Emma" class="member-avatar">
-                                                <span>Emma</span>
-                                            </div>
-                                        </td>
-                                        <td><span class="status-badge not-started">Not Started</span></td>
-                                        <td>Mar 20, 2025</td>
-                                        <td class="actions">
-                                            <button class="btn-icon delete" title="Delete Task">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div id="files" class="tab-pane">
-                        <div class="files-header">
-                            <h2>Project Files</h2>
-                            <button class="btn btn-primary" id="uploadFile">
-                                <i class="fas fa-upload"></i> Upload File
+                <!-- Tasks Tab -->
+                <div id="tasks" class="tab-pane">
+                    <div class="tasks-header">
+                        <h2>Project Tasks</h2>
+                        <div class="task-actions">
+                            <button class="btn-icon edit" title="Edit Tasks">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-primary" id="addTask">
+                                <i class="fas fa-plus"></i> Add Task
                             </button>
                         </div>
-                        <div class="files-grid">
-                            <!-- Files will be dynamically added here -->
-                        </div>
+                    </div>
+                    <div class="tasks-list">
+                        <table class="tasks-table">
+                            <thead>
+                            <tr>
+                                <th>Task Name</th>
+                                <th>Assigned Member</th>
+                                <th>Status</th>
+                                <th>Deadline</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Design User Interface</td>
+                                <td>
+                                    <div class="member">
+                                        <img src="Wefaq.jpg" alt="Sarah" class="member-avatar">
+                                        <span>Sarah</span>
+                                    </div>
+                                </td>
+                                <td><span class="status-badge completed">Completed</span></td>
+                                <td>Mar 5, 2025</td>
+                                <td class="actions">
+                                    <button class="btn-icon delete" title="Delete Task">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Implement Authentication</td>
+                                <td>
+                                    <div class="member">
+                                        <img src="Wefaq.jpg" alt="John" class="member-avatar">
+                                        <span>John</span>
+                                    </div>
+                                </td>
+                                <td><span class="status-badge in-progress">In Progress</span></td>
+                                <td>Mar 10, 2025</td>
+                                <td class="actions">
+                                    <button class="btn-icon delete" title="Delete Task">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Database Setup</td>
+                                <td>
+                                    <div class="member">
+                                        <img src="Wefaq.jpg" alt="Mike" class="member-avatar">
+                                        <span>Mike</span>
+                                    </div>
+                                </td>
+                                <td><span class="status-badge pending">Pending</span></td>
+                                <td>Mar 15, 2025</td>
+                                <td class="actions">
+                                    <button class="btn-icon delete" title="Delete Task">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Testing and QA</td>
+                                <td>
+                                    <div class="member">
+                                        <img src="Wefaq.jpg" alt="Emma" class="member-avatar">
+                                        <span>Emma</span>
+                                    </div>
+                                </td>
+                                <td><span class="status-badge not-started">Not Started</span></td>
+                                <td>Mar 20, 2025</td>
+                                <td class="actions">
+                                    <button class="btn-icon delete" title="Delete Task">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+
+                <!-- Files Tab -->
+                <div id="files" class="tab-pane">
+                        <div class="file-section">
+                            <h2>Files</h2>
+                            <label class="upload-btn">
+                                <i class="fas fa-upload"></i> Upload File
+                                <input type="file" id="fileInput" style="display:none" onchange="uploadFile()">
+                            </label>
+                            <table class="file-table" id="fileTable">
+                                <thead>
+                                <tr>
+                                    <th>File Name</th>
+                                    <th>Uploader</th>
+                                    <th>Upload Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+
+                </div>
             </div>
-        </main>
-    </div>
-    <script src="js/components.js"></script>
-    <script>
-        // Initialize tabs
-        document.addEventListener('DOMContentLoaded', function() {
-            const tabBtns = document.querySelectorAll('.tab-btn');
-            const tabPanes = document.querySelectorAll('.tab-pane');
+        </div>
+    </main>
+</div>
+<script src="js/components.js"></script>
 
-            tabBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Remove active class from all buttons and panes
-                    tabBtns.forEach(b => b.classList.remove('active'));
-                    tabPanes.forEach(p => p.classList.remove('active'));
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tab Switching Functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabPanes = document.querySelectorAll('.tab-pane');
 
-                    // Add active class to clicked button and corresponding pane
-                    btn.classList.add('active');
-                    const tabId = btn.getAttribute('data-tab');
-                    document.getElementById(tabId).classList.add('active');
-                });
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabPanes.forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
             });
         });
-    </script>
+
+        // Work Distribution Chart
+        const workCtx = document.getElementById('workDistributionChart').getContext('2d');
+        new Chart(workCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Sarah', 'John', 'Mike', 'Emma'],
+                datasets: [{
+                    data: [25, 35, 20, 20],
+                    backgroundColor: ['#9096DE', '#EED442', '#886B63', '#D3D3D3']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    datalabels: {
+                        color: '#000',
+                        anchor: 'center',
+                        align: 'center',
+                        formatter: (value) => value + '%'
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+
+        // Task Completion Chart
+        const taskCtx = document.getElementById('taskCompletionChart').getContext('2d');
+        new Chart(taskCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Completed', 'In Progress', 'Unassigned', 'Not Started'],
+                datasets: [{
+                    data: [4, 3, 2, 1],
+                    backgroundColor: ['#9096DE', '#EED442', '#886B63', '#D3D3D3']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.raw + ' tasks';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Deadline Chart
+        const deadlineCtx = document.getElementById('deadlineChart').getContext('2d');
+        new Chart(deadlineCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Days Gone', 'Days Left'],
+                datasets: [{
+                    data: [20, 10],
+                    backgroundColor: ['#9096DE', '#EED442']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                rotation: 270,
+                circumference: 180,
+                plugins: {
+                    legend: { display: false },
+                    datalabels: {
+                        color: '#000',
+                        anchor: 'center',
+                        align: 'center',
+                        font: { size: 16, weight: 'bold' },
+                        formatter: (value) => value + ' days'
+                    }
+                },
+                radius: '60%' // Adjust this value as needed
+            },
+            plugins: [ChartDataLabels]
+        });
+
+        // Team Member Contribution Chart (Horizontal Bar Chart)
+        const contributionCtx = document.getElementById('teamContributionChart').getContext('2d');
+        new Chart(contributionCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Sarah', 'John', 'Mike', 'Emma'], // Team members
+                datasets: [
+                    {
+                        label: 'Completed Tasks',
+                        data: [8, 5, 6, 4], // Completed tasks for each member
+                        backgroundColor: '#9096DE',
+                    },
+                    {
+                        label: 'In Progress Tasks',
+                        data: [2, 3, 4, 5], // In-progress tasks for each member
+                        backgroundColor: '#EED442',
+                    },
+                    {
+                        label: 'Not Started Tasks',
+                        data: [0, 2, 0, 1], // Not started tasks for each member
+                        backgroundColor: '#886B63',
+                    }
+                ]
+            },
+            options: {
+                indexAxis: 'y', // Horizontal bars
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Tasks'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+    function uploadFile() {
+        const fileInput = document.getElementById("fileInput");
+        const table = document.getElementById("fileTable");
+        const tbody = table.getElementsByTagName("tbody")[0];
+        const file = fileInput.files[0];
+
+        if (file) {
+            // Generate a URL for the file
+            const fileURL = URL.createObjectURL(file);
+
+            // Create a new row in the table
+            const row = tbody.insertRow();
+            row.innerHTML = `
+            <td><a href="${fileURL}" target="_blank">${file.name}</a></td>
+            <td>Member Name</td>
+            <td>${new Date().toLocaleString()}</td>
+            <td><i class="fas fa-trash delete-btn" onclick="deleteFile(this)"></i></td>
+        `;
+
+            // Clear the file input
+            fileInput.value = "";
+
+            // Show the table if it was hidden
+            if (!table.classList.contains("visible")) {
+                table.classList.add("visible");
+            }
+        }
+    }
+
+    function deleteFile(icon) {
+        const row = icon.parentNode.parentNode;
+        const table = document.getElementById("fileTable");
+        const fileLink = row.querySelector("a");
+
+        // Revoke the file URL to free up memory
+        if (fileLink) {
+            URL.revokeObjectURL(fileLink.href);
+        }
+
+        // Remove the row from the table
+        row.parentNode.removeChild(row);
+
+        // Hide the table if no files are left
+        if (table.getElementsByTagName("tbody")[0].rows.length === 0) {
+            table.classList.remove("visible");
+        }
+    }
+</script>
 </body>
 </html>
