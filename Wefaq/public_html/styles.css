@@ -181,6 +181,7 @@ input[type="tel"]::placeholder {
     width: 100%;
     top: 0;
     z-index: 1000;
+    
 }
 
 .index-page .hero-section 
@@ -2374,3 +2375,20 @@ input:focus, select:focus, textarea:focus {
     border-color: var(--primary-color);
     color: var(--primary-color);
 }
+
+    .chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: #9096DE;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+             font-size: 25px; 
+        }
+
+        .chat-icon:hover {
+           color: #7278c7;
+        }
