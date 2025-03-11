@@ -52,15 +52,25 @@ a {
     cursor: pointer;
     font-weight: 600;
     transition: all 0.3s ease;
-}
 
+}
+#container-btn-form {
+    display: flex;
+    justify-content: right; /* Right-align inputs and buttons */
+}
 .btn-primary {
     background-color: var(--primary-color);
     color: var(--white);
 }
+.small-btn{
+    display: inline;
+    margin: 1.9em .75em 0em .75em;
+    font-weight: 500;
 
+
+}
 .btn-secondary {
-    background-color: var(--secondary-color);
+    background-color: #cdcdcd;
     color: var(--white);
 }
 
@@ -82,10 +92,13 @@ a {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.btn-outline:hover {
-    background: #f5f5f5;
-    color: #333;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.btn-danger:hover {
+    background: #ca4132;
+
+}
+.btn-secondary:hover {
+    background: #b8b8b8;
+
 }
 
 /* Forms */
@@ -455,6 +468,17 @@ input[type="tel"]::placeholder {
     margin: 0;
 }
 
+.editProject {
+    display: flex;
+
+
+}
+.editProject .project-edit-btns{
+    font-size: 1.05em;
+
+}
+
+
 .header-right {
     display: flex;
     align-items: center;
@@ -473,6 +497,12 @@ input[type="tel"]::placeholder {
 
 .user-menu:hover {
     background-color: var(--primary-light);
+}
+#complete-project-btn{
+    padding: .7em 1em;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: inline-block;
 }
 
 .user-menu .user-avatar {
@@ -776,7 +806,16 @@ input[type="tel"]::placeholder {
     box-shadow: var(--shadow);
     position: relative;
 }
-
+.modal-confirm-content {
+    background-color: white;
+    padding: 20px;
+    width: auto;
+    height: fit-content;
+}
+.modal-actions{
+    display: flex;
+    justify-content: center;
+}
 .modal-header {
     padding: 1.5rem;
     border-bottom: 1px solid var(--border-color);
@@ -1415,18 +1454,18 @@ select {
 }
 
 .status-badge.completed {
-    background-color: #e6f4ea;
-    color: #1e7e34;
+    background-color: rgba(144, 150, 222, 0.15);
+    color: var(--primary-color);
 }
 
 .status-badge.in-progress {
-    background-color: #fff3e0;
-    color: #f57c00;
+    background-color: rgba(238, 212, 66, 0.1);
+    color: #EED442;
 }
 
 .status-badge.pending {
-    background-color: #e3f2fd;
-    color: #1976d2;
+    background-color: rgba(136, 107, 99, 0.2);
+    color: #886B63;
 }
 
 .status-badge.not-started {
@@ -1454,7 +1493,6 @@ select {
 }
 
 .btn-icon:hover {
-    background-color: #f0f0f0;
 }
 
 .btn-icon.edit:hover {
@@ -1464,16 +1502,19 @@ select {
 .btn-icon.delete:hover {
     color: #dc3545;
 }
+.btn-icon.status-icons:hover {
+     color: var(--primary-color);
+ }
 
 .tasks-list {
     padding: 0;
-    margin-top: 20px;
+    margin-top: .5em;
     overflow: auto;
 }
 
 .task-actions {
     display: flex;
-    align-items: center;
+    justify-content: right ;
     gap: 10px;
 }
 
@@ -1922,7 +1963,12 @@ select {
     align-items: center;
     margin-bottom: 2rem;
 }
+.project-description{
 
+    margin-bottom: 20px;
+    background-color: #f8f7f7; /* Light background for the tab bar */
+    padding: 1.1rem 1rem; /* Add padding to the sides */
+}
 .project-tabs {/*Done*/
     display: flex;
     justify-content: center; /* Center the tabs */
@@ -1961,7 +2007,9 @@ select {
     padding: 20px;
 }
 
-
+.project-description-header {
+    display: flex;
+}
 
 .project-link {/*?*/
     display: flex;
