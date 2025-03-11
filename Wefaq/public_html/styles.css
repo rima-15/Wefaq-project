@@ -2479,9 +2479,12 @@ input:focus, select:focus, textarea:focus {
         .chat-icon:hover {
            color: #7278c7;
         }
-            .dashboard-container {
+            .dashboard-container .main-content .partsDash {
             display: flex;
             gap: 20px;
+        }
+        .partsDash {
+            margin-top: 10px;
         }
      /* Profile Card */
     .profile-card {
