@@ -584,12 +584,7 @@ input[type="tel"]::placeholder {
     margin-bottom: 1rem;
 }
 
-.skills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
+/*
 .skill-tag {
     background: var(--light-gray);
     color: var(--primary-color);
@@ -597,7 +592,7 @@ input[type="tel"]::placeholder {
     border-radius: 20px;
     font-size: 0.9rem;
 }
-
+*/
 .active-projects, .tasks, .calendar {
     display: flex;
     flex-direction: column;
@@ -846,6 +841,96 @@ input[type="tel"]::placeholder {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 2px var(--primary-light);
+}
+.skills h2 {
+    letter-spacing: 1px;
+    margin-top: 40px;
+    margin-bottom: 5px;
+    color: #666 ;
+    font-size: 17px;
+}
+.skill-bar {
+    background: #CCCCCC;
+    height: 20px;
+    border-radius: 8px;
+}
+.skill-bar div {
+    height : 20px;
+    border-radius: 8px; 
+    width: 0;
+}
+.skill-bar div span {
+    height: 40px;
+    width:40px;
+    border-radius: 50%;
+    float: right;
+    margin-top: -12px;
+    margin-right: -11px;
+    color: #333;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.skill-bar div span i {
+    font-size: 27px;
+color: #EED442;
+  text-shadow: 
+    1px 1px 3px #A89632,  /* Soft shadow */
+    0px 0px 5px #F6E9A5;  /* Gentle glow */
+}
+.skill1 {
+    background: #ec665e;
+    animation: skill1 0.75s linear forwards;
+}
+.skill2 {
+    background: #ded890;
+    animation: skill2 0.75s linear forwards;
+}
+.skill3 {
+    background: var(--primary-color);
+    animation: skill3 0.75s linear forwards;
+}
+.skill4 {
+    background: #90de95;
+    animation: skill4 0.75s linear forwards;
+}
+.skill5 {
+    background: #decc90;
+    animation: skill5 0.75s linear forwards;
+}
+.skill6 {
+    background: #90ded8;
+    animation: skill6 0.75s linear forwards;
+}
+@keyframes skill1 {
+    100%{
+        width: 74%;
+    }
+}
+@keyframes skill2 {
+    100%{
+        width: 54%;
+    }
+}
+@keyframes skill3 {
+    100%{
+        width: 40%;
+    }
+}
+@keyframes skill4 {
+    100%{
+        width: 63%;
+    }
+}
+@keyframes skill5 {
+    100%{
+        width: 100%;
+    }
+}
+@keyframes skill6 {
+    100%{
+        width: 89%;
+    }
 }
 
 /* Auth Pages */
