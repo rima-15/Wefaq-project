@@ -10,7 +10,7 @@
     --text-color: #2c3e50;
     --border-color: #dcdfe6;
     --background-color: #f8f9fa;
-    --light-gray: #ecf0f1;
+    --light-gray: #fdfdfd;
     --dark-gray: #7f8c8d;
     --white: #ffffff;
     --sidebar-width: 250px;
@@ -712,20 +712,13 @@ input[type="tel"]::placeholder {
 }
 
 /* Profile Page */
-.profile-content {
+.profilePage-content {
     padding: 2rem;
-    max-width: 800px;
+    max-width: 100%;
     margin: 0 auto;
 }
 
-.profile-header {
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-}
-
-.profile-image-container {
+.profilePage-image-container {
     width: 120px;
     height: 120px;
     border-radius: 50%;
@@ -733,20 +726,66 @@ input[type="tel"]::placeholder {
     border: 3px solid var(--primary-color);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+.Profilecard {
+  --main-color: #000;
+  --submain-color: #78858F;
+  --bg-color: #fff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  background: var(--bg-color);
+}
 
+.Profilecard__img {
+  height: 192px;
+  width: 100%;
+}
+
+.Profilecard__img svg {
+  height: 100%;
+  border-radius: 20px 20px 0 0;
+}
+
+.Profilecard__avatar {
+  position: absolute;
+  width: 114px;
+  height: 114px;
+  background: white;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.Profilecard__avatar svg {
+  width: 100px;
+  height: 100px;
+}
 .profile-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.profile-details {
+.profilePage-details , .profileSkills{
     background: white;
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
+.profileMainContent{
+    margin-top: 10px;
+    display:flex;
+    justify-content: space-between;
+    gap: 5px;
+}
+.profilePage-details , .profileSkills {
+    width: 50%;
+}
 .info-group {
     margin-bottom: 1.5rem;
 }
@@ -767,7 +806,7 @@ input[type="tel"]::placeholder {
     color: #333;
     margin: 0;
 }
-
+/*
 .skills-list {
     display: flex;
     flex-wrap: wrap;
@@ -781,8 +820,103 @@ input[type="tel"]::placeholder {
     border-radius: var(--border-radius);
     margin: 2px;
     font-size: 0.9rem;
+}*/
+.skills h2 {
+    letter-spacing: 1px;
+    margin-top: 40px;
+    margin-bottom: 5px;
+    color: #666 ;
+    font-size: 17px;
 }
-
+ .skill-bar {
+    background: #CCCCCC;
+    height: 10px;
+    border-radius: 8px;
+}
+.profile-content .skills p {
+    justify-content: left;
+    font-size: 18px;
+    color: #666;
+    font-weight: bold;
+}
+.skill-bar div {
+    height : 10px;
+    border-radius: 8px; 
+    width: 0;
+}
+.skill-bar div span {
+    height: 40px;
+    width:40px;
+    border-radius: 50%;
+    float: right;
+    margin-top: -17px;
+    margin-right: -11px;
+    color: #333;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.skill-bar div span i {
+    font-size: 20px;
+    color: #EED442;
+    text-shadow: 
+    1px 1px 3px #A89632,  /* Soft shadow */
+    0px 0px 5px #F6E9A5;  /* Gentle glow */
+}
+.skill1 {
+    background: #ec665e;
+    animation: skill1 0.75s linear forwards;
+}
+.skill2 {
+    background: #ded890;
+    animation: skill2 0.75s linear forwards;
+}
+.skill3 {
+    background: var(--primary-color);
+    animation: skill3 0.75s linear forwards;
+}
+.skill4 {
+    background: #90de95;
+    animation: skill4 0.75s linear forwards;
+}
+.skill5 {
+    background: #decc90;
+    animation: skill5 0.75s linear forwards;
+}
+.skill6 {
+    background: #90ded8;
+    animation: skill6 0.75s linear forwards;
+}
+@keyframes skill1 {
+    100%{
+        width: 74%;
+    }
+}
+@keyframes skill2 {
+    100%{
+        width: 54%;
+    }
+}
+@keyframes skill3 {
+    100%{
+        width: 40%;
+    }
+}
+@keyframes skill4 {
+    100%{
+        width: 63%;
+    }
+}
+@keyframes skill5 {
+    100%{
+        width: 100%;
+    }
+}
+@keyframes skill6 {
+    100%{
+        width: 89%;
+    }
+}
 /* Modal */
 .modal {
     display: none;
@@ -881,96 +1015,7 @@ input[type="tel"]::placeholder {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 2px var(--primary-light);
 }
-.skills h2 {
-    letter-spacing: 1px;
-    margin-top: 40px;
-    margin-bottom: 5px;
-    color: #666 ;
-    font-size: 17px;
-}
-.skill-bar {
-    background: #CCCCCC;
-    height: 20px;
-    border-radius: 8px;
-}
-.skill-bar div {
-    height : 20px;
-    border-radius: 8px; 
-    width: 0;
-}
-.skill-bar div span {
-    height: 40px;
-    width:40px;
-    border-radius: 50%;
-    float: right;
-    margin-top: -12px;
-    margin-right: -11px;
-    color: #333;
-    display:flex;
-    align-items: center;
-    justify-content: center;
-}
-.skill-bar div span i {
-    font-size: 27px;
-color: #EED442;
-  text-shadow: 
-    1px 1px 3px #A89632,  /* Soft shadow */
-    0px 0px 5px #F6E9A5;  /* Gentle glow */
-}
-.skill1 {
-    background: #ec665e;
-    animation: skill1 0.75s linear forwards;
-}
-.skill2 {
-    background: #ded890;
-    animation: skill2 0.75s linear forwards;
-}
-.skill3 {
-    background: var(--primary-color);
-    animation: skill3 0.75s linear forwards;
-}
-.skill4 {
-    background: #90de95;
-    animation: skill4 0.75s linear forwards;
-}
-.skill5 {
-    background: #decc90;
-    animation: skill5 0.75s linear forwards;
-}
-.skill6 {
-    background: #90ded8;
-    animation: skill6 0.75s linear forwards;
-}
-@keyframes skill1 {
-    100%{
-        width: 74%;
-    }
-}
-@keyframes skill2 {
-    100%{
-        width: 54%;
-    }
-}
-@keyframes skill3 {
-    100%{
-        width: 40%;
-    }
-}
-@keyframes skill4 {
-    100%{
-        width: 63%;
-    }
-}
-@keyframes skill5 {
-    100%{
-        width: 100%;
-    }
-}
-@keyframes skill6 {
-    100%{
-        width: 89%;
-    }
-}
+
 
 /* Auth Pages */
 .auth-page {
