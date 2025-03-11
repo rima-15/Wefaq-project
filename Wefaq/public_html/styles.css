@@ -758,7 +758,7 @@ input[type="tel"]::placeholder {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 10px;
+  margin-left: 15px;
 }
 
 .Profilecard__avatar svg {
@@ -786,47 +786,27 @@ input[type="tel"]::placeholder {
 .profilePage-details , .profileSkills {
     width: 50%;
 }
-.info-group {
+.info-group , .skill-bar{
     margin-bottom: 1.5rem;
 }
 
-.info-group:last-child {
+.info-group:last-child , skill-bar:last-child {
     margin-bottom: 0;
 }
 
-.info-group label {
+.info-group label , .profileSkills label , .profileSkills .skills p {
     display: block;
-    font-weight: 600;
-    color: #666;
     margin-bottom: 0.5rem;
 }
 
-.info-group p {
+.info-group p , .skills p{
     font-size: 1.1rem;
     color: #333;
     margin: 0;
 }
-/*
-.skills-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
 
-.skill-tag {
-    display: inline-block;
-    padding: 4px 8px;
-    background-color: var(--light-gray);
-    border-radius: var(--border-radius);
-    margin: 2px;
-    font-size: 0.9rem;
-}*/
-.skills h2 {
+.skills p {
     letter-spacing: 1px;
-    margin-top: 40px;
-    margin-bottom: 5px;
-    color: #666 ;
-    font-size: 17px;
 }
  .skill-bar {
     background: #CCCCCC;
