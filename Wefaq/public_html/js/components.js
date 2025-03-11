@@ -45,19 +45,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add the header HTML directly
     const headerHtml = `
         <header class="dashboard-header">
-            <div class="header-left">
-                <button type="button" id="sidebarToggle" class="sidebar-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <h1 id="pageTitle">Dashboard</h1>
-            </div>
-            <div class="header-right">
-                <div class="user-menu">
-                    <img src="Wefaq.jpg" alt="User Avatar" class="user-avatar">
-                    <span class="user-name">John Doe</span>
-                </div>
-            </div>
-        </header>
+        <div class="header-left">
+        <button type="button" id="sidebarToggle" class="sidebar-toggle">
+        <i class="fas fa-bars"></i>
+</button>
+    <h1 id="pageTitle">Dashboard</h1>
+    <p id="project-deadline-header"></p>
+    <div class="editProject" style="display: none;">
+        <button class="btn-icon edit project-edit-btns" title="Edit Tasks">
+            <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn-icon delete project-edit-btns" title="Delete Task">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+</div>
+    <div class="header-right">
+        <button class="btn btn-primary" id="complete-project-btn" style="display: none;">
+            Mark as Complete
+        </button>
+        <div class="user-menu">
+            <img src="Wefaq.jpg" alt="User Avatar" class="user-avatar">
+                <span class="user-name">Hi, John Doe</span>
+        </div>
+    </div>
+</header>
     `;
 
     // Add the sidebar HTML directly
@@ -65,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <nav class="sidebar" id="sidebar">
             <div class="logo">
                 <img src="Wefaq.jpg" alt="Wefaq Logo" class="logo-img">
-            </div>
+            </div
             <div class="nav-content">
                 <ul class="nav-links">
                     <li>
@@ -140,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="modal-content">
                 <div class="modal-header">
                     <h2>Create New Project</h2>
-                    <button class="close-modal">&times;</button>
+                    <button class="close-modal" onclick="closeGenericModal('newProjectModal')">&times;</button>
                 </div>
                 <div class="modal-body">
                     <form id="newProjectForm">
@@ -156,7 +168,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             <label for="projectDeadline">Deadline</label>
                             <input type="date" id="projectDeadline" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Create Project</button>
+                        <div id="container-btn-form">
+                                       <button type="submit" class="btn btn-primary">Create Project</button>
+         
+</div>
                     </form>
                 </div>
             </div>
@@ -244,16 +259,148 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeDropdown();
         updatePageTitle();
 
-        // Update project title if we're on the project page
+
+        // Update project header if we're on the project page
         if (path.includes('project.html')) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const projectName = urlParams.get('name');
-            if (projectName) {
-                const pageTitle = document.getElementById('pageTitle');
-                if (pageTitle) {
-                    pageTitle.textContent = decodeURIComponent(projectName);
-                }
+            const project = getProjectFromURL();
+            if (!project) {
+                console('Project not found!');
+                window.location.href = 'dashboard.html';
+                return;
             }
+
+            updateProjectHeader(project);
+            initializeProjectButtons(project);
+        }
+    }
+
+    // Function to retrieve project data from URL
+    function getProjectFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectName = urlParams.get('name');
+
+        // Default project data
+        const defaultProject = {
+            name: "Project Name",
+            deadline: "Jun 28 2025",
+            status: "In Progress"
+        };
+
+        if (!projectName) return defaultProject;
+
+        const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+        return projects.find(project => project.name === decodeURIComponent(projectName)) || defaultProject;
+    }
+    // Function to format the deadline
+    function formatDeadline(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    // Function to update the project header
+    function updateProjectHeader(project) {
+        if (!project) return;
+
+        const pageTitle = document.getElementById('pageTitle');
+        const projectDeadlineHeader = document.getElementById('project-deadline-header');
+        const editProjectBtn = document.querySelector('.editProject');
+        const userMenu = document.querySelector('.user-menu');
+        const completeProjectBtn = document.getElementById('complete-project-btn');
+
+        if (pageTitle) {
+            pageTitle.textContent = project.name;
+        }
+
+        if (projectDeadlineHeader) {
+            projectDeadlineHeader.textContent = `Deadline: ${formatDeadline(project.deadline)}`;
+        }
+
+        if (editProjectBtn) {
+            editProjectBtn.style.display = 'flex'; // Use flex to align icons horizontally
+        }
+
+        if (completeProjectBtn) {
+            if (project.status === 'Completed') {
+                // Replace the button with the "Completed" badge
+                completeProjectBtn.style.display = 'none';
+                document.querySelector('.header-right').insertAdjacentHTML('beforeend', '<span class="status-badge completed">Completed</span>');
+
+            } else {
+                completeProjectBtn.style.display = 'block';
+            }
+        }
+
+
+        if (userMenu) {
+            userMenu.style.display = 'none'; // Use flex to align icons horizontally
+        }
+    }
+
+    // Function to initialize project buttons
+    function initializeProjectButtons(project) {
+        if (!project) return;
+
+        const editBtn = document.querySelector('.edit.project-edit-btns');
+        const deleteBtn = document.querySelector('.delete.project-edit-btns');
+        const completeBtn = document.getElementById('complete-project-btn');
+
+        // Delete Project Popup
+        const deleteModal = document.getElementById('deleteProjectModal');
+        const confirmDeleteBtn = document.getElementById('confirmDelete');
+        const cancelDeleteBtn = document.getElementById('cancelDelete');
+
+        if (deleteBtn && deleteModal && confirmDeleteBtn && cancelDeleteBtn) {
+            deleteBtn.addEventListener('click', () => {
+                deleteModal.style.display = 'flex';
+            });
+
+            confirmDeleteBtn.addEventListener('click', () => {
+                const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+                const updatedProjects = projects.filter(p => p.name !== project.name);
+                localStorage.setItem('projects', JSON.stringify(updatedProjects));
+                window.location.href = 'dashboard.html';
+            });
+
+            cancelDeleteBtn.addEventListener('click', () => {
+                deleteModal.style.display = 'none';
+            });
+            cancelDeleteBtn.addEventListener('click', () => {
+                deleteModal.style.display = 'none';
+            });
+        }
+
+        // Mark as Complete Popup
+        const completeModal = document.getElementById('completeProjectModal');
+        const confirmCompleteBtn = document.getElementById('confirmComplete');
+        const cancelCompleteBtn = document.getElementById('cancelComplete');
+        const xCompleteBtn = document.getElementById('cancelComplete');
+
+        if (completeBtn && completeModal && confirmCompleteBtn && cancelCompleteBtn) {
+            completeBtn.addEventListener('click', () => {
+                completeModal.style.display = 'flex';
+            });
+
+            confirmCompleteBtn.addEventListener('click', () => {
+                const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+                const updatedProjects = projects.map(p => {
+                    if (p.name === project.name) {
+                        return { ...p, status: 'Completed' };
+                    }
+                    return p;
+                });
+                localStorage.setItem('projects', JSON.stringify(updatedProjects));
+                completeBtn.style.display = 'none';
+                document.querySelector('.header-right').insertAdjacentHTML('beforeend', '<span class="status-badge completed">Completed</span>');
+                completeModal.style.display = 'none';
+            });
+
+            cancelCompleteBtn.addEventListener('click', () => {
+                completeModal.style.display = 'none';
+            });
+
+            cancelCompleteBtn.addEventListener('click', () => {
+                completeModal.style.display = 'none';
+            });
         }
     }
 
@@ -328,3 +475,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize components
     initializeComponents();
 });
+
+

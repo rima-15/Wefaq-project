@@ -76,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function() {
             openModal();
         }
     });
-
     if (closeModalBtn) {
         closeModalBtn.addEventListener('click', closeModal);
     }
@@ -99,11 +98,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (projectForm) {
         projectForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             // Get form values
             const projectName = document.getElementById('projectName').value;
             const projectDescription = document.getElementById('projectDescription').value;
-            
+
             // Create new project object
             const newProject = {
                 id: Date.now(),
@@ -113,13 +112,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 members: [],
                 created: new Date().toISOString()
             };
-            
+
             // Add to projects array
             projects.push(newProject);
-            
+
             // Save to localStorage
             localStorage.setItem('projects', JSON.stringify(projects));
-            
+
             // Add to sidebar list
             const projectItem = document.createElement('li');
             projectItem.innerHTML = `
@@ -128,12 +127,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span>${newProject.name}</span>
                 </a>
             `;
-            
+
             // Insert before the "Add Project" button
             const projectsList = document.getElementById('projectsList');
             const addProjectItem = projectsList.querySelector('.add-project').parentElement;
             projectsList.insertBefore(projectItem, addProjectItem);
-            
+
             // Close modal
             closeModal();
 
@@ -153,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span>${project.name}</span>
                     </a>
                 `;
-                
+
                 // Insert before the "Add Project" button
                 const addProjectItem = projectsList.querySelector('.add-project').parentElement;
                 projectsList.insertBefore(projectItem, addProjectItem);
@@ -232,20 +231,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Modal Handling
-    const openModal = (modalId) => {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.style.display = 'block';
-        }
-    };
-
-    const closeModal = (modalId) => {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.style.display = 'none';
-        }
-    };
 
     // Close modal when clicking outside
     window.addEventListener('click', (e) => {
@@ -273,13 +258,55 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Add Task
-    const addTaskBtn = document.getElementById('addTask');
-    if (addTaskBtn) {
-        addTaskBtn.addEventListener('click', () => {
-            // Add task creation logic here
-            console.log('Add task clicked');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add Task Button
+        const addTaskBtn = document.getElementById('addTaskBtn');
+        if (addTaskBtn) {
+            addTaskBtn.addEventListener('click', () => {
+                openGenericModal('addTaskModal');
+            });
+        }
+
+        // Close "Add Task" Modal
+        const closeTaskModalBtn = document.querySelector('#addTaskModal .close-modal');
+        if (closeTaskModalBtn) {
+            console.log('Close button found'); // Debugging
+
+            closeTaskModalBtn.addEventListener('click', () => {
+                closeGenericModal("addTaskModal");
+            });
+        }
+
+        // Close "Add Task" Modal when clicking outside
+        window.addEventListener('click', (e) => {
+            const addTaskModal = document.getElementById('addTaskModal');
+            if (e.target === addTaskModal) {
+                closeGenericModal('addTaskModal');
+            }
         });
-    }
+
+        // Handle "Add Task" Form Submission
+        const addTaskForm = document.getElementById('addTaskForm');
+        if (addTaskForm) {
+            addTaskForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                // Get form values
+                const taskName = document.getElementById('taskName').value;
+                const taskDeadline = document.getElementById('taskDeadline').value;
+
+                // Log the values (replace this with your logic to save the task)
+                console.log('Task Name:', taskName);
+                console.log('Task Deadline:', taskDeadline);
+
+                // Close the modal
+                closeGenericModal('addTaskModal');
+
+                // Clear the form fields
+                addTaskForm.reset();
+            });
+        }
+    });
 
     // Search Functionality
     const searchInput = document.querySelector('.search-bar input');
@@ -301,4 +328,22 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Filter applied:', button.textContent);
         });
     });
+
+
 });
+// Modal Handling
+function openGenericModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'block';
+    }
+}
+
+function closeGenericModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+
