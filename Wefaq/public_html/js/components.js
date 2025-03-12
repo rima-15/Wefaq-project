@@ -61,11 +61,17 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
     <div class="header-right">
+    <div class="team-members" style="display: none;">
+                    <div class="header-member" style="background-image: url('images/avatarF1.jpeg');"></div>
+                    <div class="header-member" style="background-image: url('images/avatarM1.jpeg');"></div>
+                    <div class="header-member" style="background-image: url('images/avatarF2.jpeg');"></div>
+                    <div class="header-member add-member" onclick="openInvitePopup()">+</div>
+                </div>
         <button class="btn btn-primary" id="complete-project-btn" style="display: none;">
             Mark as Complete
         </button>
         <div class="user-menu">
-            <img src="Wefaq.jpg" alt="User Avatar" class="user-avatar">
+            <img src="images/avatarF1.jpeg" alt="User Avatar" class="user-avatar">
                 <span class="user-name">Hi, John Doe</span>
         </div>
     </div>
@@ -306,6 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const editProjectBtn = document.querySelector('.editProject');
         const userMenu = document.querySelector('.user-menu');
         const completeProjectBtn = document.getElementById('complete-project-btn');
+        const teamMembers = document.querySelector('.team-members');
 
         if (pageTitle) {
             pageTitle.textContent = project.name;
@@ -330,6 +337,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
+        if (teamMembers) {
+            teamMembers.style.display = 'flex'; // Use flex to align icons horizontally
+        }
 
         if (userMenu) {
             userMenu.style.display = 'none'; // Use flex to align icons horizontally
@@ -342,6 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const editBtn = document.querySelector('.edit.project-edit-btns');
         const deleteBtn = document.querySelector('.delete.project-edit-btns');
+        const addMember = document.querySelector('.add-member');
         const completeBtn = document.getElementById('complete-project-btn');
 
         // Delete Project Popup
@@ -457,6 +468,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function openInvitePopup() {
+        document.getElementById('invitePopup').style.display = 'block';
+    }
+    function closeInvitePopup() {
+        document.getElementById('invitePopup').style.display = 'none';
+    }
+    function sendInvite() {
+        let input = document.getElementById('inviteInput').value;
+        if (input) {
+            alert('Invite sent to ' + input);
+            document.getElementById('inviteInput').value = '';
+        }
+    }
+
     function updatePageTitle() {
         const pageName = document.title.split('-')[0].trim();
         const pageTitle = document.getElementById('pageTitle');
@@ -471,6 +496,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+
 
     // Initialize components
     initializeComponents();

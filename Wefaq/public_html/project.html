@@ -9,6 +9,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script src="script.js"></script>
+    <style>
+
+    </style>
+
 </head>
 <body>
 
@@ -100,7 +104,7 @@
                                 <td>Design User Interface</td>
                                 <td>
                                     <div class="member">
-                                        <img src="Wefaq.jpg" alt="Sarah" class="member-avatar">
+                                        <img src="images/avatarF2.jpeg" alt="Sarah" class="member-avatar">
                                         <span>Sarah</span>
                                     </div>
                                 </td>
@@ -117,7 +121,7 @@
                                 <td>Implement Authentication</td>
                                 <td>
                                     <div class="member">
-                                        <img src="Wefaq.jpg" alt="John" class="member-avatar">
+                                        <img src="images/avatarF1.jpeg" alt="John" class="member-avatar">
                                         <span>John</span>
                                     </div>
                                 </td>
@@ -136,9 +140,8 @@
                             <tr>
                                 <td>Database Setup</td>
                                 <td>
-                                    <div class="member">
-                                        <img src="Wefaq.jpg" alt="Mike" class="member-avatar">
-                                        <span>Mike</span>
+                                    <div>
+                                        <span></span>
                                     </div>
                                 </td>
                                 <td><span class="status-badge pending">Unassigned</span></td>
@@ -159,7 +162,7 @@
                                 <td>Testing and QA</td>
                                 <td>
                                     <div class="member">
-                                        <img src="Wefaq.jpg" alt="Emma" class="member-avatar">
+                                        <img src="images/avatarM1.jpeg" alt="Emma" class="member-avatar">
                                         <span>Emma</span>
                                     </div>
                                 </td>
@@ -180,7 +183,90 @@
                         </table>
                     </div>
                 </div>
+
+
+                <!-- Invite Popup -->
+                <div id="invitePopup" class="popup modal">
+                    <div class="popup-content modal-content">
+                        <div class="modal-header">
+                            <h2>Add Member</h2>
+                            <button class="close-modal" onclick="closeInvitePopup()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                            <div id="invite-model">
+
+                                    <input type="text" id="inviteInput" placeholder="Enter username" required>
+                                    <button class="btn btn-primary" id="inviteBtn" onclick="sendInvite()" >Invite</button>
+                            </div>
+                            </form>
+
+                        <p class="light-gray" id="members-header">Members</p>
+                        <ul class="member-list">
+                            <li class="member-item">
+                                <div class="member-info">
+                                    <img src="images/avatarM1.jpeg" class="member-avatar" alt="Avatar">
+                                    <div>
+                                        <strong>Sara Ahmed </strong>
+                                        <div class="member-email">sara@example.com</div>
+                                    </div>
+                                </div>
+                                <span class="member-role light-gray">Leader</span>
+                                <button class="btn-icon delete you-member" title="Delete Member" >
+                                    <span class="status-badge completed" id="you-leader"> You</span>
+                                </button>
+
+                            </li>
+                            <li class="member-item">
+                                <div class="member-info">
+                                    <img src="images/avatarF2.jpeg" class="member-avatar" alt="Avatar">
+                                    <div>
+                                        <div class="member-with-delete">
+                                            <strong>John Doe</strong>
+
+                                        </div>
+
+                                        <div class="member-email">john@example.com</div>
+                                    </div>
+                                </div>
+                                <span class="member-role light-gray">Member</span>
+                                <button class="btn-icon delete delete-member-btn"  title="Delete Member"> <i class="fas fa-trash"></i>
+                                </button>
+
+                            </li>
+                            <li class="member-item">
+                                <div class="member-info">
+                                    <img src="images/avatarF1.jpeg" class="member-avatar" alt="Avatar">
+                                    <div>
+                                        <strong>Jane Smith</strong>
+                                        <div class="member-email">jane@example.com</div>
+                                    </div>
+                                </div>
+                                <span class="member-role light-gray">Member</span>
+                                <button class="btn-icon delete delete-member-btn" title="Delete Member"> <i class="fas fa-trash"></i>
+                                </button>                            </li>
+                        </ul>
+                            </div>
+                    </div>
+                </div>
+
+                <script>
+                    function openInvitePopup() {
+                        document.getElementById('invitePopup').style.display = 'block';
+                    }
+                    function closeInvitePopup() {
+                        document.getElementById('invitePopup').style.display = 'none';
+                    }
+                    function sendInvite() {
+                        let input = document.getElementById('inviteInput').value;
+                        if (input) {
+                            alert('Invite sent to ' + input);
+                            document.getElementById('inviteInput').value = '';
+                        }
+                    }
+                </script>
                 <!-- Add Task Modal (hidden by default) -->
+
                 <div id="addTaskModal" class="modal">
                     <div class="modal-content">
                         <div class="modal-header">

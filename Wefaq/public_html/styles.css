@@ -10,7 +10,7 @@
     --text-color: #2c3e50;
     --border-color: #dcdfe6;
     --background-color: #f8f9fa;
-    --light-gray: #fdfdfd;
+    --light-gray: #ecf0f1;
     --dark-gray: #7f8c8d;
     --white: #ffffff;
     --sidebar-width: 250px;
@@ -761,9 +761,9 @@ input[type="tel"]::placeholder {
   margin-left: 15px;
 }
 
-.Profilecard__avatar svg {
-  width: 100px;
-  height: 100px;
+.Profilecard__avatar img {
+    width: 100%;
+    height: 100%;
 }
 .profile-image {
     width: 100%;
