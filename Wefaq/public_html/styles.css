@@ -106,7 +106,7 @@ a {
     margin-bottom: 1rem;
 }
 
-label {
+label , .confirmationModal .modal-content p {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
@@ -917,7 +917,7 @@ input[type="tel"]::placeholder {
     backdrop-filter: blur(4px);
 }
 
-.modal-content {
+.modal-content , .RateModal-content{
     background-color: var(--white);
     margin: 10% auto;
     padding: 0;
@@ -926,6 +926,8 @@ input[type="tel"]::placeholder {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     position: relative;
+    text-align: center;
+    overflow:hidden;
 }
 .modal-confirm-content {
     background-color: white;
@@ -937,7 +939,7 @@ input[type="tel"]::placeholder {
     display: flex;
     justify-content: center;
 }
-.modal-header {
+.modal-header , .confirmationModal{
     padding: 1.5rem;
     border-bottom: 1px solid var(--border-color);
     display: flex;
@@ -945,13 +947,13 @@ input[type="tel"]::placeholder {
     align-items: center;
 }
 
-.modal-header h2 {
+.modal-header h2 , .confirmationModal .modal-content h2{
     margin: 0;
     color: var(--text-color);
     font-size: 1.25rem;
 }
 
-.close-modal {
+.close-modal , .RateClose {
     background: none;
     border: none;
     font-size: 1.5rem;
@@ -1003,6 +1005,57 @@ input[type="tel"]::placeholder {
     box-shadow: 0 0 0 2px var(--primary-light);
 }
 
+.inbox-section .section-header{
+    margin-bottom: 0;
+}
+
+.RateModal-content , .confirmationModal {
+    border-radius: 10px;
+    width: 70%;
+    text-align: center;
+}
+.RateModal-content .modal-body , .confirmationModal .modal-content {
+    padding: 20px;
+}
+.confirmationModal .modal-content h2 ,
+.confirmationModal .modal-content p , 
+.confirmationModal .modal-content button {
+    padding-top: 5px ;
+    padding-bottom: 5px;
+}
+.ratingModal , .confirmationModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+.RateClose {
+    cursor: pointer;
+    float: right;
+    font-size: 20px;
+}
+
+.confirm-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    background: var(--primary-color);
+    color: var(--white);
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.confirm-btn:hover {
+    background: var(--secondary-color);
+}
 
 /* Auth Pages */
 .auth-page {
