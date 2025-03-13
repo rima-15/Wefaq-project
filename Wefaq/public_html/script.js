@@ -1,43 +1,47 @@
 // DOM Elements
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize sidebar elements
-    const sidebar = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const mainContent = document.querySelector('.main-content');
+    // Skip sidebar initialization if it's being handled by components.js
+    // This check prevents conflicts in profile and community pages
+    if (!document.querySelector('.sidebar-overlay[data-from="components"]')) {
+        // Initialize sidebar elements
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const mainContent = document.querySelector('.main-content');
 
-    // Create and append overlay
-    const sidebarOverlay = document.createElement('div');
-    sidebarOverlay.className = 'sidebar-overlay';
-    document.body.appendChild(sidebarOverlay);
+        // Create and append overlay
+        const sidebarOverlay = document.createElement('div');
+        sidebarOverlay.className = 'sidebar-overlay';
+        document.body.appendChild(sidebarOverlay);
 
-    // Toggle sidebar function
-    function toggleSidebar() {
-        sidebar.classList.toggle('active');
-        sidebarOverlay.classList.toggle('active');
-        // Remove the sidebar-active class from main content since we don't shift it anymore
-        mainContent.classList.remove('sidebar-active');
-    }
+        // Toggle sidebar function
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+            // Remove the sidebar-active class from main content since we don't shift it anymore
+            mainContent.classList.remove('sidebar-active');
+        }
 
-    // Add click event to toggle button
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+        // Add click event to toggle button
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleSidebar();
+            });
+        }
+
+        // Close sidebar when clicking overlay
+        sidebarOverlay.addEventListener('click', function() {
             toggleSidebar();
         });
+
+        // Close sidebar when pressing Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+        });
     }
-
-    // Close sidebar when clicking overlay
-    sidebarOverlay.addEventListener('click', function() {
-        toggleSidebar();
-    });
-
-    // Close sidebar when pressing Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && sidebar.classList.contains('active')) {
-            toggleSidebar();
-        }
-    });
 
     // Project Management
     const newProjectModal = document.getElementById('newProjectModal');
@@ -345,5 +349,3 @@ function closeGenericModal(modalId) {
         modal.style.display = 'none';
     }
 }
-
-
