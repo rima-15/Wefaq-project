@@ -630,13 +630,20 @@ input[type="tel"]::placeholder {
 
 /* Community Page */
 .community-filters {
-    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center; /* Centers it horizontally */
+    align-items: center; /* Aligns items vertically */
+    width: 100%;
+    padding: 1rem 0;
+    position: relative;
 }
 
 .search-bar {
     display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    align-items: center;
+    gap: 0.5rem;
+    width: 50%; /* Adjust the width as needed */
+    max-width: 500px;
 }
 
 .search-bar input {
@@ -2809,8 +2816,10 @@ input:focus, select:focus, textarea:focus {
             border: 1px solid #ddd;
             background-color: #C2C6F0;
             position: relative;
+              outline: none; /* Prevents black outline */
             
         }
+        
         .calendar-day:hover::after {
             content: attr(data-task);
             position: absolute;
@@ -2824,10 +2833,7 @@ input:focus, select:focus, textarea:focus {
             white-space: nowrap;
             font-size: 12px;
         }
-        .task-deadline {
-            background-color: #eed442 !important;
-            color: #fff !important;
-        }
+       
         .project-deadline {
             background-color: #eed442 !important;
             color: #fff;
