@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Hub - Home</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar/dist/simplebar.min.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">    
     <style>
         /* General Styling */
         body {
@@ -179,7 +179,63 @@
         .feature-card:hover i {
             transform: scale(1.1);
         }
+ footer {
+    background: white;
+    color: #9096DE ;
+    padding: 30px 0;
+    text-align: center;
+    box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.1);
+}
 
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    flex-wrap: wrap;
+}
+
+.footer-logo img {
+    width: 90px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.footer-logo img:hover {
+    transform: scale(1.1);
+}
+
+.footer-contact p {
+    margin: 5px 0;
+    font-size: 17px;
+}
+
+.footer-social {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: white;
+    color: #6064D5;
+    font-size: 22px;
+    text-decoration: none;
+    transition: 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.social-icon:hover {
+    background: #eed442;
+    color: #333;
+    transform: translateY(-5px);
+}
         /* Responsive Fixes */
         @media (max-width: 768px) {
             .hero-content h1 {
@@ -251,5 +307,22 @@
             </div>
         </section>
     </div>
+    <footer>
+    <div class="footer-container">
+        <div class="footer-logo">
+            <img src="logoNOback.png" alt="Logo">
+        </div>
+        <div class="footer-contact">
+            <p><strong>Contacts:</strong></p>
+            <p>0558944669</p>
+            <p>wefaq@email.com</p>
+        </div>
+        <div class="footer-social">
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-x-twitter"></i></a>
+        </div>
+    </div>
+</footer>
 </body>
 </html>
