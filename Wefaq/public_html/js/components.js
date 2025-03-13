@@ -421,6 +421,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!sidebarOverlay) {
             sidebarOverlay = document.createElement('div');
             sidebarOverlay.className = 'sidebar-overlay';
+            sidebarOverlay.setAttribute('data-from', 'components'); // Add data attribute
             document.body.appendChild(sidebarOverlay);
         }
 
@@ -502,5 +503,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize components
     initializeComponents();
 });
-
-
