@@ -1,4 +1,4 @@
-# Wefaq
+# Wefaq 🤝
 
 ## Overview
 
