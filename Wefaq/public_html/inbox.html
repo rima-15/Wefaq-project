@@ -85,40 +85,40 @@
                     <div id="ratingForm">
                         <div class="RateSlider-container">
                             <label>Design :</label>
-                            <input type="range" min="1" max="10" value="5">
+                            <input type="range" class="slider" min="0" max="5" value="0">
                         </div>
                         <div class="RateSlider-container">
                             <label>Programming :</label>
-                            <input type="range" min="1" max="10" value="5">
+                            <input type="range" class="slider" min="0" max="5" value="0">
                         </div>
                         <div class="RateSlider-container">
                             <label>Communication Skills :</label>
-                            <input type="range" min="1" max="10" value="5">
+                            <input type="range" class="slider"min="0" max="5" value="0">
                         </div>
                         <div class="RateSlider-container">
                             <label>Work Quality :</label>
-                            <input type="range" min="1" max="10" value="5">
+                            <input type="range" class="slider"min="0" max="5" value="0">
                         </div>
                         <div class="RateSlider-container">
                             <label>Adaptability to feedback :</label>
-                            <input type="range" min="1" max="10" value="5">
+                            <input type="range" class="slider"min="0" max="5" value="3">
                         </div>
                         <div class="RateSlider-container">
                             <label>Time Management :</label>
-                            <input type="range" min="1" max="10" value="5">
+                            <input type="range" class="slider"min="0" max="5" value="0" >
                         </div>
                         <button class="RateNextMember btn btn-primary">Next</button>
                     </div>    
                     </div>
                 </div>  
-            </div>   
+            </div>
             <div class="confirmationModal" style="display: none;">
-    <div class="modal-content">
-        <h2>All Members Rated!</h2>
-        <p>Thank you for rating all the members.</p>
-        <button class="confirmClose btn btn-primary">OK</button>
-    </div>
-</div>
+                <div class="modal-content">
+                    <h2>All Members Rated!</h2>
+                    <p>Thank you for rating all the members.</p>
+                    <button class="confirmClose btn btn-primary">OK</button>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -151,7 +151,7 @@ const maxMembers = 5; // Maximum members to rate
 function initializeRatingSystem() {
     memberIndex = 1;
     document.querySelector(".RateMemberNumber").innerText = memberIndex;
-    document.querySelectorAll("input[type='range']").forEach(input => input.value = 5); // Reset range inputs
+    document.querySelectorAll("input[type='range']").forEach(input => input.value = 0); // Reset range inputs
     document.querySelector(".RateNextMember").innerText = "Next"; // Reset button text
     document.querySelector(".ratingModal").style.display = "flex"; // Show rating modal
     document.querySelector(".confirmationModal").style.display = "none"; // Hide confirmation modal initially
@@ -172,7 +172,7 @@ function nextMember() {
     if (memberIndex < maxMembers) {
         memberIndex++;
         document.querySelector(".RateMemberNumber").innerText = memberIndex;
-        document.querySelectorAll("input[type='range']").forEach(input => input.value = 5); // Reset input values
+        document.querySelectorAll("input[type='range']").forEach(input => input.value = 0); // Reset input values
 
         // Change button text when reaching the last member
         if (memberIndex === maxMembers) {
