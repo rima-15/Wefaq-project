@@ -516,7 +516,60 @@ input[type="tel"]::placeholder {
     color: var(--text-color);
     font-weight: 500;
 }
+#invite-model {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adds spacing between input and button */
+}
 
+#inviteInput {
+    flex: 1; /* Makes input take up available space */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    height: 40px; /* Ensures a consistent height */
+}
+
+#inviteBtn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    height: 38px; /* Matches the input field height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.member-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.member-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.member-info {
+    display: flex ;
+    justify-items: left ;
+    gap: 10px;
+}
+.member-info div {
+    justify-items: left;
+}
+.member-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 /* Sidebar Toggle Button */
 .sidebar-toggle {
     background: none;
