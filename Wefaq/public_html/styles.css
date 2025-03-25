@@ -3120,3 +3120,8 @@ input:focus, select:focus, textarea:focus {
     color: #333;
     transform: translateY(-5px);
 }
+.search-bar {
+    width: 100%; /* Make search bar full width */
+    max-width: 800px; /* Set a max-width to prevent it from becoming too large */
+    
+}
