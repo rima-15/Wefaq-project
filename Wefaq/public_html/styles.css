@@ -3125,3 +3125,41 @@ input:focus, select:focus, textarea:focus {
     max-width: 800px; /* Set a max-width to prevent it from becoming too large */
     
 }
+
+.user-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #34495e; /* Dark gray text */
+    margin-top: 8px;
+    padding: 5px 0;
+}
+
+.user-info p {
+    margin: 0; /* Remove margin to keep them on the same line */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+.user-rating {
+    color: #EED442; /* Yellow for rating stars */
+}
+
+.user-projects {
+    color: #9096DE; /* Theme color for projects */
+    opacity: 0.5;
+}
+
+.user-projects i {
+    color: gray; /* Matching folder icon color */
+    opacity: 0.5;
+}
+/*.same-row{
+    display: flex;
+    justify-content: space-between;
+    
+}*/
