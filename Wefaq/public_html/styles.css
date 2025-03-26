@@ -2857,20 +2857,6 @@ input:focus, select:focus, textarea:focus {
     gap: 10px;
 }
 
-.active-projects, .my-tasks {
- width: 100%;
-            margin: 20px auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background: #f9f9f9;
-            
-}
-
-.active-projects {
-    width: 100%;
-    overflow-x: auto; /* Enable horizontal scrolling */
-}
 
 .projects-container {
     display: flex;
@@ -2969,98 +2955,6 @@ input:focus, select:focus, textarea:focus {
             position: relative;
               outline: none; /* Prevents black outline */
             
-        }
-        
-        .calendar-day:hover::after {
-            content: attr(data-task);
-            position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            white-space: nowrap;
-            font-size: 12px;
-        }
-       
-        .project-deadline {
-            background-color: #eed442 !important;
-            color: #fff;
-        }
-        .calendar-grid:last-child {
-            margin-bottom: 0;
-        }
-         .event {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 10px;
-        }
-        .event-circle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            background-color: #eed442;
-            color: #fff;
-        }
-       
-
-       .my-tasks h2 {
-            text-align: center;
-        }
-        .active-projects h2{
-             text-align: center; 
-    width: 100%; /* Ensures it spans the full width */
-    display: block; /* Ensures it behaves like a block element */
-        }
-        .task-list {
-        
-            list-style: none;
-            padding: 0;
-        }
-
-        .task-item {
-           
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .task-item:last-child {
-            border-bottom: none;
-        }
-
-        .project-link {
-            text-decoration: none;
-         
-            font-weight: bold;
-        }
-
-        .project-link:hover {
-            color: #9096DE;;
-        }
-
-        .separator {
-            color: #aaa;
-        }
-
-        .icon {
-            font-size: 16px;
-            color: #555;
-        }
-
-        .task-deadline {
-            font-weight: bold;
-            color: #333;
         }
     
     footer {

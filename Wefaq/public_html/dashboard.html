@@ -1,245 +1,793 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page - Wefaq - Project Management</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Page - Wefaq - Project Management</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar/dist/simplebar.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+   
+  
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar/dist/simplebar.min.css">
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="script.js"></script>
+  <style>
+    body {
+      
+      background: #ffffff;
+      margin: 0;
+      padding: 0;
 
-    
+    }
+
+    .main-content {
+      padding: 2rem;
+    }
+
+ .profile-card-modern.no-border {
+    display: flex;
+    border: none;
+    overflow: hidden;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* نفس التقويم */
+  border-radius: 30px;
+  }
+
+  .profile-left-modern.soft-rounded {
+    background: #D5D9FB;
+    padding: 2rem;
+    flex: 1;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+  }
+
+  .profile-left-modern .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin-bottom: 1rem;
+  }
+
+  .profile-left-modern h2 {
+    margin-bottom: 0.5rem;
+
+  }
+
+  .bio {
+    font-style: italic;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .profile-right-modern {
+    flex: 2;
+    padding: 2rem;
+    min-width: 280px;
+    background-color: #f9f9f9;
+  }
+
+  .underlined-title {
+    display: inline-block;
+    border-bottom: 3px solid #C2C6F0;
+    padding-bottom: 4px;
+    margin-bottom: 1rem;
+
+  }
+
+  .skill {
+    color:gray;
+    margin-bottom: 0.75rem;
+  }
+
+.progress {
+  position: relative;
+  height: 15px;
+  background: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress::after {
+  content: attr(data-label);
+  position: absolute;
+  top: -22px;
+  right: 0;
+  font-size: 0.75rem;
+  color: #9b59b6;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.progress:hover::after {
+  opacity: 1;
+}
+
+
+  .fill {
+    background: #eed442;
+    height: 100%;
+  }
+
+  .modern-btn-container {
+    margin-top: 2rem;
+  }
+
+  .modern-learn-btn {
+    text-decoration: none;
+    color: gray;
+    padding-bottom: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .modern-learn-btn:hover {
+    color: #C2C6F0;
+    border-color: #C2C6F0;
+  }/*
+ .profile-imageC {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+  }*/
+  .profile-imageC {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 0 5px #fff,    /* دائرة بيضاء خارجية */
+              0 0 100px #eed442; /* توهج أصفر ناعم */
+}
+
+    .calendar-projects-section {
+    display: flex;
+    gap: 4rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+
+  .calendar {
+    flex: 1;
+    min-width: 280px;
+    border-radius: 12px;
+    padding: 1rem;
+    background-color: #f9f9f9;
+  }
+
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+.calendar-header button {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    justify-items: center;
+  }
+
+  .calendar-day, .weekday {
+    text-align: center;
+    padding: 0.5rem;
+  }
+  .weekday {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .calendar-day {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background-color: #D5D9FB;
+            position: relative;
+              outline: none; /* Prevents black outline */
+            
+        }
+        
+.calendar-day[data-task]:hover::after {
+  content: attr(data-task);
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+       
+       .task-deadline ,.project-deadline {
+            background-color: #eed442 !important;
+            color: #fff;
+        }
+        .calendar-grid:last-child {
+            margin-bottom: 0;
+        }
+         .event {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px;
+        }
+        .event-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            background-color: #eed442;
+            color: #fff;
+        }
+       
+
+.my-tasks {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* نفس التقويم */
+  border-radius: 12px;
+}
+
+
+
+.active-projects {
+  min-width: 250px;
+  flex: 0 0 30%;
+  align-self: flex-start;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  transition: max-height 0.3s ease;
+  overflow: hidden;
+   border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+
+  .active-projects h2 {
+    margin-bottom: 0.5rem;
+
+  }
+ul.project-links {
+  list-style: none;
+  padding-left: 0; 
+}
+.project-links {
+  margin-top: 10px;
+  padding-left: 2.5rem; 
+  margin-left:2.5rem;
+  max-height: 6.5rem; 
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.project-links.expanded {
+  max-height: none; 
+}
+
+.project-links li a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+
+
+.project-links li a:hover {
+  color: #9096DE;
+}
+
+
+ 
+
+  .toggle-button:hover {
+    color: #C2C6F0;
+    border-color: #C2C6F0;
+  }
+.toggle-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem auto 0; /* وسّط الزر أفقيًا */
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+   color: gray;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: all  0.3s ease;
+}
+
+.toggle-button i {
+  transition: transform 0.3s ease;
+}
+
+.toggle-button.rotate i {
+  transform: rotate(180deg);
+}
+
+ .my-tasks {
+     background-color: #f9f9f9;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .my-tasks h2 {
+    color: #4a3c74;
+    margin-bottom: 1rem;
+  }
+
+  .cards-wrapper {
+      
+    overflow-x: auto;
+    white-space: nowrap;
+    cursor: grab;
+    max-width: 80%;
+    margin: 0 auto;
+  }
+
+  .cards-container {
+      
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+  }
+
+  .task-card {
+    min-width: 280px;
+    max-width: 280px;
+    flex-shrink: 0;
+    background: #fdfbff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    margin-bottom: 15px;
+  }
+
+  .task-header {
+    padding: 0.75rem;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    font-size: 14px;
+    background-color: #C2C6F0;
+  }
+
+  .task-body {
+    padding: 1.25rem;
+  }
+
+  .task-body h3 {
+    margin-top: 0;
+    color: #4a3c74;
+  }
+  .task-info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.task-info-row i {
+  width: 18px;
+  text-align: center;
+  color: #555;
+}
+
+.info-label {
+  width: 80px; /* تنسيق ثابت للمساحة */
+  font-weight: 500;
+  color: #555;
+}
+
+.info-value {
+  flex-grow: 1;
+  font-weight: bold;
+
+}
+.info-value a {
+  flex-grow: 1;
+  font-weight: bold;
+  color:#555;
+}
+
+.info-value a:hover {
+  flex-grow: 1;
+  font-weight: bold;
+  color:#9096DE;
+}
+
+
+.status {
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: white;
+}
+
+/* ألوان الحالة */
+.status.working {
+   background-color: rgba(238, 212, 66, 0.1);
+    color: #EED442;
+}
+.status.pending {
+    background-color: #f5f5f5;
+    color: #666;
+}
+
+
+.today-marker {
+  position: relative;
+  background-color:#D3D3D3;
+}
+
+.today-marker:hover::after {
+  content: "Today";
+  position: absolute;
+  bottom: 115%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+}
+.project-stats-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.stat-card-clean {
+  background-color: #C2C6F0;
+  border-radius: 12px;
+  padding: 0.5rem 0.75rem;
+  width: 175px;
+  height: 75px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  font-weight: bold;
+  opacity: 0.85;
+  color: gray;
+  text-align: left;
+}
+
+.tiny {
+  font-size: 0.8rem;
+  font-weight: bold;
+  opacity: 0.85;
+  color: gray;
+  text-align: right;
+   margin-top: 0;
+  transform: translateY(-3px);  
+}
+
+.numerator,
+.denominator {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.slash {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin: 0 4px;
+  vertical-align: middle;
+  color: #eed442;
+}
+ 
+.stat-card-clean:hover {
+   transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  
+}
+  </style>
 </head>
 <body>
-   <div class="dashboard-container">
-        <main class="main-content">
-            <!-- Header will be loaded here -->
-            <div class="partsDash">
-            <div class="profile-card">
-                <!-- Top Section (Purple Background) -->
-                <div class="profile-header">
-                    <div class="avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                </div>
+  <div class="dashboard-container">
+    <main class="main-content">
+      <!-- 1. Profile -->
+   <div class="profile-card-modern no-border">
+  <!-- Left: Profile Info with soft background and rounded edge -->
+  <div class="profile-left-modern soft-rounded">
+   <img src="images/profileTest.jpeg" alt="Profile Picture" class="profile-imageC" />
+    <h2>John Doe</h2>
+    <p class="bio">Full-stack developer passionate about creating efficient solutions</p>
+    <p><strong>Type:</strong> Professional</p>
+    <p><strong>Organization:</strong> Saudi Electricity Company</p>
+  </div>
 
-                <!-- Profile Content -->
-                <div class="profile-content">
-                    <h2>John Doe</h2>
-                    <p><i class="fas fa-user-graduate"></i> <strong>Type:</strong> Professional</p>
-                    <p><i class="fas fa-university"></i> <strong>Organization:</strong> Saudi Electricity Company</p>
-                </div>
 
-                <!-- Skills Section -->
-                <div class="skills-container">
-                    <h3><i class="fas fa-tools"></i> Skills</h3>
-                    <div class="skill">
-                        <span><i class="fas fa-code"></i> Programming</span>
-                        <div class="progress"><div class="fill" style="width: 70%;"></div></div>
-                    </div>
-                    <div class="skill">
-                        <span><i class="fas fa-paint-brush"></i> Design</span>
-                        <div class="progress"><div class="fill" style="width: 50%;"></div></div>
-                    </div>
-                    <div class="skill">
-                        <span><i class="fas fa-clock"></i> Time Management</span>
-                        <div class="progress"><div class="fill" style="width: 80%;"></div></div>
-                    </div>
-                </div>
 
-                <!-- Footer with Button -->
-                <div class="profile-footer">
-                   <button onclick="window.location.href='profile.html'">
-    <i class="fas fa-eye"></i> View Profile
-</button>
 
-                </div>
-            </div>
-
-            <div class="projects-tasks">
-                <div class="active-projects" data-simplebar>
-                    <h2>Active Projects</h2>
-                    <div class="projects-container">
-                        <div class="project-item">
-                            <div class="logo-background">
-                                <img src="Wefaq2.png" alt="Data Science Logo" style="width: 90%;height: 60%;">
-                            </div>
-                            <a href="project.html" class="Active-Project-Name">Wefaq</a>
-                        </div>
-    
-                        <div class="project-item">
-                            <div class="logo-background">
-                                <img src="Network2.png" alt="Network Logo" style="width: 100%;height: 100%;">
-                            </div>
-                            <a href="project.html" class="Active-Project-Name">Network</a>
-                        </div>
-        
-                        <div class="project-item">
-                            <div class="logo-background">
-                                <img src="DSCC.png" alt="Network Logo" style="width: 90%;height: 60%;">
-                            </div>
-                            <a href="project.html" class="Active-Project-Name">Data Science</a>
-                        </div>
-        
-                        <div class="project-item">
-                            <div class="logo-background">
-                                <img src="Fekra.png" alt="Network Logo" style="width: 100%;height: 100%;">
-                            </div>
-                            <a href="project.html" class="Active-Project-Name">فكرة</a>
-                        </div>
-        
-                        <div class="project-item">
-                            <div class="logo-background">
-                                <img src="R.png" alt="Network Logo" style="width: 100%;height: 100%;">
-                            </div>
-                            <a href="project.html" class="Active-Project-Name">رؤية</a>
-                        </div>
-        
-                        <!-- Add more project items as needed -->
-                    </div>
-                </div>
-            
-           
-                <div class="my-tasks">
-                    <h2>My Tasks</h2>
-                    <ul class="task-list">
-                        <li class="task-item">
-                            <i class="fas fa-project-diagram icon"></i>
-                            <a href="project.html" class="project-link">Network</a>
-                            <span class="separator">|</span>
-                            <i class="fas fa-tasks icon"></i>
-                            <span class="task-name">Create Logo</span>
-                            <span class="separator">|</span>
-                            <i class="far fa-clock icon"></i>
-                            <span class="task-deadline">21/03/2025</span>
-                        </li>
-                        <li class="task-item">
-                            <i class="fas fa-project-diagram icon"></i>
-                            <a href="project.html" class="project-link">Data Science</a>
-                            <span class="separator">|</span>
-                            <i class="fas fa-tasks icon"></i>
-                            <span class="task-name">Data Preprocessing </span>
-                            <span class="separator">|</span>
-                            <i class="far fa-clock icon"></i>
-                            <span class="task-deadline">2/04/2025</span>
-                        </li>
-                        
-                        <li class="task-item">
-                            <i class="fas fa-project-diagram icon"></i>
-                            <a href="project.html" class="project-link">Wefaq</a>
-                            <span class="separator">|</span>
-                            <i class="fas fa-tasks icon"></i>
-                            <span class="task-name">Activity Diagram </span>
-                            <span class="separator">|</span>
-                            <i class="far fa-clock icon"></i>
-                            <span class="task-deadline">2/04/2025</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="container">
-                <aside class="calendar">
-                    <div class="calendar-header">
-                        <button onclick="prevMonth()">&#9665;</button>
-                        <span id="calendar-header"></span>
-                        <button onclick="nextMonth()">&#9655;</button>
-                    </div>
-                    <div class="calendar-grid" id="weekday-labels"></div>
-                    <div class="calendar-grid" id="calendar-grid"></div>
-                    <hr>
-                    <h3 class="event-title">Upcoming Events</h3>
-                    <div class="event"> 
-                        <div class="event-circle">20</div>
-                        <span>Design Phase</span>
-                    </div>
-                    <div class="event">
-                        <div class="event-circle">25</div>
-                        <span>Development</span>
-                    </div>
-                    <div class="event">
-                        <div class="event-circle">30</div>
-                        <span>Project Launch</span>
-                    </div>
-    
-                </aside>
-            
-            </div>
-           </div>
-        </main>   
+  <!-- Right: Ratings and Button -->
+  <div class="profile-right-modern">
+    <h3 class="underlined-title">Top Ratings</h3>
+    <div class="skill">
+      <span><i class="fas fa-code"></i> Programming</span>
+      <div class="progress" data-label="70%">
+       <div class="fill" style="width: 70%;"></div>
+</div>
     </div>
-    <script src="script.js"></script>
-    <script src="js/components.js"></script>
-    <script>
-        const deadlines = {
-            20: { type: 'task', name: 'Design Phase' },
-            25: { type: 'task', name: 'Development' },
-            30: { type: 'project', name: 'Project Launch' }
-        };
-        let currentMonth = new Date().getMonth();
-        let currentYear = new Date().getFullYear();
+    <div class="skill">
+      <span><i class="fas fa-paint-brush"></i> Design</span>
+      <div class="progress" data-label="85%">
+  <div class="fill" style="width: 85%;"></div>
+</div>
+    </div>
+    <div class="skill">
+      <span><i class="fas fa-clock"></i> Time Management</span>
+      <div class="progress" data-label="66%">
+  <div class="fill" style="width: 66%;"></div>
+</div>
+    </div>
 
-        function generateCalendar(month, year) {
-            const calendarGrid = document.getElementById('calendar-grid');
-            const calendarHeader = document.getElementById('calendar-header');
-            const weekdayLabels = document.getElementById('weekday-labels');
-            const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            
-            calendarHeader.textContent = `${new Date(year, month).toLocaleString('default', { month: 'long' })} ${year}`;
-            
-            weekdayLabels.innerHTML = '';
-            weekdays.forEach(day => {
-                const dayLabel = document.createElement('div');
-                dayLabel.classList.add('weekday');
-                dayLabel.textContent = day;
-                weekdayLabels.appendChild(dayLabel);
-            });
-            
-            calendarGrid.innerHTML = '';
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            
-            for (let i = 0; i < firstDay; i++) {
-                const emptyCell = document.createElement('div');
-                emptyCell.classList.add('calendar-day');
-                calendarGrid.appendChild(emptyCell);
-            }
-            
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayCell = document.createElement('div');
-                dayCell.classList.add('calendar-day');
-                dayCell.textContent = day;
-                
-                if (deadlines[day]) {
-                    dayCell.classList.add(deadlines[day].type === 'task' ? 'task-deadline' : 'project-deadline');
-                    dayCell.setAttribute('data-task', deadlines[day].name);
-                }
-                
-                calendarGrid.appendChild(dayCell);
-            }
-        }
-        
-        function prevMonth() {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            generateCalendar(currentMonth, currentYear);
-        }
-        
-        function nextMonth() {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            generateCalendar(currentMonth, currentYear);
-        }
-        
-        generateCalendar(currentMonth, currentYear);
-    </script>
-<footer>
+    <div class="modern-btn-container">
+     <a href="profile.html" class="modern-learn-btn">
+  VIEW PROFILE
+  <i class="fas fa-arrow-right"></i>
+</a>
+    </div>
+  </div>
+</div>
+ 
+
+      <!-- 2. Calendar 3. Active Projects -->
+     <div class="calendar-projects-section">
+           <!-- Active Projects -->
+<section class="active-projects">
+  <h2>Active Projects</h2>
+<div class="project-stats-row">
+  <div class="stat-card-clean" id="activeCard">
+    <div class="stat-label">Active in</div>
+    <div class="stat-fraction">
+      <span class="numerator">7</span>
+      <span class="slash">/</span>
+      <span class="denominator">10</span>
+    </div>
+    <div class="tiny">Projects</div>
+  </div>
+
+  <div class="stat-card-clean" id="leaderCard">
+    <div class="stat-label">Leader of</div>
+    <div class="stat-fraction">
+      <span class="numerator">2</span>
+      <span class="slash">/</span>
+      <span class="denominator">10</span>
+    </div>
+    <div class="tiny">Projects</div>
+  </div>
+</div>
+
+
+  <hr>
+<ul class="project-links" id="projectList">
+  <li class="task-info-row">
+    <i class="fas fa-diagram-project"></i>
+
+    <span class="info-value"><a href="project.html">Wefaq</a></span>
+  </li>
+  <li class="task-info-row">
+    <i class="fas fa-diagram-project"></i>
+   
+    <span class="info-value"><a href="project.html">Network</a></span>
+  </li>
+  <li class="task-info-row">
+    <i class="fas fa-diagram-project"></i>
+
+    <span class="info-value"><a href="project.html">Data Science</a></span>
+  </li>
+   
+  <li class="task-info-row">
+    <i class="fas fa-diagram-project"></i>
+
+    <span class="info-value"><a href="project.html">Data Science</a></span>
+  </li>
+  <li class="task-info-row">
+    <i class="fas fa-diagram-project"></i>
+
+    <span class="info-value"><a href="project.html">Data Science</a></span>
+  </li>
+  <li class="task-info-row">
+    <i class="fas fa-diagram-project"></i>
+
+    <span class="info-value"><a href="project.html">Data Science</a></span>
+  </li>
+</ul>
+  <button class="toggle-button">
+  <span class="btn-text">Show More</span>
+  <i class="fas fa-chevron-down"></i>
+</button>
+</section>
+  <!-- Calendar -->
+  <aside class="calendar">
+    <div class="calendar-header">
+      <button onclick="prevMonth()">&#9665;</button>
+      <span id="calendar-header"></span>
+      <button onclick="nextMonth()">&#9655;</button>
+    </div>
+    <div class="calendar-grid" id="weekday-labels"></div>
+    <div class="calendar-grid" id="calendar-grid"></div>
+  </aside>
+
+
+</div>
+
+      <!-- 4. My Tasks -->
+  <section class="my-tasks">
+  <h2>My Tasks</h2>
+  <div class="cards-wrapper" id="taskScroll">
+    <div class="cards-container">
+      <div class="task-card">
+        <div class="task-header">Task 1</div>
+        <div class="task-body">
+   <div class="task-info-row">
+  <i class="fas fa-diagram-project"></i>
+  <span class="info-label">Project:</span>
+  <span class="info-value"><a href="project.html">Network</a></span>
+</div>
+
+<div class="task-info-row">
+  <i class="fas fa-calendar-alt"></i>
+  <span class="info-label">Deadline:</span>
+  <span class="info-value">Mar 23</span>
+</div>
+
+<div class="task-info-row">
+  <i class="fas fa-tasks"></i>
+  <span class="info-label">Status:</span>
+  <span class="info-value status pending">Not Started</span>
+</div>
+
+        </div>
+      </div>
+            <div class="task-card">
+        <div class="task-header">Task 1</div>
+        <div class="task-body">
+   <div class="task-info-row">
+  <i class="fas fa-diagram-project"></i>
+  <span class="info-label">Project:</span>
+  <span class="info-value"><a href="project.html">Network</a></span>
+</div>
+
+<div class="task-info-row">
+  <i class="fas fa-calendar-alt"></i>
+  <span class="info-label">Deadline:</span>
+  <span class="info-value">Mar 23</span>
+</div>
+
+<div class="task-info-row">
+  <i class="fas fa-tasks"></i>
+  <span class="info-label">Status:</span>
+  <span class="info-value status working">In Progress</span>
+</div>
+
+        </div>
+      </div>
+            <div class="task-card">
+        <div class="task-header">Task 1</div>
+        <div class="task-body">
+   <div class="task-info-row">
+  <i class="fas fa-diagram-project"></i>
+  <span class="info-label">Project:</span>
+  <span class="info-value"><a href="project.html">Network</a></span>
+</div>
+
+<div class="task-info-row">
+  <i class="fas fa-calendar-alt"></i>
+  <span class="info-label">Deadline:</span>
+  <span class="info-value">Mar 23</span>
+</div>
+
+<div class="task-info-row">
+  <i class="fas fa-tasks"></i>
+  <span class="info-label">Status:</span>
+  <span class="info-value status working">In progress</span>
+</div>
+
+        </div>
+      </div>
+                <div class="task-card">
+        <div class="task-header">Task 1</div>
+        <div class="task-body">
+   <div class="task-info-row">
+  <i class="fas fa-diagram-project"></i>
+  <span class="info-label">Project:</span>
+  <span class="info-value"><a href="project.html">Network</a></span>
+</div>
+
+<div class="task-info-row">
+  <i class="fas fa-calendar-alt"></i>
+  <span class="info-label">Deadline:</span>
+  <span class="info-value">Mar 23</span>
+</div>
+
+<div class="task-info-row">
+  <i class="fas fa-tasks"></i>
+  <span class="info-label">Status:</span>
+  <span class="info-value status pending">Not Started</span>
+</div>
+
+        </div>
+      </div>
+              <div class="task-card">
+        <div class="task-header">Task 1</div>
+        <div class="task-body">
+   <div class="task-info-row">
+  <i class="fas fa-diagram-project"></i>
+  <span class="info-label">Project:</span>
+  <span class="info-value"><a href="project.html">Network</a></span>
+</div>
+
+<div class="task-info-row">
+  <i class="fas fa-calendar-alt"></i>
+  <span class="info-label">Deadline:</span>
+  <span class="info-value">Mar 23</span>
+</div>
+
+<div class="task-info-row">
+  <i class="fas fa-tasks"></i>
+  <span class="info-label">Status:</span>
+  <span class="info-value status pending">Not Started</span>
+</div>
+
+        </div>
+      </div>
+      <!-- More task cards can be added here -->
+    </div>
+  </div>
+</section>
+    </main>
+  </div>
+    
+    <footer>
     <div class="footer-container">
         <div class="footer-logo">
             <img src="logoNOback.png" alt="Logo">
@@ -256,7 +804,202 @@
         </div>
     </div>
 </footer>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+   
+    const deadlines = {
+      20: { type: 'task', name: 'Design Phase' },
+      25: { type: 'task', name: 'Development' },
+      30: { type: 'project', name: 'Project Launch' }
+    };
+
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+
+    function generateCalendar(month, year) {
+      const calendarGrid = document.getElementById('calendar-grid');
+      const calendarHeader = document.getElementById('calendar-header');
+      const weekdayLabels = document.getElementById('weekday-labels');
+      const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+      calendarHeader.textContent = `${new Date(year, month).toLocaleString('default', { month: 'long' })} ${year}`;
+      weekdayLabels.innerHTML = '';
+      weekdays.forEach(day => {
+        const dayLabel = document.createElement('div');
+        dayLabel.classList.add('weekday');
+        dayLabel.textContent = day;
+        weekdayLabels.appendChild(dayLabel);
+      });
+
+      calendarGrid.innerHTML = '';
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      for (let i = 0; i < firstDay; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.classList.add('calendar-day');
+        calendarGrid.appendChild(emptyCell);
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayCell = document.createElement('div');
+        dayCell.classList.add('calendar-day');
+        dayCell.textContent = day;
+
+        const today = new Date();
+        if (
+          day === today.getDate() &&
+          month === today.getMonth() &&
+          year === today.getFullYear()
+        ) {
+          dayCell.classList.add('today-marker');
+          dayCell.setAttribute('data-task', 'Today');
+        }
+
+        if (deadlines[day]) {
+          dayCell.classList.add(deadlines[day].type === 'task' ? 'task-deadline' : 'project-deadline');
+          dayCell.setAttribute('data-task', deadlines[day].name);
+        }
+
+        calendarGrid.appendChild(dayCell);
+      }
+    }
+
+    window.prevMonth = function () {
+      currentMonth--;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      generateCalendar(currentMonth, currentYear);
+    };
+
+    window.nextMonth = function () {
+      currentMonth++;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      generateCalendar(currentMonth, currentYear);
+    };
+
+    generateCalendar(currentMonth, currentYear);
+
+    // زر Show More
+    const projectsList = document.getElementById('projectList');
+    const toggleBtn = document.querySelector('.toggle-button');
+
+    toggleBtn.addEventListener('click', () => {
+      projectsList.classList.toggle('expanded');
+      const isExpanded = projectsList.classList.contains('expanded');
+      toggleBtn.querySelector('.btn-text').textContent = isExpanded ? 'Show Less' : 'Show More';
+      toggleBtn.classList.toggle('rotate', isExpanded);
+    });
+
+    // تمرير المهام
+    const taskScroll = document.getElementById('taskScroll');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    taskScroll.addEventListener('mousedown', (e) => {
+      isDown = true;
+      taskScroll.classList.add('active');
+      startX = e.pageX - taskScroll.offsetLeft;
+      scrollLeft = taskScroll.scrollLeft;
+    });
+
+    taskScroll.addEventListener('mouseleave', () => {
+      isDown = false;
+      taskScroll.classList.remove('active');
+    });
+
+    taskScroll.addEventListener('mouseup', () => {
+      isDown = false;
+      taskScroll.classList.remove('active');
+    });
+
+    taskScroll.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - taskScroll.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      taskScroll.scrollLeft = scrollLeft - walk;
+    });
+
+   
+    const leaderProjects = ["رؤية", "Data Science", "تحليل البيانات"]; 
+    const allProjectNames = [
+      "Wefaq",
+      "Network",
+      "Data Science",
+      "فكرة",
+      "رؤية",
+      "تخطيط",
+      "منصة"
+    ];
+
+    const projectList = document.getElementById("projectList");
+    const leaderCard = document.getElementById("leaderCard");
+    const activeCard = document.getElementById("activeCard");
+
+    let filteredByLeader = false;
+
+ function createProjectRow(projectName) {
+  const li = document.createElement('li');
+  li.classList.add('task-info-row');
+
+  const icon = document.createElement('i');
+  icon.className = 'fas fa-diagram-project';
+
+  const value = document.createElement('span');
+  value.className = 'info-value';
+
+  const link = document.createElement('a');
+  link.href = "project.html";
+  link.textContent = projectName;
+
+  value.appendChild(link);
+  li.appendChild(icon);
+  li.appendChild(value);
+
+  return li;
+}
+
+
+
+    function updateProjectList() {
+      projectList.innerHTML = '';
+      const visibleProjects = filteredByLeader
+        ? allProjectNames.filter(name => leaderProjects.includes(name))
+        : allProjectNames;
+
+      visibleProjects.forEach(name => {
+        const li = createProjectRow(name);
+        projectList.appendChild(li);
+      });
+    }
+
+    leaderCard.addEventListener("click", () => {
+      filteredByLeader = true;
+      updateProjectList();
+      leaderCard.classList.add("active-leader");
+      activeCard.classList.remove("active-leader");
+    });
+
+    activeCard.addEventListener("click", () => {
+      filteredByLeader = false;
+      updateProjectList();
+      activeCard.classList.add("active-leader");
+      leaderCard.classList.remove("active-leader");
+    });
+
+    updateProjectList(); 
+  });
+</script>
+
+      <script src="script.js"></script>
+    <script src="js/components.js"></script>
 </body>
 </html>
-
-        
