@@ -93,6 +93,7 @@
                             <thead>
                             <tr>
                                 <th>Task Name</th>
+                                <th>Task Description</th>
                                 <th>Assigned Member</th>
                                 <th>Status</th>
                                 <th>Deadline</th>
@@ -102,6 +103,7 @@
                             <tbody>
                             <tr>
                                 <td>Design User Interface</td>
+                                <td class='taskDescription'>Create a visually intuitive and user-friendly layout for the system.</td>
                                 <td>
                                     <div class="member">
                                         <img src="images/avatarF2.jpeg" alt="Sarah" class="member-avatar">
@@ -119,6 +121,7 @@
                             </tr>
                             <tr>
                                 <td>Implement Authentication</td>
+                                <td class='taskDescription'></td>
                                 <td>
                                     <div class="member">
                                         <img src="images/avatarF1.jpeg" alt="John" class="member-avatar">
@@ -139,6 +142,8 @@
                             </tr>
                             <tr>
                                 <td>Database Setup</td>
+                                <td class='taskDescription'>Define tables, relationships, and constraints to store and manage system data.</td>
+
                                 <td>
                                     <div>
                                         <span></span>
@@ -160,6 +165,7 @@
                             </tr>
                             <tr>
                                 <td>Testing and QA</td>
+                                <td class='taskDescription'></td>
                                 <td>
                                     <div class="member">
                                         <img src="images/avatarM1.jpeg" alt="Emma" class="member-avatar">
@@ -276,7 +282,11 @@
                             <form id="addTaskForm">
                                 <div class="form-group">
                                     <label for="taskName">Task Name</label>
-                                    <input type="text" id="taskName" required>
+                                    <input type="text" id="taskName" maxlength='25' required>
+                                </div>
+                                  <div class="form-group">
+                                    <label for="taskName">Task Description</label>
+                                    <input type="text" id="taskDescription" maxlength="90">
                                 </div>
                                 <div class="form-group">
                                     <label for="taskDeadline">Deadline</label>
