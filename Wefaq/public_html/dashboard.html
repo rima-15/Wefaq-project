@@ -1,171 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home Page - Wefaq - Project Management</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar/dist/simplebar.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-   
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Project Hub - Home Page</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">   
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
   
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js"></script>
-  <style>
-    body {
-      
-      background: #ffffff;
+      body {
+      font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-
+      color: white;
+      background: white;
+      overflow-x: hidden;
+      text-align: center;
+      
     }
 
-    .main-content {
-      padding: 2rem;
+    .index-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      box-sizing: border-box;
     }
 
- .profile-card-modern.no-border {
-    display: flex;
-    border: none;
-    overflow: hidden;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* نفس التقويم */
-  border-radius: 30px;
-  }
+    .logo img {
+      width: 120px;
+    }
 
-  .profile-left-modern.soft-rounded {
-    background: #D5D9FB;
-    padding: 2rem;
-    flex: 1;
-    min-width: 280px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-top-left-radius: 30px;
-    border-bottom-left-radius: 30px;
-  }
+    .hero-section {
+      background: linear-gradient(135deg,#f8f9fa, #9096DE);
+      z-index: 1;
+    }
 
-  .profile-left-modern .avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: #eee;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30px;
-    margin-bottom: 1rem;
-  }
-
-  .profile-left-modern h2 {
-    margin-bottom: 0.5rem;
-
-  }
-
-  .bio {
-    font-style: italic;
-    margin-bottom: 1rem;
-    text-align: center;
-  }
-
-  .profile-right-modern {
-    flex: 2;
-    padding: 2rem;
-    min-width: 280px;
-    background-color: #f9f9f9;
-  }
-
-  .underlined-title {
-    display: inline-block;
-    border-bottom: 3px solid #C2C6F0;
-    padding-bottom: 4px;
-    margin-bottom: 1rem;
-
-  }
-
-  .skill {
-    color:gray;
-    margin-bottom: 0.75rem;
-  }
-
-.progress {
-  position: relative;
-  height: 15px;
-  background: #ddd;
-  border-radius: 10px;
-  overflow: hidden;
+    .charts-wrapper {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 50px;
+    }
+.chart-card {
+  background: white;
+  color: #6064D5;
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 160px;
+  height: 250px;
 }
 
-.progress::after {
-  content: attr(data-label);
-  position: absolute;
-  top: -22px;
-  right: 0;
-  font-size: 0.75rem;
-  color: #9b59b6;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+.task-card,
+.project-card {
+  width: 160px;
+  height: 190px;
 }
 
-.progress:hover::after {
-  opacity: 1;
+.rating-card,
+.chart-card:nth-child(2) {
+  width: 220px;
+  height: 250px;
 }
 
+    .chart-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
 
-  .fill {
-    background: #eed442;
-    height: 100%;
-  }
-
-  .modern-btn-container {
-    margin-top: 2rem;
-  }
-
-  .modern-learn-btn {
-    text-decoration: none;
-    color: gray;
-    padding-bottom: 4px;
-    transition: all 0.3s ease;
-  }
-
-  .modern-learn-btn:hover {
-    color: #C2C6F0;
-    border-color: #C2C6F0;
-  }/*
- .profile-imageC {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 1rem;
-  }*/
-  .profile-imageC {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 1rem;
-  box-shadow: 0 0 0 5px #fff,    /* دائرة بيضاء خارجية */
-              0 0 100px #eed442; /* توهج أصفر ناعم */
+  .chart-card canvas {
+  max-width: 120px;
+  max-height: 120px;
+  height: auto;
+  margin-top: 10px;
+}
+#ratingCircle{
+      max-width: 140px;
+  max-height: 140px;
+  height: auto;
+  margin-top: 10px;
+}
+.chart-card h3 {
+  font-size: 1rem;
+  margin-bottom: 0;
 }
 
-    .calendar-projects-section {
+/* تعديل تنسيق رقم Total Projects ليطابق نصوص المخططات الدائرية */
+.project-number-box {
+    font-weight: bold;       /* جعل الخط عريضًا */
+    font-size: 1.25rem;      /* ضبط الحجم لنحو 20px لمطابقة حجم نص المخطط */
+    color: #6064D5;          /* استخدام نفس اللون البنفسجي الداكن */
+}
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      font-size: 0.6rem;
+      gap: 3px 8px;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    .wave-divider {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    footer {
+      background: white;
+      color: #9096DE;
+      padding: 30px 0;
+      text-align: center;
+      box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .footer-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-logo img {
+      width: 90px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .footer-logo img:hover {
+      transform: scale(1.1);
+    }
+
+    .footer-contact p {
+      margin: 5px 0;
+      font-size: 17px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 15px;
+    }
+
+    .social-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: white;
+      color: #6064D5;
+      font-size: 22px;
+      text-decoration: none;
+      transition: 0.3s ease-in-out;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .social-icon:hover {
+      background: #eed442;
+      color: #333;
+      transform: translateY(-5px);
+    }
+      .project-icon {
+     justify-content: center;
+      font-size: 3.2rem;
+      color: #eed442;
+      margin-bottom: 10px;
+      margin-top: 20px;
+    }
+
+
+
+  .calendar-projects-section {
     display: flex;
     gap: 4rem;
     flex-wrap: wrap;
     margin-bottom: 3rem;
+    background-color: white;
+    justify-content: center;
   }
+.calendar {
+  flex: 1 1 300px;
+  min-width: 280px;
+  max-width: 380px;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
 
-  .calendar {
-    flex: 1;
-    min-width: 280px;
-    border-radius: 12px;
-    padding: 1rem;
-    background-color: #f9f9f9;
-  }
 
+  
   .calendar-header {
     display: flex;
     justify-content: space-between;
@@ -195,8 +246,9 @@
             margin-bottom: 5px;
         }
         .calendar-day {
-            width: 40px;
-            height: 40px;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.8rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -223,7 +275,7 @@
 }
 
        
-       .task-deadline ,.project-deadline {
+ .task-deadline ,.project-deadline {
             background-color: #eed442 !important;
             color: #fff;
         }
@@ -252,6 +304,7 @@
 .my-tasks {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* نفس التقويم */
   border-radius: 12px;
+  background-color: white;
 }
 
 
@@ -264,7 +317,7 @@
   background-color: #f9f9f9;
   transition: max-height 0.3s ease;
   overflow: hidden;
-   border-radius: 12px;
+  border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
@@ -344,7 +397,8 @@ ul.project-links {
   }
 
   .my-tasks h2 {
-    color: #4a3c74;
+     padding-top: 10px;  
+   
     margin-bottom: 1rem;
   }
 
@@ -358,14 +412,14 @@ ul.project-links {
   }
 
   .cards-container {
-      
+   
     display: flex;
     gap: 1rem;
     justify-content: flex-start;
   }
 
-  .task-card {
-    min-width: 280px;
+  .task-card2 {
+    min-width: 250px;
     max-width: 280px;
     flex-shrink: 0;
     background: #fdfbff;
@@ -392,32 +446,36 @@ ul.project-links {
     margin-top: 0;
     color: #4a3c74;
   }
-  .task-info-row {
+.task-info-row {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px; /* زيادة التباعد */
   font-size: 0.9rem;
   color: #333;
+  line-height: 1.4;
 }
 
 .task-info-row i {
-  width: 18px;
-  text-align: center;
-  color: #555;
+  width: 20px;
+  font-size: 1rem;
+  color: #606060;
+  margin-top: 2px;
 }
 
 .info-label {
-  width: 80px; /* تنسيق ثابت للمساحة */
+  width: 90px; /* زيادة بسيطة للوضوح */
   font-weight: 500;
   color: #555;
 }
 
 .info-value {
   flex-grow: 1;
-  font-weight: bold;
-
+  font-weight: 600;
+  color: #222;
+  word-wrap: break-word;
 }
+
 .info-value a {
   flex-grow: 1;
   font-weight: bold;
@@ -475,21 +533,6 @@ ul.project-links {
   margin-bottom: 1rem;
   justify-content: center;
 }
-
-.stat-card-clean {
-  background-color: #C2C6F0;
-  border-radius: 12px;
-  padding: 0.5rem 0.75rem;
-  width: 175px;
-  height: 75px;
-  text-align: center;
-  color: white;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
 .stat-label {
   font-size: 0.8rem;
   font-weight: bold;
@@ -522,88 +565,114 @@ ul.project-links {
   color: #eed442;
 }
  
-.stat-card-clean:hover {
-   transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
-  
+.stat-card-clean {
+  background-color: #C2C6F0;
+  border-radius: 12px;
+  padding: 0.5rem 0.75rem;
+  width: 100px; /* عرض أصغر */
+  height: 100px; /* ارتفاع أصغر */
+  text-align: center;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-  </style>
+
+.stat-card-clean:hover {
+  transform: scale(1.05); /* تأثير تكبير عند المرور بالماوس */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card-clean canvas {
+  max-width: 70px;
+  max-height: 70px;
+  margin-bottom: 4px;
+  margin-top: 5px;
+}
+
+.wh{
+
+    color:black;
+    padding-left: 80px;
+    padding-right: 80px;
+}
+
+#MainTitle{
+    padding-top: 90px;
+}
+    </style>
 </head>
-<body>
-  <div class="dashboard-container">
-    <main class="main-content">
-      <!-- 1. Profile -->
-   <div class="profile-card-modern no-border">
-  <!-- Left: Profile Info with soft background and rounded edge -->
-  <div class="profile-left-modern soft-rounded">
-   <img src="images/profileTest.jpeg" alt="Profile Picture" class="profile-imageC" />
-    <h2>John Doe</h2>
-    <p class="bio">Full-stack developer passionate about creating efficient solutions</p>
-    <p><strong>Type:</strong> Professional</p>
-    <p><strong>Organization:</strong> Saudi Electricity Company</p>
-  </div>
+<body> Performance Summary
+  <div class="home-container">
+    <nav class="navbar index-nav">
+      <div class="logo">
+        <img src="logoNOback.png" alt="Logo">
+      </div>
+    </nav>
+     
+    <main class="hero-section">
+          <h1 id="MainTitle">Performance Summary</h1>
+      <div class="charts-wrapper">
+        <div class="chart-card project-card">
+          <h3>Total Projects</h3>
+          <i class="fas fa-folder-open project-icon" ></i>
+          <p class="project-number-box">12</p>
+        </div>
+          
+ <div class="chart-card">
+          <h3>Overall Rating</h3>
+          <canvas id="ratingCircle" ></canvas>
+          <div class="legend">
+            <span><span class="dot" style="background:#f87171;"></span>Design</span>
+            <span><span class="dot" style="background:#facc15;"></span>Programming</span>
+            <span><span class="dot" style="background:#a5b4fc;"></span>Communication</span>
+            <span><span class="dot" style="background:#6ee7b7;"></span>Work Quality</span>
+            <span><span class="dot" style="background:#fbbf24;"></span>Feedback</span>
+            <span><span class="dot" style="background:#5eead4;"></span>Time</span>
+          </div>
+        </div>
+          
+        <div class="chart-card task-card">
+          <h3>Tasks</h3>
+          <canvas id="tasksChart" width="140" height="140"></canvas>
+          <div class="legend">
+            <span><span class="dot" style="background:#eed442;"></span>Completed</span>
+            <span><span class="dot" style="background:#d3d3d3;"></span>Remaining</span>
+          </div>
+        </div>
 
-
-
-
-  <!-- Right: Ratings and Button -->
-  <div class="profile-right-modern">
-    <h3 class="underlined-title">Top Ratings</h3>
-    <div class="skill">
-      <span><i class="fas fa-code"></i> Programming</span>
-      <div class="progress" data-label="70%">
-       <div class="fill" style="width: 70%;"></div>
-</div>
-    </div>
-    <div class="skill">
-      <span><i class="fas fa-paint-brush"></i> Design</span>
-      <div class="progress" data-label="85%">
-  <div class="fill" style="width: 85%;"></div>
-</div>
-    </div>
-    <div class="skill">
-      <span><i class="fas fa-clock"></i> Time Management</span>
-      <div class="progress" data-label="66%">
-  <div class="fill" style="width: 66%;"></div>
-</div>
-    </div>
-
-    <div class="modern-btn-container">
-     <a href="profile.html" class="modern-learn-btn">
-  VIEW PROFILE
-  <i class="fas fa-arrow-right"></i>
-</a>
-    </div>
-  </div>
-</div>
- 
-
-      <!-- 2. Calendar 3. Active Projects -->
+       
+      </div>
+           <svg class="wave-divider" viewBox="0 0 1440 200" xmlns="http://www.w3.org/2000/svg">
+                <path fill="white" fill-opacity="1" d="M0,256L80,234.7C120,213,240,171,360,165.3C480,160,600,192,720,186.7C840,181,960,139,1080,128C1200,117,1320,149,1380,170.7L1440,192L1440,320L0,320Z"></path>
+            </svg>
+            
+   
+    </main>
+       
+         
+    <div class="wh">           <!-- 2. Calendar 3. Active Projects -->
      <div class="calendar-projects-section">
            <!-- Active Projects -->
 <section class="active-projects">
   <h2>Active Projects</h2>
 <div class="project-stats-row">
-  <div class="stat-card-clean" id="activeCard">
-    <div class="stat-label">Active in</div>
-    <div class="stat-fraction">
-      <span class="numerator">7</span>
-      <span class="slash">/</span>
-      <span class="denominator">10</span>
-    </div>
-    <div class="tiny">Projects</div>
-  </div>
+<div class="stat-card-clean" id="activeCard">
+  <div class="stat-label"> Your Active Projects </div>
+  <canvas id="activeProjectsChart"></canvas>
+ 
+ 
+</div>
 
   <div class="stat-card-clean" id="leaderCard">
-    <div class="stat-label">Leader of</div>
-    <div class="stat-fraction">
-      <span class="numerator">2</span>
-      <span class="slash">/</span>
-      <span class="denominator">10</span>
-    </div>
-    <div class="tiny">Projects</div>
-  </div>
+  <div class="stat-label">Projects You Lead</div>
+  <canvas id="LeaderChart" width="140" height="140"></canvas>
+ 
+ 
+</div>
 </div>
 
 
@@ -665,7 +734,7 @@ ul.project-links {
   <h2>My Tasks</h2>
   <div class="cards-wrapper" id="taskScroll">
     <div class="cards-container">
-      <div class="task-card">
+      <div class="task-card2">
         <div class="task-header">Task 1</div>
         <div class="task-body">
    <div class="task-info-row">
@@ -685,10 +754,16 @@ ul.project-links {
   <span class="info-label">Status:</span>
   <span class="info-value status pending">Not Started</span>
 </div>
+            
+            <div class="task-info-row">
+  <i class="fas fa-align-left"></i>
+  <span class="info-label">Description:</span>
+  <span class="info-value">Prepare the report</span>
+        </div>
 
         </div>
       </div>
-            <div class="task-card">
+            <div class="task-card2">
         <div class="task-header">Task 1</div>
         <div class="task-body">
    <div class="task-info-row">
@@ -709,9 +784,14 @@ ul.project-links {
   <span class="info-value status working">In Progress</span>
 </div>
 
+              <div class="task-info-row">
+  <i class="fas fa-align-left"></i>
+  <span class="info-label">Description:</span>
+  <span class="info-value">Prepare the report</span>
+        </div>
         </div>
       </div>
-            <div class="task-card">
+            <div class="task-card2">
         <div class="task-header">Task 1</div>
         <div class="task-body">
    <div class="task-info-row">
@@ -731,10 +811,17 @@ ul.project-links {
   <span class="info-label">Status:</span>
   <span class="info-value status working">In progress</span>
 </div>
+            
+              <div class="task-info-row">
+  <i class="fas fa-align-left"></i>
+  <span class="info-label">Description:</span>
+  <span class="info-value">Prepare the report</span>
+        </div>
 
+            
         </div>
       </div>
-                <div class="task-card">
+                <div class="task-card2">
         <div class="task-header">Task 1</div>
         <div class="task-body">
    <div class="task-info-row">
@@ -757,7 +844,7 @@ ul.project-links {
 
         </div>
       </div>
-              <div class="task-card">
+              <div class="task-card2">
         <div class="task-header">Task 1</div>
         <div class="task-body">
    <div class="task-info-row">
@@ -784,28 +871,146 @@ ul.project-links {
     </div>
   </div>
 </section>
-    </main>
-  </div>
-    
+      
+    </div>
+      
+  
     <footer>
-    <div class="footer-container">
+      <div class="footer-container">
         <div class="footer-logo">
-            <img src="logoNOback.png" alt="Logo">
+          <img src="logoNOback.png" alt="Logo">
         </div>
         <div class="footer-contact">
-            <p><strong>Contacts:</strong></p>
-            <p>0558944669</p>
-            <p>wefaq@email.com</p>
+          <p><strong>Contacts:</strong></p>
+          <p>0558944669</p>
+          <p>wefaq@email.com</p>
         </div>
         <div class="footer-social">
-            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
-            <a href="#" class="social-icon"><i class="fab fa-x-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-x-twitter"></i></a>
         </div>
-    </div>
-</footer>
+      </div>
+    </footer>
+  </div>
 
-<script>
+  <script>
+      
+      new Chart(document.getElementById('activeProjectsChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Active', 'Inactive'],
+    datasets: [{
+      data: [7, 3],  // استخدم بياناتك الفعلية هنا
+      backgroundColor: ['#eed442', '#D1D5DB'],  // الألوان
+      borderWidth: 0
+    }]
+  },
+  options: {
+    cutout: '70%',
+    plugins: { legend: { display: false } },
+    elements: {
+      center: {
+        text: '7/10'  // النص داخل الدائرة
+      }
+    }
+  }
+});
+
+// إضافة الرسم البياني للـ "Leader"
+new Chart(document.getElementById('LeaderChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Leader', 'Not Leader'],
+    datasets: [{
+      data: [2, 8],  // استخدم البيانات الفعلية هنا
+      backgroundColor: ['#eed442', '#D1D5DB'],  // الألوان
+      borderWidth: 0
+    }]
+  },
+  options: {
+    cutout: '70%',
+    plugins: { legend: { display: false } },
+    elements: {
+      center: {
+        text: '2/12'  // النص داخل الدائرة
+      }
+    }
+  }
+});
+
+
+    Chart.register({
+      id: 'centerText',
+      beforeDraw: function(chart) {
+        if (chart.config.options.elements && chart.config.options.elements.center) {
+          const ctx = chart.ctx;
+          const centerConfig = chart.config.options.elements.center;
+          const txt = centerConfig.text;
+          const color = centerConfig.color || '#6064D5';
+          ctx.font = 'bold 20px Poppins';
+          ctx.fillStyle = color;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+          const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+          ctx.fillText(txt, centerX, centerY);
+        }
+      }
+    });
+
+    const completedTasks = 8;
+    const totalTasks = 12;
+    const remainingTasks = totalTasks - completedTasks;
+
+    new Chart(document.getElementById('tasksChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Completed', 'Remaining'],
+        datasets: [{
+          data: [completedTasks, remainingTasks],
+          backgroundColor: ['#eed442', '#d3d3d3'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        cutout: '70%',
+        plugins: { legend: { display: false } },
+        elements: {
+          center: {
+            text: `${completedTasks}/${totalTasks}`
+          }
+        }
+      }
+    });
+
+    const ratingData = [4, 3, 3, 4, 5, 5];
+    const ratingLabels = ['Design', 'Programming', 'Communication', 'Work Quality', 'Feedback', 'Time Management'];
+    const ratingColors = ['#f87171', '#facc15', '#a5b4fc', '#6ee7b7', '#fbbf24', '#5eead4'];
+    const averageRating = (ratingData.reduce((a, b) => a + b, 0) / ratingData.length).toFixed(1);
+
+    new Chart(document.getElementById('ratingCircle'), {
+      type: 'doughnut',
+      data: {
+        labels: ratingLabels,
+        datasets: [{
+          data: ratingData,
+          backgroundColor: ratingColors,
+          borderWidth: 0
+        }]
+      },
+      options: {
+        cutout: '70%',
+        plugins: { legend: { display: false } },
+        elements: {
+          center: {
+            text: averageRating
+          }
+        }
+      }
+    });
+    
+
   document.addEventListener("DOMContentLoaded", () => {
    
     const deadlines = {
@@ -997,9 +1202,7 @@ ul.project-links {
 
     updateProjectList(); 
   });
-</script>
 
-      <script src="script.js"></script>
-    <script src="js/components.js"></script>
+  </script>
 </body>
 </html>
