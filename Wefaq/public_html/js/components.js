@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="header-member" style="background-image: url('images/avatarF1.jpeg');"></div>
                     <div class="header-member" style="background-image: url('images/avatarM1.jpeg');"></div>
                     <div class="header-member" style="background-image: url('images/avatarF2.jpeg');"></div>
-                    <div class="header-member add-member" onclick="openInvitePopup()">+</div>
+                    <div class="header-member add-member" onclick="openGenericModal('invitePopup')">+</div>
                 </div>
         <button class="btn btn-primary" id="complete-project-btn" style="display: none;">
             Mark as Complete
@@ -469,19 +469,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function openInvitePopup() {
-        document.getElementById('invitePopup').style.display = 'block';
-    }
-    function closeInvitePopup() {
-        document.getElementById('invitePopup').style.display = 'none';
-    }
-    function sendInvite() {
-        let input = document.getElementById('inviteInput').value;
-        if (input) {
-            alert('Invite sent to ' + input);
-            document.getElementById('inviteInput').value = '';
-        }
-    }
+ 
 
     function updatePageTitle() {
         const pageName = document.title.split('-')[0].trim();

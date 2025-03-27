@@ -80,9 +80,7 @@
                     <div class="tasks-header">
                         <h2>Project Tasks</h2>
                         <div class="task-actions">
-                           <!-- <button class="btn-icon edit" title="Edit Tasks">
-                                <i class="fas fa-edit"></i>
-                            </button>-->
+                          
                             <button class="btn btn-primary" id="addTaskBtn" onclick="openGenericModal('addTaskModal')">
                                 <i class="fas fa-plus"></i> Add
                             </button>
@@ -113,7 +111,7 @@
                                 <td><span class="status-badge completed">Completed</span></td>
                                 <td>Mar 5, 2025</td>
                                 <td class="actions">
-                                    <button class="btn-icon delete" title="Delete Task">
+                                    <button class="btn-icon delete" title="Delete Task" onclick="openGenericModal('deleteTaskModal')">
                                         <i class="fas fa-trash"></i>
                                     </button>
 
@@ -131,10 +129,10 @@
                                 <td><span class="status-badge in-progress">In Progress</span></td>
                                 <td>Mar 10, 2025</td>
                                 <td class="actions">
-                                    <button class="btn-icon status-icons" title="Complete Task">
+                                    <button class="btn-icon status-icons" title="Complete Task" onclick="openGenericModal('completeTaskModal')">
                                         <i class="fas fa-flag-checkered"></i>
                                     </button>
-                                    <button class="btn-icon delete" title="Delete Task">
+                                    <button class="btn-icon delete" title="Delete Task" onclick="openGenericModal('deleteTaskModal')">
                                         <i class="fas fa-trash"></i>
                                     </button>
 
@@ -153,12 +151,12 @@
                                 <td>Mar 15, 2025</td>
                                 <td class="actions">
 
-                                    <button class="btn-icon status-icons" title="Choose Task">
+                                    <button class="btn-icon status-icons" title="Choose Task" onclick="openGenericModal('assignTaskModal')">
                                         <i class="fas fa-user-check"></i>
 
                                     </button>
 
-                                    <button class="btn-icon delete" title="Delete Task">
+                                    <button class="btn-icon delete" title="Delete Task" onclick="openGenericModal('deleteTaskModal')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -175,10 +173,10 @@
                                 <td><span class="status-badge not-started">Not Started</span></td>
                                 <td>Mar 20, 2025</td>
                                 <td class="actions">
-                                    <button class="btn-icon status-icons" title="Start Task">
+                                    <button class="btn-icon status-icons" title="Start Task" onclick="openGenericModal('startTaskModal')">
                                         <i class="fas fa-play"></i>
                                     </button>
-                                    <button class="btn-icon delete" title="Delete Task">
+                                    <button class="btn-icon delete" title="Delete Task" onclick="openGenericModal('deleteTaskModal')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -196,7 +194,7 @@
                     <div class="popup-content modal-content">
                         <div class="modal-header">
                             <h2>Add Member</h2>
-                            <button class="close-modal" onclick="closeInvitePopup()">&times;</button>
+                            <button class="close-modal" onclick="closeGenericModal('invitePopup')">&times;</button>
                         </div>
                         <div class="modal-body">
                             <form>
@@ -256,12 +254,7 @@
                 </div>
 
                 <script>
-                    function openInvitePopup() {
-                        document.getElementById('invitePopup').style.display = 'block';
-                    }
-                    function closeInvitePopup() {
-                        document.getElementById('invitePopup').style.display = 'none';
-                    }
+                  
                     function sendInvite() {
                         let input = document.getElementById('inviteInput').value;
                         if (input) {
@@ -286,7 +279,7 @@
                                 </div>
                                   <div class="form-group">
                                     <label for="taskName">Task Description</label>
-                                    <input type="text" id="taskDescription" maxlength="90">
+                                    <textarea id="taskDescription" maxlength="85"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label for="taskDeadline">Deadline</label>
@@ -334,6 +327,71 @@
                         </div>
                     </div>
                 </div>
+                  <!-- Delete task Popup -->
+                <div id="deleteTaskModal" class="modal confirm-modal">
+                    <div class="modal-content modal-confirm-content">
+                        <div class="modal-header">
+                            <h2>Delete Project</h2>
+                            <button class="close-modal" onclick="closeGenericModal('deleteTaskModal')">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete this task?</p>
+                            <div class="modal-actions">
+                                <button class="btn btn-danger small-btn" id="confirmDelete">Delete</button>
+                                <button class="btn btn-secondary small-btn" id="cancelDelete" onclick="closeGenericModal('deleteTaskModal')">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Assign task-->
+                <div id="assignTaskModal" class="modal">
+                    <div class="modal-content modal-confirm-content">
+                        <div class="modal-header">
+                            <h2>Assign Task</h2>
+                            <button class="close-modal" onclick="closeGenericModal('assignTaskModal')">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <span>Are you sure you want to assign this task to yourself?</span>
+                            <div class="modal-actions">
+                                <button class="btn btn-primary small-btn" id="confirmComplete">Assign</button>
+                                <button class="btn btn-secondary small-btn" id="cancelComplete" onclick="closeGenericModal('assignTaskModal')">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                   <!-- Start task-->
+                <div id="startTaskModal" class="modal">
+                    <div class="modal-content modal-confirm-content">
+                        <div class="modal-header">
+                            <h2>Start Task</h2>
+                            <button class="close-modal" onclick="closeGenericModal('startTaskModal')">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <span>Are you sure you want to start this task?</span>
+                            <div class="modal-actions">
+                                <button class="btn btn-primary small-btn" id="confirmComplete">Start</button>
+                                <button class="btn btn-secondary small-btn" id="cancelComplete" onclick="closeGenericModal('startTaskModal')">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                     <!-- complete task-->
+                <div id="completeTaskModal" class="modal">
+                    <div class="modal-content modal-confirm-content">
+                        <div class="modal-header">
+                            <h2>Complete Task</h2>
+                            <button class="close-modal" onclick="closeGenericModal('completeTaskModal')">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <span>Are you sure you want to mark this task as complete?</span>
+                            <div class="modal-actions">
+                                <button class="btn btn-primary small-btn" id="confirmComplete">Complete</button>
+                                <button class="btn btn-secondary small-btn" id="cancelComplete"  onclick="closeGenericModal('completeTaskModal')">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- Files Tab -->
                 <div id="files" class="tab-pane">
