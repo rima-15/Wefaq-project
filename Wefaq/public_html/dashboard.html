@@ -126,7 +126,7 @@
     .wave-divider {
       display: block;
       width: 100%;
-      height: auto;
+      height: 265px;
     }
 
     footer {
@@ -601,298 +601,280 @@ ul.project-links {
 }
 
 #MainTitle{
-    padding-top: 90px;
+    padding-top: 50px;
 }
     </style>
 </head>
-<body> Performance Summary
-  <div class="home-container">
-    <nav class="navbar index-nav">
-      <div class="logo">
-        <img src="logoNOback.png" alt="Logo">
-      </div>
-    </nav>
+    <body> Performance Summary
+        <div class="home-container">
+            <nav class="navbar index-nav">
+                <div class="logo">
+                    <img src="logoNOback.png" alt="Logo">
+                </div>
+            </nav>
      
-    <main class="hero-section">
-          <h1 id="MainTitle">Performance Summary</h1>
-      <div class="charts-wrapper">
-        <div class="chart-card project-card">
-          <h3>Total Projects</h3>
-          <i class="fas fa-folder-open project-icon" ></i>
-          <p class="project-number-box">12</p>
-        </div>
+            <main class="hero-section">
+                <h1 id="MainTitle">Performance Summary</h1>
+                <div class="charts-wrapper">
+                    <div class="chart-card project-card">
+                        <h3>Total Projects</h3>
+                        <i class="fas fa-folder-open project-icon" ></i>
+                        <p class="project-number-box">12</p>
+                    </div>
           
- <div class="chart-card">
-          <h3>Overall Rating</h3>
-          <canvas id="ratingCircle" ></canvas>
-          <div class="legend">
-            <span><span class="dot" style="background:#f87171;"></span>Design</span>
-            <span><span class="dot" style="background:#facc15;"></span>Programming</span>
-            <span><span class="dot" style="background:#a5b4fc;"></span>Communication</span>
-            <span><span class="dot" style="background:#6ee7b7;"></span>Work Quality</span>
-            <span><span class="dot" style="background:#fbbf24;"></span>Feedback</span>
-            <span><span class="dot" style="background:#5eead4;"></span>Time</span>
-          </div>
-        </div>
+                    <div class="chart-card">
+                        <h3>Overall Rating</h3>
+                        <canvas id="ratingCircle" ></canvas>
+                        <div class="legend">
+                            <span><span class="dot" style="background:#f87171;"></span>Design</span>
+                            <span><span class="dot" style="background:#facc15;"></span>Programming</span>
+                            <span><span class="dot" style="background:#a5b4fc;"></span>Communication</span>
+                            <span><span class="dot" style="background:#6ee7b7;"></span>Work Quality</span>
+                            <span><span class="dot" style="background:#fbbf24;"></span>Feedback</span>
+                            <span><span class="dot" style="background:#5eead4;"></span>Time</span>
+                        </div>
+                    </div>
           
-        <div class="chart-card task-card">
-          <h3>Tasks</h3>
-          <canvas id="tasksChart" width="140" height="140"></canvas>
-          <div class="legend">
-            <span><span class="dot" style="background:#eed442;"></span>Completed</span>
-            <span><span class="dot" style="background:#d3d3d3;"></span>Remaining</span>
-          </div>
-        </div>
+                    <div class="chart-card task-card">
+                        <h3>Tasks</h3>
+                        <canvas id="tasksChart" width="140" height="140"></canvas>
+                        <div class="legend">
+                            <span><span class="dot" style="background:#eed442;"></span>Completed</span>
+                            <span><span class="dot" style="background:#d3d3d3;"></span>Remaining</span>
+                        </div>
+                    </div>
 
        
-      </div>
-           <svg class="wave-divider" viewBox="0 0 1440 200" xmlns="http://www.w3.org/2000/svg">
-                <path fill="white" fill-opacity="1" d="M0,256L80,234.7C120,213,240,171,360,165.3C480,160,600,192,720,186.7C840,181,960,139,1080,128C1200,117,1320,149,1380,170.7L1440,192L1440,320L0,320Z"></path>
-            </svg>
+                </div>
+                <svg class="wave-divider" viewBox="0 0 1440 200" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="white" fill-opacity="1" d="M0,256L80,234.7C120,213,240,171,360,165.3C480,160,600,192,720,186.7C840,181,960,139,1080,128C1200,117,1320,149,1380,170.7L1440,192L1440,320L0,320Z"></path>
+                </svg>
             
    
-    </main>
+            </main>
        
          
-    <div class="wh">           <!-- 2. Calendar 3. Active Projects -->
-     <div class="calendar-projects-section">
-           <!-- Active Projects -->
-<section class="active-projects">
-  <h2>Active Projects</h2>
-<div class="project-stats-row">
-<div class="stat-card-clean" id="activeCard">
-  <div class="stat-label"> Your Active Projects </div>
-  <canvas id="activeProjectsChart"></canvas>
- 
- 
-</div>
+            <div class="wh">           <!-- 2. Calendar 3. Active Projects -->
+                <div class="calendar-projects-section">
+                    <!-- Active Projects -->
+                    <section class="active-projects">
+                        <h2>Active Projects</h2>
+                        <div class="project-stats-row">
+                            <div class="stat-card-clean" id="activeCard">
+                                <div class="stat-label"> Your Active Projects </div>
+                                <canvas id="activeProjectsChart"></canvas> 
+                            </div>
 
-  <div class="stat-card-clean" id="leaderCard">
-  <div class="stat-label">Projects You Lead</div>
-  <canvas id="LeaderChart" width="140" height="140"></canvas>
- 
- 
-</div>
-</div>
-
-
-  <hr>
-<ul class="project-links" id="projectList">
-  <li class="task-info-row">
-    <i class="fas fa-diagram-project"></i>
-
-    <span class="info-value"><a href="project.html">Wefaq</a></span>
-  </li>
-  <li class="task-info-row">
-    <i class="fas fa-diagram-project"></i>
+                            <div class="stat-card-clean" id="leaderCard">
+                                <div class="stat-label">Projects You Lead</div>
+                                <canvas id="LeaderChart" width="140" height="140"></canvas>
+                            </div>
+                        </div>
+                        <hr>
+                        <ul class="project-links" id="projectList">
+                            <li class="task-info-row">
+                                <i class="fas fa-diagram-project"></i>
+                                <span class="info-value"><a href="project.html">Wefaq</a></span>
+                            </li>
+                            <li class="task-info-row">
+                                <i class="fas fa-diagram-project"></i>
+                                <span class="info-value"><a href="project.html">Network</a></span>
+                            </li>
+                            <li class="task-info-row">
+                                <i class="fas fa-diagram-project"></i>
+                                <span class="info-value"><a href="project.html">Data Science</a></span>
+                            </li>
    
-    <span class="info-value"><a href="project.html">Network</a></span>
-  </li>
-  <li class="task-info-row">
-    <i class="fas fa-diagram-project"></i>
-
-    <span class="info-value"><a href="project.html">Data Science</a></span>
-  </li>
-   
-  <li class="task-info-row">
-    <i class="fas fa-diagram-project"></i>
-
-    <span class="info-value"><a href="project.html">Data Science</a></span>
-  </li>
-  <li class="task-info-row">
-    <i class="fas fa-diagram-project"></i>
-
-    <span class="info-value"><a href="project.html">Data Science</a></span>
-  </li>
-  <li class="task-info-row">
-    <i class="fas fa-diagram-project"></i>
-
-    <span class="info-value"><a href="project.html">Data Science</a></span>
-  </li>
-</ul>
-  <button class="toggle-button">
-  <span class="btn-text">Show More</span>
-  <i class="fas fa-chevron-down"></i>
-</button>
-</section>
-  <!-- Calendar -->
-  <aside class="calendar">
-    <div class="calendar-header">
-      <button onclick="prevMonth()">&#9665;</button>
-      <span id="calendar-header"></span>
-      <button onclick="nextMonth()">&#9655;</button>
-    </div>
-    <div class="calendar-grid" id="weekday-labels"></div>
-    <div class="calendar-grid" id="calendar-grid"></div>
-  </aside>
+                            <li class="task-info-row">
+                                <i class="fas fa-diagram-project"></i>
+                                <span class="info-value"><a href="project.html">Data Science</a></span>
+                            </li>
+                            <li class="task-info-row">
+                                <i class="fas fa-diagram-project"></i>
+                                <span class="info-value"><a href="project.html">Data Science</a></span>
+                            </li>
+                            <li class="task-info-row">
+                                <i class="fas fa-diagram-project"></i>
+                                <span class="info-value"><a href="project.html">Data Science</a></span>
+                            </li>
+                        </ul>
+                        <button class="toggle-button">
+                            <span class="btn-text">Show More</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </section>
+                    <!-- Calendar -->
+                    <aside class="calendar">
+                        <div class="calendar-header">
+                            <button onclick="prevMonth()">&#9665;</button>
+                            <span id="calendar-header"></span>
+                            <button onclick="nextMonth()">&#9655;</button>
+                        </div>
+                        <div class="calendar-grid" id="weekday-labels"></div>
+                        <div class="calendar-grid" id="calendar-grid"></div>
+                    </aside>
 
 
-</div>
+                </div>
 
-      <!-- 4. My Tasks -->
-  <section class="my-tasks">
-  <h2>My Tasks</h2>
-  <div class="cards-wrapper" id="taskScroll">
-    <div class="cards-container">
-      <div class="task-card2">
-        <div class="task-header">Task 1</div>
-        <div class="task-body">
-   <div class="task-info-row">
-  <i class="fas fa-diagram-project"></i>
-  <span class="info-label">Project:</span>
-  <span class="info-value"><a href="project.html">Network</a></span>
-</div>
+                <!-- 4. My Tasks -->
+                <section class="my-tasks">
+                    <h2>My Tasks</h2>
+                        <div class="cards-wrapper" id="taskScroll">
+                            <div class="cards-container">
+                                <div class="task-card2">
+                                    <div class="task-header">Task 1</div>
+                                    <div class="task-body">
+                                        <div class="task-info-row">
+                                            <i class="fas fa-diagram-project"></i>
+                                            <span class="info-label">Project:</span>
+                                            <span class="info-value"><a href="project.html">Network</a></span>
+                                        </div>
 
-<div class="task-info-row">
-  <i class="fas fa-calendar-alt"></i>
-  <span class="info-label">Deadline:</span>
-  <span class="info-value">Mar 23</span>
-</div>
+                                        <div class="task-info-row">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <span class="info-label">Deadline:</span>
+                                            <span class="info-value">Mar 23</span>
+                                        </div>
 
-<div class="task-info-row">
-  <i class="fas fa-tasks"></i>
-  <span class="info-label">Status:</span>
-  <span class="info-value status pending">Not Started</span>
-</div>
+                                        <div class="task-info-row">
+                                            <i class="fas fa-tasks"></i>
+                                            <span class="info-label">Status:</span>
+                                            <span class="info-value status pending">Not Started</span>
+                                        </div>
             
-            <div class="task-info-row">
-  <i class="fas fa-align-left"></i>
-  <span class="info-label">Description:</span>
-  <span class="info-value">Prepare the report</span>
-        </div>
+                                        <div class="task-info-row">
+                                            <i class="fas fa-align-left"></i>
+                                            <span class="info-label">Description:</span>
+                                            <span class="info-value">Prepare the report</span>
+                                        </div>
 
-        </div>
-      </div>
-            <div class="task-card2">
-        <div class="task-header">Task 1</div>
-        <div class="task-body">
-   <div class="task-info-row">
-  <i class="fas fa-diagram-project"></i>
-  <span class="info-label">Project:</span>
-  <span class="info-value"><a href="project.html">Network</a></span>
-</div>
+                                    </div>
+                                </div>
+                                <div class="task-card2">
+                                    <div class="task-header">Task 1</div>
+                                        <div class="task-body">
+                                            <div class="task-info-row">
+                                                <i class="fas fa-diagram-project"></i>
+                                                <span class="info-label">Project:</span>
+                                                <span class="info-value"><a href="project.html">Network</a></span>
+                                            </div>
 
-<div class="task-info-row">
-  <i class="fas fa-calendar-alt"></i>
-  <span class="info-label">Deadline:</span>
-  <span class="info-value">Mar 23</span>
-</div>
+                                            <div class="task-info-row">
+                                                <i class="fas fa-calendar-alt"></i>
+                                                <span class="info-label">Deadline:</span>
+                                                <span class="info-value">Mar 23</span>
+                                            </div>
 
-<div class="task-info-row">
-  <i class="fas fa-tasks"></i>
-  <span class="info-label">Status:</span>
-  <span class="info-value status working">In Progress</span>
-</div>
+                                            <div class="task-info-row">
+                                                <i class="fas fa-tasks"></i>
+                                                <span class="info-label">Status:</span>
+                                                <span class="info-value status working">In Progress</span>
+                                            </div>
 
-              <div class="task-info-row">
-  <i class="fas fa-align-left"></i>
-  <span class="info-label">Description:</span>
-  <span class="info-value">Prepare the report</span>
-        </div>
-        </div>
-      </div>
-            <div class="task-card2">
-        <div class="task-header">Task 1</div>
-        <div class="task-body">
-   <div class="task-info-row">
-  <i class="fas fa-diagram-project"></i>
-  <span class="info-label">Project:</span>
-  <span class="info-value"><a href="project.html">Network</a></span>
-</div>
+                                            <div class="task-info-row">
+                                                <i class="fas fa-align-left"></i>
+                                                <span class="info-label">Description:</span>
+                                                <span class="info-value">Prepare the report</span>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="task-card2">
+                                    <div class="task-header">Task 1</div>
+                                    <div class="task-body">
+                                        <div class="task-info-row">
+                                            <i class="fas fa-diagram-project"></i>
+                                            <span class="info-label">Project:</span>
+                                            <span class="info-value"><a href="project.html">Network</a></span>
+                                        </div>
 
-<div class="task-info-row">
-  <i class="fas fa-calendar-alt"></i>
-  <span class="info-label">Deadline:</span>
-  <span class="info-value">Mar 23</span>
-</div>
+                                        <div class="task-info-row">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <span class="info-label">Deadline:</span>
+                                            <span class="info-value">Mar 23</span>
+                                        </div>
 
-<div class="task-info-row">
-  <i class="fas fa-tasks"></i>
-  <span class="info-label">Status:</span>
-  <span class="info-value status working">In progress</span>
-</div>
+                                        <div class="task-info-row">
+                                            <i class="fas fa-tasks"></i>
+                                            <span class="info-label">Status:</span>
+                                            <span class="info-value status working">In progress</span>
+                                        </div>
             
-              <div class="task-info-row">
-  <i class="fas fa-align-left"></i>
-  <span class="info-label">Description:</span>
-  <span class="info-value">Prepare the report</span>
+                                        <div class="task-info-row">
+                                            <i class="fas fa-align-left"></i>
+                                            <span class="info-label">Description:</span>
+                                            <span class="info-value">Prepare the report</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="task-card2">
+                                    <div class="task-header">Task 1</div>
+                                    <div class="task-body">
+                                        <div class="task-info-row">
+                                            <i class="fas fa-diagram-project"></i>
+                                            <span class="info-label">Project:</span>
+                                            <span class="info-value"><a href="project.html">Network</a></span>
+                                        </div>
+
+                                        <div class="task-info-row">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <span class="info-label">Deadline:</span>
+                                            <span class="info-value">Mar 23</span>
+                                        </div>
+
+                                        <div class="task-info-row">
+                                            <i class="fas fa-tasks"></i>
+                                            <span class="info-label">Status:</span>
+                                            <span class="info-value status pending">Not Started</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="task-card2">
+                                    <div class="task-header">Task 1</div>
+                                    <div class="task-body">
+                                        <div class="task-info-row">
+                                            <i class="fas fa-diagram-project"></i>
+                                            <span class="info-label">Project:</span>
+                                            <span class="info-value"><a href="project.html">Network</a></span>
+                                        </div>
+                                        
+                                        <div class="task-info-row">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <span class="info-label">Deadline:</span>
+                                            <span class="info-value">Mar 23</span>
+                                        </div>
+
+                                        <div class="task-info-row">
+                                            <i class="fas fa-tasks"></i>
+                                            <span class="info-label">Status:</span>
+                                            <span class="info-value status pending">Not Started</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            <!-- More task cards can be added here -->
+                            </div>
+                        </div>
+               </section>
+            </div>
         </div>
-
-            
-        </div>
-      </div>
-                <div class="task-card2">
-        <div class="task-header">Task 1</div>
-        <div class="task-body">
-   <div class="task-info-row">
-  <i class="fas fa-diagram-project"></i>
-  <span class="info-label">Project:</span>
-  <span class="info-value"><a href="project.html">Network</a></span>
-</div>
-
-<div class="task-info-row">
-  <i class="fas fa-calendar-alt"></i>
-  <span class="info-label">Deadline:</span>
-  <span class="info-value">Mar 23</span>
-</div>
-
-<div class="task-info-row">
-  <i class="fas fa-tasks"></i>
-  <span class="info-label">Status:</span>
-  <span class="info-value status pending">Not Started</span>
-</div>
-
-        </div>
-      </div>
-              <div class="task-card2">
-        <div class="task-header">Task 1</div>
-        <div class="task-body">
-   <div class="task-info-row">
-  <i class="fas fa-diagram-project"></i>
-  <span class="info-label">Project:</span>
-  <span class="info-value"><a href="project.html">Network</a></span>
-</div>
-
-<div class="task-info-row">
-  <i class="fas fa-calendar-alt"></i>
-  <span class="info-label">Deadline:</span>
-  <span class="info-value">Mar 23</span>
-</div>
-
-<div class="task-info-row">
-  <i class="fas fa-tasks"></i>
-  <span class="info-label">Status:</span>
-  <span class="info-value status pending">Not Started</span>
-</div>
-
-        </div>
-      </div>
-      <!-- More task cards can be added here -->
-    </div>
-  </div>
-</section>
-      
-    </div>
-      
-  
     <footer>
-      <div class="footer-container">
-        <div class="footer-logo">
-          <img src="logoNOback.png" alt="Logo">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="logoNOback.png" alt="Logo">
+            </div>
+            <div class="footer-contact">
+                <p><strong>Contacts:</strong></p>
+                <p>0558944669</p>
+                <p>wefaq@email.com</p>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-x-twitter"></i></a>
+            </div>
         </div>
-        <div class="footer-contact">
-          <p><strong>Contacts:</strong></p>
-          <p>0558944669</p>
-          <p>wefaq@email.com</p>
-        </div>
-        <div class="footer-social">
-          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-x-twitter"></i></a>
-        </div>
-      </div>
     </footer>
-  </div>
+  
 
   <script>
       
