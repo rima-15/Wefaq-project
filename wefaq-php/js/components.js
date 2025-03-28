@@ -18,30 +18,100 @@ window.closeProjectModal = function() {
 };
 
 // Function to add project to sidebar
-function addProjectToSidebar(project) {
-    const projectsList = document.getElementById('projectsList');
-    if (!projectsList) return;
+async function addProjectToSidebar() {
+    try {
+        let response = await fetch("handleProject.php?fetch_all=true", {
+            credentials: 'include' //  for sessions
+        });
+        
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        let projects = await response.json();
 
-    const projectItem = document.createElement('li');
-    projectItem.innerHTML = `
-        <a href="project.html?name=${encodeURIComponent(project.name)}" class="project-link">
-            <i class="fas fa-folder"></i>
-            <span>${project.name}</span>
-        </a>
-    `;
-    
-    // Insert before the "Add Project" button
-    const addProjectBtn = projectsList.querySelector('.add-project').parentElement;
-    projectsList.insertBefore(projectItem, addProjectBtn);
+        if (projects.error) {
+            console.error("Error fetching projects:", projects.error);
+            return;
+        }
+
+        const projectsList = document.getElementById("projectsList");
+        if (!projectsList) return;
+
+        // Clear existing projects but keep the "Add Project" button
+        const addProjectBtn = projectsList.querySelector('.add-project-container') || 
+            projectsList.querySelector('li:last-child');
+        
+        projectsList.innerHTML = '';
+        
+        // Add projects
+        projects.forEach(project => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <a href="project.html?project_ID=${project.project_ID}" class="project-link">
+                    <i class="fas fa-folder"></i>
+                    <span>${project.project_name}</span>
+                </a>
+            `;
+            projectsList.appendChild(li);
+        });
+
+        // Add the "Add Project" button back
+        if (addProjectBtn) {
+            projectsList.appendChild(addProjectBtn);
+        } else {
+            const addBtnLi = document.createElement('li');
+            addBtnLi.innerHTML = `
+                <button type="button" class="add-project" id="addProjectBtn">
+                    <i class="fas fa-plus"></i>
+                    <span>Add Project</span>
+                </button>
+            `;
+            projectsList.appendChild(addBtnLi);
+            addBtnLi.querySelector('#addProjectBtn').addEventListener('click', openProjectModal);
+        }
+    } catch (error) {
+        console.error("Error loading projects:", error);
+    }
 }
+
 
 document.addEventListener('DOMContentLoaded', function() {
     // Don't load components for login and signup pages
     const path = window.location.pathname;
-    if (path.includes('login.html') || path.includes('signup.html')) {
+    if (path.includes('login.php') || path.includes('signup.php')) {
         return;
     }
+    
+    if (window.location.pathname.includes('project.html')) {
+        initializeProjectDeletion();
+        updateProjectHeader();
+        initializeProjectNameEditing();
 
+
+    }
+    
+    // Then load projects
+    addProjectToSidebar();
+    
+    initializeComponents();
+    
+      if (window.location.pathname.includes('project.html')) {
+
+        initializeProjectNameEditing();
+
+
+    }
+    });
+    
+
+
+
+
+    // Function to initialize components
+    function initializeComponents() {
+        
+        
+        
     // Add the header HTML directly
     const headerHtml = `
         <header class="dashboard-header">
@@ -52,10 +122,10 @@ document.addEventListener('DOMContentLoaded', function() {
     <h1 id="pageTitle">Dashboard</h1>
     <p id="project-deadline-header"></p>
     <div class="editProject" style="display: none;">
-        <button class="btn-icon edit project-edit-btns" title="Edit Tasks">
+        <button class="btn-icon edit project-edit-btns" id="editProjectBtn" title="Edit Project" >
             <i class="fas fa-edit"></i>
         </button>
-        <button class="btn-icon delete project-edit-btns" title="Delete Task">
+        <button class="btn-icon delete project-edit-btns" title="Delete Task" onclick="openGenericModal('deleteProjectModal')">
             <i class="fas fa-trash"></i>
         </button>
     </div>
@@ -67,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="header-member" style="background-image: url('images/avatarF2.jpeg');"></div>
                     <div class="header-member add-member" onclick="openGenericModal('invitePopup')">+</div>
                 </div>
-        <button class="btn btn-primary" id="complete-project-btn" style="display: none;">
+        <button class="btn btn-primary" id="complete-project-btn" style="display: none;" onclick="openGenericModal('completeProjectModal')">
             Mark as Complete
         </button>
         <div class="user-menu">
@@ -83,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <nav class="sidebar" id="sidebar">
             <div class="logo">
                 <img src="Wefaq.jpg" alt="Wefaq Logo" class="logo-img">
-            </div
+            </div>
             <div class="nav-content">
                 <ul class="nav-links">
                     <li>
@@ -101,15 +171,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             <i class="fas fa-chevron-down dropdown-icon"></i>
                         </a>
                         <ul class="projects-submenu" id="projectsList">
-                            ${loadProjectsFromStorage()}
-                            <li>
-                                <button type="button" class="add-project" id="addProjectBtn">
-                                    <i class="fas fa-plus"></i>
-                                    <span>Add Project</span>
-                                </button>
-                            </li>
-                        </ul>
-                    </li>
+                        <!-- Projects will be inserted here dynamically -->
+                            <li class="add-project-container">
+                            <button type="button" class="add-project" id="addProjectBtn">
+                             <i class="fas fa-plus"></i>
+                             <span>Add Project</span>
+                                           </button>
+                                                 </li>
+                                                    </ul>
                     <li>
                         <a href="community.html">
                             <i class="fas fa-users"></i>
@@ -139,18 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </nav>
     `;
 
-    // Function to load projects from localStorage
-    function loadProjectsFromStorage() {
-        const projects = JSON.parse(localStorage.getItem('projects') || '[]');
-        return projects.map(project => `
-            <li>
-                <a href="project.html?name=${encodeURIComponent(project.name)}" class="project-link">
-                    <i class="fas fa-folder"></i>
-                    <span>${project.name}</span>
-                </a>
-            </li>
-        `).join('');
-    }
+
 
     // Add the modal HTML
     const modalHtml = `
@@ -161,19 +219,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button class="close-modal" onclick="closeGenericModal('newProjectModal')">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <form id="newProjectForm">
-                        <div class="form-group">
+                    <form id="newProjectForm" action="handleProject.php" method="POST">
+                            <input type="hidden" name="create_project" value="1"> <!-- Hidden field -->
+
+                    <div class="form-group">
                             <label for="projectName">Project Name</label>
-                            <input type="text" id="projectName" required>
+                            <input type="text" id="projectName" name="project_name" required>
                         </div>
                         <div class="form-group">
                             <label for="projectDescription">Description</label>
-                            <textarea id="projectDescription" required></textarea>
+                            <textarea id="projectDescription" required name="project_description"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="projectDeadline">Deadline</label>
-                            <input type="date" id="projectDeadline" required>
+                            <input type="date" id="projectDeadline" name="project_deadline" required>
                         </div>
+    <input type= "hidden" name="leader_ID" value="1">
                         <div id="container-btn-form">
                                        <button type="submit" class="btn btn-primary">Create Project</button>
          
@@ -183,9 +244,6 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
     `;
-
-    // Function to initialize components
-    function initializeComponents() {
         // Insert components
         const container = document.querySelector('.dashboard-container');
         if (!container) {
@@ -238,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Handle form submission
-        const projectForm = document.getElementById('newProjectForm');
+       /* const projectForm = document.getElementById('newProjectForm');
         if (projectForm) {
             projectForm.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -258,7 +316,43 @@ document.addEventListener('DOMContentLoaded', function() {
                 closeProjectModal();
                 window.location.href = `project.html?name=${encodeURIComponent(projectData.name)}`;
             });
+        }*/
+
+    // Handle form submission with database
+const projectForm = document.getElementById("newProjectForm");
+if (projectForm) {
+    projectForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        try {
+            let formData = new FormData(projectForm);
+            let response = await fetch("handleProject.php", {
+                method: "POST",
+                body: formData,
+                credentials: 'include' //  for sessions
+
+            });
+            
+            let data = await response.json();
+            
+            if (data.success) {
+                closeProjectModal();
+                await addProjectToSidebar(); // Refresh the project list
+                
+                // Optionally redirect to the new project
+                if (data.project_ID) {
+                    window.location.href = `project.html?project_ID=${data.project_ID}`;
+                }
+            } else {
+                alert(data.message || "Error creating project");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while creating the project");
         }
+    });
+}
+
 
         // Initialize other components
         initializeSidebar();
@@ -279,33 +373,56 @@ document.addEventListener('DOMContentLoaded', function() {
             initializeProjectButtons(project);
         }
     }
-
-    // Function to retrieve project data from URL
-    function getProjectFromURL() {
+// Function to retrieve project data from URL and database
+async function getProjectFromURL() {
+    try {
+        // Get project ID from URL
         const urlParams = new URLSearchParams(window.location.search);
-        const projectName = urlParams.get('name');
+        const projectID = urlParams.get('project_ID');
+        
+        if (!projectID) {
+            console.error('No project ID in URL');
+            return null;
+        }
 
-        // Default project data
-        const defaultProject = {
-            name: "Project Name",
-            deadline: "Jun 28 2025",
-            status: "In Progress"
+        // Fetch project data from server
+        const response = await fetch(`handleProject.php?get_project=true&project_ID=${projectID}`);
+        const data = await response.json();
+        
+        if (data.error) {
+            console.error('Error fetching project:', data.error);
+            return null;
+        }
+
+        return {
+            name: data.project_name,
+            description: data.project_description,
+            deadline: data.project_deadline,
+            status: data.status,
+            project_ID: data.project_ID
         };
-
-        if (!projectName) return defaultProject;
-
-        const projects = JSON.parse(localStorage.getItem('projects') || '[]');
-        return projects.find(project => project.name === decodeURIComponent(projectName)) || defaultProject;
+        
+    } catch (error) {
+        console.error("Error fetching project:", error);
+        return null;
     }
+}
+
     // Function to format the deadline
     function formatDeadline(dateString) {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
 
-    // Function to update the project header
-    function updateProjectHeader(project) {
-        if (!project) return;
+// Function to update the project header with actual project data
+async function updateProjectHeader() {
+    try {
+        const project = await getProjectFromURL();
+        if (!project) {
+            console.error('Project not found!');
+            window.location.href = 'dashboard.html';
+            return;
+        }
 
         const pageTitle = document.getElementById('pageTitle');
         const projectDeadlineHeader = document.getElementById('project-deadline-header');
@@ -313,38 +430,38 @@ document.addEventListener('DOMContentLoaded', function() {
         const userMenu = document.querySelector('.user-menu');
         const completeProjectBtn = document.getElementById('complete-project-btn');
         const teamMembers = document.querySelector('.team-members');
+        const projectDescription = document.querySelector('.project-description p');
 
-        if (pageTitle) {
-            pageTitle.textContent = project.name;
-        }
-
-        if (projectDeadlineHeader) {
-            projectDeadlineHeader.textContent = `Deadline: ${formatDeadline(project.deadline)}`;
-        }
-
-        if (editProjectBtn) {
-            editProjectBtn.style.display = 'flex'; // Use flex to align icons horizontally
-        }
-
+        if (pageTitle) pageTitle.textContent = project.name;
+        if (projectDeadlineHeader) projectDeadlineHeader.textContent = `Deadline: ${formatDeadline(project.deadline)}`;
+        if (projectDescription) projectDescription.textContent = project.description || "No description available";
+        if (editProjectBtn) editProjectBtn.style.display = 'flex';
+        
         if (completeProjectBtn) {
             if (project.status === 'Completed') {
-                // Replace the button with the "Completed" badge
                 completeProjectBtn.style.display = 'none';
-                document.querySelector('.header-right').insertAdjacentHTML('beforeend', '<span class="status-badge completed">Completed</span>');
-
+                // Remove existing badge if any
+                const existingBadge = document.querySelector('.status-badge.completed');
+                if (!existingBadge) {
+                    document.querySelector('.header-right').insertAdjacentHTML('beforeend', 
+                        '<span class="status-badge completed">Completed</span>');
+                }
             } else {
                 completeProjectBtn.style.display = 'block';
+                // Remove completed badge if exists
+                const existingBadge = document.querySelector('.status-badge.completed');
+                if (existingBadge) existingBadge.remove();
             }
         }
 
-        if (teamMembers) {
-            teamMembers.style.display = 'flex'; // Use flex to align icons horizontally
-        }
-
-        if (userMenu) {
-            userMenu.style.display = 'none'; // Use flex to align icons horizontally
-        }
+        if (teamMembers) teamMembers.style.display = 'flex';
+        if (userMenu) userMenu.style.display = 'none';
+        
+    } catch (error) {
+        console.error("Error updating project header:", error);
     }
+}
+
 
     // Function to initialize project buttons
     function initializeProjectButtons(project) {
@@ -478,16 +595,166 @@ document.addEventListener('DOMContentLoaded', function() {
             pageTitle.textContent = pageName;
         }
 
-        const currentPage = path.split('/').pop() || 'dashboard.html';
+        const currentPage = path.split('/').pop() || 'dashboard.php';
         document.querySelectorAll('.nav-links > li > a').forEach(link => {
             if (link.getAttribute('href') === currentPage) {
                 link.parentElement.classList.add('active');
             }
         });
     }
+    
+function initializeProjectDeletion() {
+    const confirmDeleteBtn = document.getElementById('confirmProjectDelete');
+    
+    if (confirmDeleteBtn) {
+       
+        
+        confirmDeleteBtn.addEventListener('click', async function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const project_ID = urlParams.get('project_ID');
+            
+            if (!project_ID) {
+                alert("No project selected");
+                return;
+            }
+            
+            try {
+                confirmDeleteBtn.disabled = true;
+                confirmDeleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+                
+                // Create FormData object
+                const formData = new FormData();
+                formData.append('delete_project', '1');
+                formData.append('project_ID', project_ID);
+                
+                const response = await fetch('handleProject.php', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include' // Important for session
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    closeGenericModal('deleteProjectModal');
+                    window.location.href = 'dashboard.php?deleted=true';
+                } else {
+                    alert(result.message || "Failed to delete project");
+                    confirmDeleteBtn.disabled = false;
+                    confirmDeleteBtn.textContent = 'Delete';
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred while deleting the project");
+                confirmDeleteBtn.disabled = false;
+                confirmDeleteBtn.textContent = 'Delete';
+            }
+        });
+        
+        // Cancel button handler remains the same
+        const cancelDeleteBtn = document.getElementById('cancelDelete');
+        if (cancelDeleteBtn) {
+            cancelDeleteBtn.addEventListener('click', function() {
+                closeGenericModal('deleteProjectModal');
+            });
+        }
+    }
+}
+
+// Replace your current initialization with this:
+function initializeProjectNameEditing() {
+    console.log("Looking for edit button...");
+    
+    // Keep trying until elements exist (with timeout safety)
+    const maxAttempts = 10;
+    let attempts = 0;
+    
+    const checkElements = setInterval(() => {
+        attempts++;
+        const editBtn = document.querySelector('.edit.project-edit-btns');
+        const pageTitle = document.getElementById('pageTitle');
+        
+        if (editBtn && pageTitle) {
+            clearInterval(checkElements);
+            console.log("Elements found! Setting up editor...");
+            setupEditor(editBtn, pageTitle);
+        } else if (attempts >= maxAttempts) {
+            clearInterval(checkElements);
+            console.error("Could not find elements after 10 attempts");
+        }
+    }, 300); // Check every 300ms
+}
+
+function setupEditor(editBtn, pageTitle) {
+    editBtn.addEventListener('click', function() {
+        console.log("Edit button clicked - creating input field");
+        
+        // Create input element
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = pageTitle.textContent;
+        input.className = 'project-name-edit';
+        
+        // Style it to match your h1
+        input.style.cssText = `
+            font-size: inherit;
+            font-weight: inherit;
+            font-family: inherit;
+            border: 2px solid #4a90e2;
+            padding: 5px 10px;
+            width: auto;
+            min-width: 200px;
+        `;
+
+        // Replace h1 with input
+        pageTitle.replaceWith(input);
+        input.focus();
+
+        // Handle save
+        const saveEdit = async () => {
+            const newName = input.value.trim();
+            if (!newName) {
+                alert("Project name cannot be empty");
+                input.replaceWith(pageTitle);
+                return;
+            }
+
+            try {
+                const project_ID = new URLSearchParams(window.location.search).get('project_ID');
+                const formData = new FormData();
+                formData.append('update_project', '1');
+                formData.append('project_ID', project_ID);
+                formData.append('new_name', newName);
+
+                const response = await fetch('handleProject.php', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    pageTitle.textContent = newName;
+                    input.replaceWith(pageTitle);
+                    await addProjectToSidebar(); // Refresh sidebar
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert(error.message);
+                input.replaceWith(pageTitle);
+            }
+        };
+
+        // Event listeners
+        input.addEventListener('blur', saveEdit);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') saveEdit();
+            if (e.key === 'Escape') input.replaceWith(pageTitle);
+        });
+    });
+}
 
 
-
-    // Initialize components
-    initializeComponents();
-});
