@@ -86,6 +86,8 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeProjectDeletion();
         updateProjectHeader();
         initializeProjectNameEditing();
+        initializeProjectDescriptionEditing();
+        initializeProjectCompletion(); 
 
 
     }
@@ -157,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="nav-content">
                 <ul class="nav-links">
                     <li>
-                        <a href="dashboard.html">
+                        <a href="dashboard.php">
                             <i class="fas fa-home"></i>
                             <span>Dashboard</span>
                         </a>
@@ -180,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                  </li>
                                                     </ul>
                     <li>
-                        <a href="community.html">
+                        <a href="community.php">
                             <i class="fas fa-users"></i>
                             <span>Community</span>
                         </a>
@@ -428,7 +430,6 @@ async function updateProjectHeader() {
         const projectDeadlineHeader = document.getElementById('project-deadline-header');
         const editProjectBtn = document.querySelector('.editProject');
         const userMenu = document.querySelector('.user-menu');
-        const completeProjectBtn = document.getElementById('complete-project-btn');
         const teamMembers = document.querySelector('.team-members');
         const projectDescription = document.querySelector('.project-description p');
 
@@ -437,22 +438,27 @@ async function updateProjectHeader() {
         if (projectDescription) projectDescription.textContent = project.description || "No description available";
         if (editProjectBtn) editProjectBtn.style.display = 'flex';
         
-        if (completeProjectBtn) {
-            if (project.status === 'Completed') {
-                completeProjectBtn.style.display = 'none';
-                // Remove existing badge if any
-                const existingBadge = document.querySelector('.status-badge.completed');
-                if (!existingBadge) {
-                    document.querySelector('.header-right').insertAdjacentHTML('beforeend', 
-                        '<span class="status-badge completed">Completed</span>');
-                }
-            } else {
-                completeProjectBtn.style.display = 'block';
-                // Remove completed badge if exists
-                const existingBadge = document.querySelector('.status-badge.completed');
-                if (existingBadge) existingBadge.remove();
+             // Handle completion status
+        const isCompleted = project.status === 'completed';
+        const completeBtn = document.getElementById('complete-project-btn');
+        const headerRight = document.querySelector('.header-right');
+        
+        // Remove existing badge if any
+        const existingBadge = document.querySelector('.status-badge.completed');
+        if (existingBadge) existingBadge.remove();
+        
+        if (isCompleted) {
+            // Project is completed
+            if (completeBtn) completeBtn.style.display = 'none';
+            if (headerRight) {
+                headerRight.insertAdjacentHTML('beforeend',
+                    '<span class="status-badge completed">Completed</span>');
             }
+        } else {
+            // Project is not completed
+            if (completeBtn) completeBtn.style.display = 'block';
         }
+
 
         if (teamMembers) teamMembers.style.display = 'flex';
         if (userMenu) userMenu.style.display = 'none';
@@ -461,7 +467,6 @@ async function updateProjectHeader() {
         console.error("Error updating project header:", error);
     }
 }
-
 
     // Function to initialize project buttons
     function initializeProjectButtons(project) {
@@ -756,5 +761,123 @@ function setupEditor(editBtn, pageTitle) {
         });
     });
 }
+function initializeProjectDescriptionEditing() {
+    console.log("Initializing description editing...");
+    
+    // Find elements with polling (like we did for title)
+    const maxAttempts = 10;
+    let attempts = 0;
+    
+    const checkElements = setInterval(() => {
+        attempts++;
+        const editBtn = document.getElementById('editProjectDescription');
+        const descriptionElement = document.getElementById('project-description-content');
+        
+        if (editBtn && descriptionElement) {
+            clearInterval(checkElements);
+            console.log("Description elements found!");
+            setupDescriptionEditor(editBtn, descriptionElement);
+        } else if (attempts >= maxAttempts) {
+            clearInterval(checkElements);
+            console.error("Couldn't find description elements");
+        }
+    }, 300);
+}
+function setupDescriptionEditor(editBtn, descriptionElement) {
+    editBtn.addEventListener('click', function() {
+        // Create textarea
+        const textarea = document.createElement('textarea');
+        textarea.value = descriptionElement.textContent;
+        textarea.className = 'project-description-edit';
+        textarea.style.cssText = `
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 2px solid #4a90e2;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: inherit;
+        `;
 
+        // Replace paragraph with textarea
+        descriptionElement.replaceWith(textarea);
+        textarea.focus();
 
+        // Handle save
+        const saveEdit = async () => {
+            const newDescription = textarea.value.trim();
+            const project_ID = new URLSearchParams(window.location.search).get('project_ID');
+            
+            try {
+                const formData = new FormData();
+                formData.append('update_description', '1');
+                formData.append('project_ID', project_ID);
+                formData.append('new_description', newDescription);
+
+                const response = await fetch('handleProject.php', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    descriptionElement.textContent = newDescription;
+                    textarea.replaceWith(descriptionElement);
+                } else {
+                    throw new Error(result.message || "Failed to update description");
+                }
+            } catch (error) {
+                console.error("Update error:", error);
+                alert(error.message);
+                textarea.replaceWith(descriptionElement);
+            }
+        };
+
+        // Event listeners
+        textarea.addEventListener('blur', saveEdit);
+        textarea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) saveEdit();
+            if (e.key === 'Escape') textarea.replaceWith(descriptionElement);
+        });
+    });
+}
+
+function initializeProjectCompletion() {
+    const completeBtn = document.getElementById('confirmCompleteProject');
+    
+    if (completeBtn) {
+        completeBtn.addEventListener('click', async function() {
+            try {
+                completeBtn.disabled = true;
+                completeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Completing...';
+                
+                const project_ID = new URLSearchParams(window.location.search).get('project_ID');
+                const response = await fetch('handleProject.php', {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        complete_project: '1',
+                        project_ID: project_ID
+                    }),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    closeGenericModal('completeProjectModal');
+                    await updateProjectHeader(); // Use the main header update function
+                } else {
+                    throw new Error(result.message || "Failed to complete project");
+                }
+            } catch (error) {
+                console.error("Completion error:", error);
+                alert(error.message);
+            } finally {
+                completeBtn.disabled = false;
+                completeBtn.textContent = 'Complete';
+            }
+        });
+    }
+}
