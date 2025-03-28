@@ -115,7 +115,21 @@ elseif (isset($_GET['get_project'])) {
     $project_ID = $_GET['project_ID'] ?? 0;
     
     if ($project_ID > 0) {
-        $query = "SELECT * FROM project WHERE project_ID = ?";
+        $query = "SELECT 
+                    project_ID,
+                    project_name,
+                    project_description,
+                    project_deadline,
+                    status,
+                    leader_ID,
+                    created_at,
+                    CASE 
+                        WHEN status = 'completed' THEN 1 
+                        ELSE 0 
+                    END as is_completed
+                  FROM project 
+                  WHERE project_ID = ?";
+        
         $stmt = $conn->prepare($query);
         
         if ($stmt) {
@@ -125,16 +139,22 @@ elseif (isset($_GET['get_project'])) {
             
             if ($result->num_rows > 0) {
                 $response = $result->fetch_assoc();
+                // Ensure status is never null
+                $response['status'] = $response['status'] ?? 'in progress';
             } else {
-                $response = ["success" => false, "error" => "Project not found"];
+                $response = ["error" => "Project not found"];
             }
             $stmt->close();
         } else {
-            $response = ["success" => false, "error" => "Database error: " . $conn->error];
+            $response = ["error" => "Database error"];
         }
     } else {
-        $response = ["success" => false, "error" => "Invalid project ID"];
+        $response = ["error" => "Invalid project ID"];
     }
+    
+    header('Content-Type: application/json');
+    echo json_encode($response);
+    exit;
 }
 // Delete a project
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_project'])) {
@@ -179,7 +199,6 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_project']))
         $response = ["success" => false, "message" => "Invalid project ID"];
     }
 }
-// Add this condition before your final else
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_project'])) {
     error_log("Update project request received");
     
@@ -221,6 +240,83 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_project']))
     } else {
         error_log("Database error: " . $stmt->error);
         echo json_encode(['success' => false, 'message' => 'Database error']);
+    }
+    exit;
+}
+elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_description'])) {
+    header('Content-Type: application/json');
+    
+    try {
+        $project_ID = (int)$_POST['project_ID'];
+        $new_description = trim($_POST['new_description']);
+
+        // Validate input
+        if (empty($new_description)) {
+            throw new Exception("Description cannot be empty");
+        }
+
+        // Verify leadership
+        $stmt = $conn->prepare("SELECT leader_ID FROM project WHERE project_ID = ?");
+        $stmt->bind_param("i", $project_ID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 0) {
+            throw new Exception("Project not found");
+        }
+        
+        $leader_ID = $result->fetch_assoc()['leader_ID'];
+        if ($leader_ID != $_SESSION['user_id']) {
+            throw new Exception("Only project leaders can edit descriptions");
+        }
+
+        // Update description
+        $stmt = $conn->prepare("UPDATE project SET project_description = ? WHERE project_ID = ?");
+        $stmt->bind_param("si", $new_description, $project_ID);
+        
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true]);
+        } else {
+            throw new Exception("Database error: " . $stmt->error);
+        }
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+    exit;
+}
+// Add this before the final else
+elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['complete_project'])) {
+    header('Content-Type: application/json');
+    
+    try {
+        $project_ID = $_POST['project_ID'];
+        
+        // Verify leadership
+        $stmt = $conn->prepare("SELECT leader_ID FROM project WHERE project_ID = ?");
+        $stmt->bind_param("i", $project_ID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 0) {
+            throw new Exception("Project not found");
+        }
+        
+        $leader_ID = $result->fetch_assoc()['leader_ID'];
+        if ($leader_ID != $_SESSION['user_id']) {
+            throw new Exception("Only project leaders can complete projects");
+        }
+
+        // Update status
+        $stmt = $conn->prepare("UPDATE project SET status = 'Completed' WHERE project_ID = ?");
+        $stmt->bind_param("i", $project_ID);
+        
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true]);
+        } else {
+            throw new Exception("Database error: " . $stmt->error);
+        }
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
     }
     exit;
 }
