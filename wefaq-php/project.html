@@ -23,16 +23,12 @@
             <div class="project-description">
                 <div class="project-description-header">
 
-                <h3> Project Description </h3>
-                <button class="btn-icon edit project-edit-btns" title="Edit Tasks">
+                <h3>  </h3>
+                <button class="btn-icon edit project-edit-btns" id="editProjectDescription" title="Edit Tasks">
                     <i class="fas fa-edit"></i>
                 </button>
                 </div>
-                <p>   This platform enables seamless project management by allowing
-                    users to create, assign, and track tasks with deadlines. Team
-                    members can self-assign tasks, update their status, and collaborate effectively.
-                    Real-time updates ensure everyone stays informed about task progress and deadlines.
-                    The intuitive interface simplifies project organization, making it ideal for teams of all sizes.
+                <p id="project-description-content">   
                 </p>
             </div>
 
@@ -322,7 +318,7 @@
                         <div class="modal-body">
                             <span>Are you sure you want to mark this project as complete?</span>
                             <div class="modal-actions">
-                                <button class="btn btn-primary small-btn" id="confirmComplete">Complete</button>
+                                <button class="btn btn-primary small-btn" id="confirmCompleteProject">Complete</button>
                                 <button class="btn btn-secondary small-btn" id="cancelComplete" onclick="closeGenericModal('completeProjectModal')">Cancel</button>
                             </div>
                         </div>
