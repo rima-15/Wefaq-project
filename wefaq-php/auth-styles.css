@@ -189,25 +189,72 @@
     height: 18px;
 }
 
-.password-input {
+/* Uniquely named password input styling */
+.wefaq-password-container {
     position: relative;
+    width: 100%;
 }
 
-.toggle-password {
+.wefaq-password-container input[type="password"],
+.wefaq-password-container input[type="text"] {
+    width: 100%;
+    padding-right: 40px; /* Make space for the button */
+}
+
+.wefaq-toggle-btn {
     position: absolute;
-    right: 16px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
-    cursor: pointer;
-    color: var(--dark-gray);
-    background: none;
+    background: transparent;
     border: none;
-    padding: 0;
+    cursor: pointer;
+    padding: 5px;
+    color: var(--dark-gray);
     font-size: 16px;
+    z-index: 10;
 }
 
-.toggle-password:hover {
+.wefaq-toggle-btn:hover {
     color: var(--primary-color);
+}
+
+.wefaq-toggle-btn:focus {
+    outline: none;
+}
+
+/* New password input styling */
+.password-input-container {
+    position: relative;
+    width: 100%;
+}
+
+.password-input-container input[type="password"],
+.password-input-container input[type="text"] {
+    width: 100%;
+    padding-right: 40px; /* Make space for the button */
+}
+
+.toggle-password-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    color: var(--dark-gray);
+    font-size: 16px;
+    z-index: 10;
+}
+
+.toggle-password-btn:hover {
+    color: var(--primary-color);
+}
+
+.toggle-password-btn:focus {
+    outline: none;
 }
 
 .btn-primary {
@@ -245,6 +292,34 @@
 
 .auth-footer a:hover {
     color: var(--primary-dark);
+}
+
+/* Alert Messages */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    text-align: center;
+    font-weight: 500;
+    animation: fadeIn 0.3s ease;
+}
+
+.alert-success {
+    background-color: rgba(46, 204, 113, 0.15);
+    color: #27ae60;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.alert-danger {
+    background-color: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* Responsive styles for smaller screens */
