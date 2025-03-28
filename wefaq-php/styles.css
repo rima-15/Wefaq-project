@@ -3126,3 +3126,23 @@ input:focus, select:focus, textarea:focus {
     max-width: 800px; /* Set a max-width to prevent it from becoming too large */
     
 }
+.project-name-input {
+    font-size: inherit;
+    font-weight: inherit;
+    font-family: inherit;
+    border: 2px solid #4a90e2;
+    padding: 5px 10px;
+    width: auto;
+    min-width: 200px;
+    border-radius: 4px;
+    outline: none;
+}
+
+#pageTitle {
+    cursor: default;
+    padding: 2px 5px;
+    border-radius: 3px;
+    transition: background-color 0.2s;
+    display: inline-block;
+    min-width: 200px;
+}
