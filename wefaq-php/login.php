@@ -2,23 +2,23 @@
 include 'connection.php';
 
 // Initialize variables
-$email = $password = '';
+$login_id = $password = '';
 $error = '';
 
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form data
-    $email = trim($_POST['email']);
+    $login_id = trim($_POST['login_id']);
     $password = $_POST['password'];
     
     // Validate inputs
-    if (empty($email) || empty($password)) {
+    if (empty($login_id) || empty($password)) {
         $error = "Please fill in all fields.";
     } else {
-        // Check if email exists and verify password
-        $query = "SELECT user_ID, username, password, user_type FROM user WHERE email = ?";
+        // Check if the login ID is an email or username, and verify password
+        $query = "SELECT user_ID, username, password, user_type FROM user WHERE email = ? OR username = ?";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("s", $email);
+        $stmt->bind_param("ss", $login_id, $login_id);
         $stmt->execute();
         $result = $stmt->get_result();
         
@@ -37,10 +37,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: dashboard.php");
                 exit();
             } else {
-                $error = "Invalid email or password.";
+                $error = "Invalid username/email or password.";
             }
         } else {
-            $error = "Invalid email or password.";
+            $error = "Invalid username/email or password.";
         }
         
         $stmt->close();
@@ -99,8 +99,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
                 <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" class="auth-form">
                     <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" placeholder="Enter your email" value="<?php echo htmlspecialchars($email); ?>" required>
+                        <label for="login_id">Username or Email</label>
+                        <input type="text" id="login_id" name="login_id" placeholder="Enter your username or email" value="<?php echo htmlspecialchars($login_id); ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
