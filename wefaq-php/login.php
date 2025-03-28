@@ -1,5 +1,51 @@
 <?php
 include 'connection.php';
+
+// Initialize variables
+$email = $password = '';
+$error = '';
+
+// Process form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get form data
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    
+    // Validate inputs
+    if (empty($email) || empty($password)) {
+        $error = "Please fill in all fields.";
+    } else {
+        // Check if email exists and verify password
+        $query = "SELECT user_ID, username, password, user_type FROM user WHERE email = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows == 1) {
+            $user = $result->fetch_assoc();
+            
+            // Verify the password
+            if (password_verify($password, $user['password'])) {
+                // Start session and store user info
+                session_start();
+                $_SESSION['user_id'] = $user['user_ID'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['user_type'] = $user['user_type'];
+                
+                // Redirect to dashboard
+                header("Location: dashboard.php");
+                exit();
+            } else {
+                $error = "Invalid email or password.";
+            }
+        } else {
+            $error = "Invalid email or password.";
+        }
+        
+        $stmt->close();
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,16 +90,25 @@ include 'connection.php';
         <div class="auth-form-container">
             <div class="auth-card">
                 <h2>Welcome Back</h2>
-                <form id="loginForm" onsubmit="return redirectToDashboard(event)" class="auth-form">
+                
+                <?php if (!empty($error)): ?>
+                    <div class="alert alert-danger">
+                        <?php echo $error; ?>
+                    </div>
+                <?php endif; ?>
+                
+                <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" class="auth-form">
                     <div class="form-group">
                         <label for="email">Email Address</label>
-                        <input type="email" id="email" placeholder="Enter your email" required>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" value="<?php echo htmlspecialchars($email); ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <div class="password-input">
-                            <input type="password" id="password" placeholder="Enter your password" required>
-                            <i class="fas fa-eye toggle-password" onclick="togglePassword('password')"></i>
+                        <div class="wefaq-password-container">
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                            <button type="button" class="wefaq-toggle-btn" aria-label="Toggle password visibility">
+                                <i class="fas fa-eye" id="password-toggle-icon"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -65,28 +120,34 @@ include 'connection.php';
             </div>
         </div>
     </div>
-    <script src="script.js"></script>
+    
     <script>
-        function redirectToDashboard(event) {
-            event.preventDefault();
-            window.location.href = 'dashboard.php';
-            return false;
-        }
-
-        function togglePassword(inputId) {
-            const input = document.getElementById(inputId);
-            const icon = event.currentTarget;
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup password toggle
+            setupPasswordToggle('password', 'password-toggle-icon');
             
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+            function setupPasswordToggle(inputId, iconId) {
+                const toggleIcon = document.getElementById(iconId);
+                const toggleBtn = toggleIcon.closest('.wefaq-toggle-btn');
+                const passwordInput = document.getElementById(inputId);
+                
+                toggleBtn.addEventListener('click', function() {
+                    // Toggle type
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    
+                    // Toggle icon
+                    if (type === 'password') {
+                        toggleIcon.classList.remove('fa-eye-slash');
+                        toggleIcon.classList.add('fa-eye');
+                    } else {
+                        toggleIcon.classList.remove('fa-eye');
+                        toggleIcon.classList.add('fa-eye-slash');
+                    }
+                });
             }
-        }
+        });
     </script>
 </body>
 </html>
