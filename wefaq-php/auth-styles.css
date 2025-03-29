@@ -24,28 +24,54 @@
     padding: 0;
 }
 
+/* Changed the approach to absolutely ensure no gaps */
 .auth-container {
     display: flex;
     width: 900px;
     max-width: 90%;
     height: 600px;
-    background: var(--white);
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    position: relative;
+    background: none; /* Remove any background */
+}
+
+/* Set container background to white on right side only */
+.auth-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 50%;
+    background: white;
+    border-radius: 0 12px 12px 0;
 }
 
 /* Left side with branding */
 .auth-branding {
-    flex: 1;
-    background: var(--primary-very-light);
+    width: 50%;
     padding: 40px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    color: #2b2d42;
+    color: white; /* Change text color to white to match index.html */
     position: relative;
-    overflow: hidden;
+    z-index: 1;
+}
+
+/* Background for the left side - covers everything */
+.auth-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 50%;
+    background: linear-gradient(135deg, #f8f9fa, #9096DE); /* Match index.html gradient */
+    border-radius: 12px 0 0 12px;
+    z-index: 0;
 }
 
 .auth-branding-content {
@@ -103,9 +129,12 @@
 
 /* Right side with form */
 .auth-form-container {
-    flex: 1;
+    width: 50%;
     padding: 40px;
     overflow-y: auto;
+    position: relative;
+    z-index: 1;
+    background: transparent; /* Make transparent to let the container's background show */
 }
 
 .auth-card {
