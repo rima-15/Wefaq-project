@@ -9,10 +9,12 @@ $data = json_decode($json, true) ?? $_POST; // Fallback to regular POST if not J
 // Authentication check
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(["success" => false, "message" => "Not authenticated"]);
+
     exit;
 }
-$leader_ID = $_SESSION['user_id'];
-$user_ID = $_SESSION['user_id'];
+    $leader_ID = $_SESSION['user_id'];
+    $user_ID = $_SESSION['user_id'];
+
 $response = [];
 
 // Check connection
@@ -467,7 +469,169 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_task'])) {
     }
     exit;
 }
+// Get team members for a project
+elseif ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['get_team_members'])) {
+    header('Content-Type: application/json');
+    
+    try {
+        $project_ID = (int)$_GET['project_ID'];
+        
+        $stmt = $conn->prepare("
+            SELECT u.user_ID, u.username 
+            FROM projectteam pt
+            JOIN user u ON pt.user_ID = u.user_ID
+            WHERE pt.project_ID = ?
+        ");
+        
+        $stmt->bind_param("i", $project_ID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $members = [];
+        while ($row = $result->fetch_assoc()) {
+            $members[] = $row;
+        }
+        
+        echo json_encode([
+            'success' => true, 
+            'members' => $members
+        ]);
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+    exit;
+}
+// Handle file upload
+elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_file'])) {
+    header('Content-Type: application/json');
+    
+    try {
+        $project_ID = (int)$_POST['project_ID'];
+        $user_ID = $_SESSION['user_id'];
+        
+        // Validate project access
+        $stmt = $conn->prepare("SELECT 1 FROM projectteam WHERE project_ID = ? AND user_ID = ?");
+        $stmt->bind_param("ii", $project_ID, $user_ID);
+        $stmt->execute();
+        
+        if (!$stmt->get_result()->num_rows > 0) {
+            throw new Exception("You don't have access to this project");
+        }
+        
+        // Validate file upload
+        if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+            throw new Exception("File upload failed");
+        }
+        
+        $file = $_FILES['file'];
+        $file_name = $file['name'];
+        $file_type = $file['type'];
+        $file_size = $file['size'];
+        $file_content = file_get_contents($file['tmp_name']);
+        
+        // Insert file metadata into database
+        $stmt = $conn->prepare("INSERT INTO file 
+            (file_name, file_type, file_size, uploaded_at, uploaded_by, project_ID) 
+            VALUES (?, ?, ?, NOW(), ?, ?)");
+        
+        $stmt->bind_param("ssiii", $file_name, $file_type, $file_size, $user_ID, $project_ID);
+        
+        if ($stmt->execute()) {
+            $file_ID = $stmt->insert_id;
+            
+            // Save file to server (optional - you can choose to store only in DB)
+            $upload_dir = 'uploads/';
+            if (!file_exists($upload_dir)) {
+                mkdir($upload_dir, 0777, true);
+            }
+            $file_path = $upload_dir . $file_ID . '_' . $file_name;
+            move_uploaded_file($file['tmp_name'], $file_path);
+            
+            echo json_encode(['success' => true, 'file_ID' => $file_ID]);
+        } else {
+            throw new Exception("Failed to save file metadata: " . $stmt->error);
+        }
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+    exit;
+}
 
+// Get files for a project
+elseif ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['get_files'])) {
+    header('Content-Type: application/json');
+    
+    try {
+        $project_ID = $_GET['project_ID'];
+        
+        error_log("Fetching files for project: " . $project_ID);
+        
+        $stmt = $conn->prepare("
+            SELECT f.*, u.username 
+            FROM file f
+            LEFT JOIN user u ON f.uploaded_by = u.user_ID
+            WHERE f.project_ID = ?
+            ORDER BY f.uploaded_at DESC
+        ");
+        
+        $stmt->bind_param("i", $project_ID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $files = [];
+        while ($row = $result->fetch_assoc()) {
+            $files[] = $row;
+        }
+        
+        error_log("Found " . count($files) . " files");
+        echo json_encode(['success' => true, 'files' => $files]);
+    } catch (Exception $e) {
+        error_log("Error getting files: " . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+    exit;
+}
+
+// Delete a file
+elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_file'])) {
+    header('Content-Type: application/json');
+    
+    try {
+        $file_ID = (int)$_POST['file_ID'];
+        $user_ID = $_SESSION['user_id'];
+        
+        // Verify user is a member of the project that contains this file
+        $stmt = $conn->prepare("
+            SELECT 1 
+            FROM projectteam pt
+            JOIN file f ON pt.project_ID = f.project_ID
+            WHERE f.file_ID = ? AND pt.user_ID = ?
+        ");
+        $stmt->bind_param("ii", $file_ID, $user_ID);
+        $stmt->execute();
+        
+        if (!$stmt->get_result()->num_rows > 0) {
+            throw new Exception("You must be a project member to delete files");
+        }
+        
+        // Delete file record
+        $stmt = $conn->prepare("DELETE FROM file WHERE file_ID = ?");
+        $stmt->bind_param("i", $file_ID);
+        
+        if ($stmt->execute()) {
+            // Delete the actual file if stored on server
+            $file_path = 'uploads/' . $file_ID . '_*';
+            array_map('unlink', glob($file_path));
+            
+            echo json_encode(['success' => true]);
+        } else {
+            throw new Exception("Failed to delete file: " . $stmt->error);
+        }
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+    exit;
+}
 else {
     $response = ["success" => false, "message" => "Invalid request"];
 }
