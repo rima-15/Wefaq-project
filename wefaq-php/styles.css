@@ -1637,6 +1637,10 @@ select {
     background-color: rgba(144, 150, 222, 0.15);
     color: var(--primary-color);
 }
+.status-badge.completed-task {
+    background-color: rgba(144, 150, 222, 0.15);
+    color: var(--primary-color);
+}
 
 .status-badge.in-progress {
     background-color: rgba(238, 212, 66, 0.1);
@@ -2980,3 +2984,65 @@ input:focus, select:focus, textarea:focus {
     display: inline-block;
     min-width: 200px;
 }
+
+.project-description-edit {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border: 2px solid #4a90e2;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: inherit;
+    resize: vertical;
+}
+/* Base Avatar Styles - Applied everywhere */
+.avatar {
+    --avatar-size: 40px;
+    --avatar-bg: #9096DE; /* Default color, will be overridden by JS */
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+    color: white;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+/* Avatar Container - For member listings */
+.avatar--member {
+    /* Specific member avatar styles if needed */
+}
+
+/* Avatar in Invite List */
+.avatar--invite {
+    --avatar-size: 36px;
+    font-size: 14px;
+}
+
+/* Avatar in Profile Header */
+.avatar--profile {
+    --avatar-size: 80px;
+    font-size: 32px;
+    margin-right: 16px;
+}
+
+/* Avatar in Task Assignments */
+.avatar--task {
+    /* Uses base styles */
+}
+
+/* Avatar in Chat/Message List */
+.avatar--message {
+    --avatar-size: 32px;
+    font-size: 12px;
+}
+
+/* Container for avatar + text */
+.avatar-container {
+    display: flex;
+    align-items: center;
+}
+

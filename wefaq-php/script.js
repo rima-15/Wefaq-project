@@ -46,12 +46,93 @@ document.addEventListener('DOMContentLoaded', function() {
     // Project Management
     const newProjectModal = document.getElementById('newProjectModal');
     const newProjectForm = document.getElementById('newProjectForm');
-    const addProjectBtn = document.querySelector('.add-project');
-    const cancelProjectBtn = document.getElementById('cancelProject');
-    const closeModalBtn = document.querySelector('.close-modal');
+ 
 
-    // Project data storage
-    let projects = JSON.parse(localStorage.getItem('projects')) || [];
+    // Get project ID from URL
+    function getProjectId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('project_ID');
+    }
+      // Load tasks 
+        const project_ID = getProjectId();
+        if (project_ID) 
+            loadTasks(project_ID);
+    
+
+    // Handle add task form submission
+    const addTaskForm = document.getElementById('addTaskForm');
+    if (addTaskForm) {
+        addTaskForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const project_ID = getProjectId();
+            if (project_ID) 
+                addTask(project_ID);
+        });
+    }
+
+    // Set up task action buttons (using event delegation)
+// Delete Task
+document.getElementById('confirmDeleteTask')?.addEventListener('click', function() {
+    if (currentTaskId) {
+        deleteTask(currentTaskId)
+            .then(() => {
+                closeGenericModal('deleteTaskModal');
+                const projectId = getProjectId();
+                loadTasks(projectId); // Refresh the task list
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+});
+
+// Assign Task
+document.getElementById('confirmAssignTask')?.addEventListener('click', function() {
+    if (currentTaskId) {
+        assignTask(currentTaskId)
+            .then(() => {
+                closeGenericModal('assignTaskModal');
+                const projectId = getProjectId();
+                loadTasks(projectId); // Refresh the task list
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+});
+
+// Start Task
+document.getElementById('confirmStartTask')?.addEventListener('click', function() {
+    if (currentTaskId) {
+        startTask(currentTaskId)
+            .then(() => {
+                closeGenericModal('startTaskModal');
+                const projectId = getProjectId();
+                loadTasks(projectId); // Refresh the task list
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+});
+
+// Complete Task
+document.getElementById('confirmCompleteTask')?.addEventListener('click', function() {
+    if (currentTaskId) {
+        completeTask(currentTaskId)
+            .then(() => {
+                closeGenericModal('completeTaskModal');
+                const projectId = getProjectId();
+                loadTasks(projectId); // Refresh the task list
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+});
+
+
+  
 
     // Get modal elements
     const modal = document.getElementById('newProjectModal');
@@ -98,74 +179,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle form submission
-    if (projectForm) {
-        projectForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            // Get form values
-            const projectName = document.getElementById('projectName').value;
-            const projectDescription = document.getElementById('projectDescription').value;
-
-            // Create new project object
-            const newProject = {
-                id: Date.now(),
-                name: projectName,
-                description: projectDescription,
-                tasks: [],
-                members: [],
-                created: new Date().toISOString()
-            };
-
-            // Add to projects array
-            projects.push(newProject);
-
-            // Save to localStorage
-            localStorage.setItem('projects', JSON.stringify(projects));
-
-            // Add to sidebar list
-            const projectItem = document.createElement('li');
-            projectItem.innerHTML = `
-                <a href="project-${newProject.id}.html">
-                    <i class="fas fa-folder"></i>
-                    <span>${newProject.name}</span>
-                </a>
-            `;
-
-            // Insert before the "Add Project" button
-            const projectsList = document.getElementById('projectsList');
-            const addProjectItem = projectsList.querySelector('.add-project').parentElement;
-            projectsList.insertBefore(projectItem, addProjectItem);
-
-            // Close modal
-            closeModal();
-
-            // Create and navigate to project page
-            window.location.href = `project-${newProject.id}.html`;
-        });
-    }
-
-    // Load existing projects
-    function loadProjects() {
-        if (projectsList) {
-            projects.forEach(project => {
-                const projectItem = document.createElement('li');
-                projectItem.innerHTML = `
-                    <a href="project-${project.id}.html">
-                        <i class="fas fa-folder"></i>
-                        <span>${project.name}</span>
-                    </a>
-                `;
-
-                // Insert before the "Add Project" button
-                const addProjectItem = projectsList.querySelector('.add-project').parentElement;
-                projectsList.insertBefore(projectItem, addProjectItem);
-            });
-        }
-    }
-
-    // Initialize projects
-    loadProjects();
 
     // Projects Dropdown
     const projectsDropdown = document.getElementById('projectsDropdown');
@@ -290,26 +303,30 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Handle "Add Task" Form Submission
-        const addTaskForm = document.getElementById('addTaskForm');
-        if (addTaskForm) {
-            addTaskForm.addEventListener('submit', (e) => {
-                e.preventDefault();
+    document.getElementById('addTaskForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const project_ID = new URLSearchParams(window.location.search).get('project_ID');
+    const formData = new FormData(this); // Automatically captures form inputs
+    formData.append('add_task', '1');
+    formData.append('project_ID', project_ID);
 
-                // Get form values
-                const taskName = document.getElementById('taskName').value;
-                const taskDeadline = document.getElementById('taskDeadline').value;
-
-                // Log the values (replace this with your logic to save the task)
-                console.log('Task Name:', taskName);
-                console.log('Task Deadline:', taskDeadline);
-
-                // Close the modal
-                closeGenericModal('addTaskModal');
-
-                // Clear the form fields
-                addTaskForm.reset();
-            });
+    fetch('handleProject.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            closeGenericModal('addTaskModal');
+            this.reset();
+            loadTasks(project_ID);
+        } else {
+            alert('Error: ' + (data.message || 'Task creation failed'));
         }
+    })
+    .catch(error => console.error('Error:', error));
+});
     });
 
     // Search Functionality
@@ -335,6 +352,334 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 });
+// Task Functions (add these to your existing functions)
+function loadTasks(project_ID) {
+         console.log('load Tasks ');
+
+    fetch('handleProject.php?get_tasks=1&project_ID=' + project_ID)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                             console.log('load Tasks data success before rederder call');
+
+                    renderTasks(data.tasks);
+         console.log('load Tasks data success after rederder call');
+
+                } else {
+                    console.error('Error loading tasks:', data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+}
+
+function renderTasks(tasks) {
+     console.log('Tasks data:', tasks);
+    const tbody = document.querySelector('.tasks-table tbody');
+    tbody.innerHTML = '';
+
+    tasks.forEach(task => {
+        const row = document.createElement('tr');
+        row.dataset.taskId = task.task_ID;
+
+        // Task name and description
+            row.innerHTML = `
+        <td>${escapeHtml(task.task_name)}</td>
+        <td class='taskDescription'>${escapeHtml(task.task_description)}</td>
+        <td>
+            ${task.assigned_to ? `
+            <div class="member avatar-container">
+                ${generateAvatar(task.username, '--task')}
+                <span>${task.username || ''}</span>
+            </div>
+            ` : '<div><span></span></div>'}
+        </td>
+      <td><span class="status-badge ${getStatusClass(task.status)}">${getStatusText(task.status)}</span></td>
+            <td>${formatDate(task.task_deadline)}</td>
+            <td class="actions">
+                ${getActionButtons(task)}
+            </td>
+        `;
+       
+
+        tbody.appendChild(row);
+    });
+}
+function generateAvatar(username, variant = '') {
+    if (!username) return '';
+    
+    const themeColors = ['#9096DE', '#EED442', '#886B63', '#D3D3D3','#634d47','#b0aeae','#c4c8f2','#fae987'];
+    const letter = username.charAt(0).toUpperCase();
+    
+    // Consistent color based on username hash
+    const hash = Array.from(username).reduce((hash, char) => {
+        return char.charCodeAt(0) + ((hash << 5) - hash);
+    }, 0);
+    const color = themeColors[Math.abs(hash) % themeColors.length];
+    
+    // Size variants
+    const sizes = {
+        '': 40,
+        '--invite': 36,
+        '--profile': 80,
+        '--message': 32
+    };
+    
+    const size = sizes[variant] || sizes[''];
+
+    return `
+        <div class="avatar ${variant}" style="background-color: ${color}; font-size: ${size * 0.4}px">
+            ${letter}
+        </div>
+    `;
+}
+
+function getActionButtons(task) {
+    let buttons = '';
+
+    // Delete button is always present
+    buttons += `
+        <button class="btn-icon delete" title="Delete Task" 
+                data-task-id="${task.task_ID}" 
+                onclick="openGenericModal('deleteTaskModal', ${task.task_ID})">
+            <i class="fas fa-trash"></i>
+        </button>
+    `;
+
+    // Status-specific buttons
+    switch (task.status) {
+        case 'unassigned':
+            buttons = `
+                <button class="btn-icon status-icons" title="Choose Task" 
+                        data-task-id="${task.task_ID}"
+                        onclick="openGenericModal('assignTaskModal', ${task.task_ID})">
+                    <i class="fas fa-user-check"></i>
+                </button>
+            ` + buttons;
+            break;
+        case 'not started':
+            buttons = `
+                <button class="btn-icon status-icons" title="Start Task" 
+                        data-task-id="${task.task_ID}"
+                        onclick="openGenericModal('startTaskModal', ${task.task_ID})">
+                    <i class="fas fa-play"></i>
+                </button>
+            ` + buttons;
+            break;
+        case 'in progress':
+            buttons = `
+                <button class="btn-icon status-icons" title="Complete Task" 
+                        data-task-id="${task.task_ID}"
+                        onclick="openGenericModal('completeTaskModal', ${task.task_ID})">
+                    <i class="fas fa-flag-checkered"></i>
+                </button>
+            ` + buttons;
+            break;
+    }
+
+    return buttons;
+}
+
+function addTask(project_ID) {
+    const task_name = document.getElementById('taskName').value;
+    const task_description = document.getElementById('taskDescription').value;
+    const task_deadline = document.getElementById('taskDeadline').value;
+
+    const formData = new FormData();
+    formData.append('add_task', '1');
+    formData.append('project_ID', project_ID);
+    formData.append('task_name', task_name);
+    formData.append('task_description', task_description);
+    formData.append('task_deadline', task_deadline);
+
+    fetch('handleProject.php', {
+        method: 'POST',
+        body: formData
+    })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeGenericModal('addTaskModal');
+                    document.getElementById('addTaskForm').reset();
+                    loadTasks(project_ID);
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+}
+
+function assignTask(task_ID) {
+    return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('update_task_status', '1');
+        formData.append('task_ID', task_ID);
+        formData.append('new_status', 'not started');
+        formData.append('assign_to_self', '1');
+
+        fetch('handleProject.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                resolve(data);
+            } else {
+                reject(data.message || 'Failed to assign task');
+            }
+        })
+        .catch(error => reject(error));
+    });
+}
+function startTask(task_ID) {
+    return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('update_task_status', '1');
+        formData.append('task_ID', task_ID);
+        formData.append('new_status', 'in progress');
+
+        fetch('handleProject.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                resolve(data);
+            } else {
+                reject(data.message || 'Failed to start task');
+            }
+        })
+        .catch(error => reject(error));
+    });
+}
+
+function completeTask(task_ID) {
+    return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('update_task_status', '1');
+        formData.append('task_ID', task_ID);
+        formData.append('new_status', 'completed');
+
+        fetch('handleProject.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                resolve(data);
+            } else {
+                reject(data.message || 'Failed to complete task');
+            }
+        })
+        .catch(error => reject(error));
+    });
+}
+
+function updateTaskStatus(task_ID, new_status) {
+    const formData = new FormData();
+    formData.append('update_task_status', '1');
+    formData.append('task_ID', task_ID);
+    formData.append('new_status', new_status);
+
+    fetch('handleProject.php', {
+        method: 'POST',
+        body: formData
+    })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const project_ID = getProjectId();
+                    loadTasks(project_ID);
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+}
+
+function deleteTask(task_ID) {
+   /* if (!confirm('Are you sure you want to delete this task?'))
+        return;*/
+
+      return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('delete_task', '1');
+        formData.append('task_ID', task_ID);
+
+        fetch('handleProject.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                resolve(data);
+            } else {
+                reject(data.message || 'Failed to delete task');
+            }
+        })
+        .catch(error => reject(error));
+    });
+}
+
+// Helper functions (add these to your existing helpers)
+function getStatusClass(status) {
+    switch (status) {
+        case 'completed':
+            return 'completed-task';
+        case 'in progress':
+            return 'in-progress';
+        case 'not started':
+            return 'not-started';
+        case 'unassigned':
+            return 'pending';
+        default:
+            return '';
+    }
+}
+
+function getStatusText(status) {
+    switch (status) {
+        case 'completed':
+            return 'Completed';
+        case 'in progress':
+            return 'In Progress';
+        case 'not started':
+            return 'Not Started';
+        case 'unassigned':
+            return 'Unassigned';
+        default:
+            return status;
+    }
+}
+
+function formatDate(dateString) {
+    if (!dateString)
+        return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'});
+}
+
+function escapeHtml(unsafe) {
+    if (!unsafe)
+        return '';
+    return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+}
+
+let currentTaskId = null;
+
+function openGenericModal(modalId, taskId = null) {
+    currentTaskId = taskId;
+    document.getElementById(modalId).style.display = 'block';
+}
+/*
 // Modal Handling
 function openGenericModal(modalId) {
     const modal = document.getElementById(modalId);
@@ -342,7 +687,7 @@ function openGenericModal(modalId) {
         modal.style.display = 'block';
     }
 }
-
+*/
 function closeGenericModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {

@@ -284,7 +284,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_description
     }
     exit;
 }
-// Add this before the final else
+// 
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['complete_project'])) {
     header('Content-Type: application/json');
     
@@ -314,6 +314,153 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['complete_project']
             echo json_encode(['success' => true]);
         } else {
             throw new Exception("Database error: " . $stmt->error);
+        }
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+    exit;
+}
+// Add a new task
+elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_task'])) {
+    header('Content-Type: application/json');
+    
+    try {
+        $task_name = trim($_POST['task_name']);
+        $task_description = trim($_POST['task_description'] ?? '');
+        $task_deadline = $_POST['task_deadline'];
+        $project_ID = (int)$_POST['project_ID'];
+        
+        // Validate input
+        if (empty($task_name)) {
+            throw new Exception("Task name is required");
+        }
+        
+        if (empty($task_deadline)) {
+            throw new Exception("Deadline is required");
+        }
+        
+        // Insert task
+        $stmt = $conn->prepare("INSERT INTO task 
+            (task_name, task_description, status, created_at, task_deadline, created_by, project_ID) 
+            VALUES (?, ?, 'unassigned', NOW(), ?, ?, ?)");
+        
+        $stmt->bind_param("sssii", $task_name, $task_description, $task_deadline, $_SESSION['user_id'], $project_ID);
+        
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true, 'task_ID' => $stmt->insert_id]);
+        } else {
+            throw new Exception("Failed to add task: " . $stmt->error);
+        }
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+    exit;
+}
+
+// Get all tasks for a project (updated for dynamic avatars)
+elseif ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['get_tasks'])) {
+    header('Content-Type: application/json');
+    
+    try {
+        $project_ID = (int)$_GET['project_ID'];
+        
+        $stmt = $conn->prepare("
+            SELECT 
+                t.*, 
+                u.username,
+                u.user_ID
+            FROM task t
+            LEFT JOIN user u ON t.assigned_to = u.user_ID
+            WHERE t.project_ID = ?
+            ORDER BY 
+                CASE t.status
+                    WHEN 'completed' THEN 4
+                    WHEN 'in progress' THEN 3
+                    WHEN 'not started' THEN 2
+                    WHEN 'unassigned' THEN 1
+                END,
+                t.task_deadline ASC
+        ");
+        
+        $stmt->bind_param("i", $project_ID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $tasks = [];
+        while ($row = $result->fetch_assoc()) {
+            // Add initials for client-side avatar generation
+            $row['initials'] = $row['username'] ? strtoupper(substr($row['username'], 0, 1)) : '';
+            $tasks[] = $row;
+        }
+        
+        echo json_encode([
+            'success' => true, 
+            'tasks' => $tasks,
+            'avatar_colors' => ['#9096DE', '#EED442', '#886B63', '#D3D3D3','#634d47','#b0aeae','#c4c8f2','#fae987']
+        ]);
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+    exit;
+}
+
+// Update task status (unchanged)
+elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_task_status'])) {
+    header('Content-Type: application/json');
+    
+    try {
+        $task_ID = (int)$_POST['task_ID'];
+        $new_status = $_POST['new_status'];
+        $user_ID = $_SESSION['user_id'];
+        
+        // Validate status
+        $valid_statuses = ['unassigned', 'not started', 'in progress', 'completed'];
+        if (!in_array($new_status, $valid_statuses)) {
+            throw new Exception("Invalid status");
+        }
+        
+        // Special handling for assigning task
+        if ($new_status === 'not started' && isset($_POST['assign_to_self'])) {
+            $stmt = $conn->prepare("
+                UPDATE task 
+                SET status = 'not started', assigned_to = ? 
+                WHERE task_ID = ? AND status = 'unassigned'
+            ");
+            $stmt->bind_param("ii", $user_ID, $task_ID);
+        } else {
+            $stmt = $conn->prepare("
+                UPDATE task 
+                SET status = ? 
+                WHERE task_ID = ?
+            ");
+            $stmt->bind_param("si", $new_status, $task_ID);
+        }
+        
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true]);
+        } else {
+            throw new Exception("Failed to update task: " . $stmt->error);
+        }
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+    exit;
+}
+
+// Delete task (unchanged)
+elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_task'])) {
+    header('Content-Type: application/json');
+    
+    try {
+        $task_ID = (int)$_POST['task_ID'];
+        
+        $stmt = $conn->prepare("DELETE FROM task WHERE task_ID = ?");
+        $stmt->bind_param("i", $task_ID);
+        
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true]);
+        } else {
+            throw new Exception("Failed to delete task: " . $stmt->error);
         }
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'message' => $e->getMessage()]);

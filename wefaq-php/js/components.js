@@ -97,12 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     initializeComponents();
     
-      if (window.location.pathname.includes('project.html')) {
 
-        initializeProjectNameEditing();
-
-
-    }
     });
     
 
