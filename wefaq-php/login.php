@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['user_type'] = $user['user_type'];
                 
                 // Redirect to dashboard
-                header("Location: dashboard.php");
+                header("Location: chatroom.php");
                 exit();
             } else {
                 $error = "Invalid username/email or password.";
