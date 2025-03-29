@@ -207,7 +207,7 @@ const headerHtml = `
     // Add the modal HTML
     const modalHtml = `
         <div id="newProjectModal" class="modal">
-            <div class="modal-content">
+            <div class="modal-content create-modal">
                 <div class="modal-header">
                     <h2>Create New Project</h2>
                     <button class="close-modal" onclick="closeGenericModal('newProjectModal')">&times;</button>

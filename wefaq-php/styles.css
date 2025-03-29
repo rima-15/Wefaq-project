@@ -374,6 +374,28 @@ input[type="tel"]::placeholder {
     display: none;
     margin: 0.25rem 0 0.25rem 2.7rem;
     border-left: 2px solid var(--primary-light);
+    max-height: 300px; 
+    overflow-y: auto;
+    scrollbar-width: thin; /* For Firefox */
+}
+
+/* Custom scrollbar for Webkit browsers */
+.projects-submenu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.projects-submenu::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.projects-submenu::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.projects-submenu::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 .projects-submenu.show {
@@ -978,6 +1000,11 @@ input[type="tel"]::placeholder {
     position: relative;
     text-align: center;
     overflow:hidden;
+}
+.create-modal{
+       text-align: left;
+ 
+    
 }
 .modal-confirm-content {
     background-color: white;
