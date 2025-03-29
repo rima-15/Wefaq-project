@@ -632,6 +632,21 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_file'])) {
     }
     exit;
 }
+// Add this to handleProject.php
+elseif (isset($_GET['check_leadership'])) {
+    header('Content-Type: application/json');
+    $project_ID = (int)$_GET['project_ID'];
+    $user_ID = $_SESSION['user_id'] ?? 0;
+    
+    $stmt = $conn->prepare("SELECT 1 FROM project WHERE project_ID = ? AND leader_ID = ?");
+    $stmt->bind_param("ii", $project_ID, $user_ID);
+    $stmt->execute();
+    
+    echo json_encode([
+        'isLeader' => $stmt->get_result()->num_rows > 0
+    ]);
+    exit;
+}
 else {
     $response = ["success" => false, "message" => "Invalid request"];
 }

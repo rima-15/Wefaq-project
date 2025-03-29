@@ -480,36 +480,57 @@ function getActionButtons(task) {
     return buttons;
 }
 async function handleTaskOperation(operationPromise, modalId, project_ID) {
+    let confirmBtn;
+    let originalBtnText;
+
     try {
-        // Show loading state in modal button
-        const confirmBtn = document.querySelector(`#${modalId} .modal-actions .btn-primary`);
-        const originalBtnText = confirmBtn.innerHTML;
+        // 1. Get the correct confirm button based on modalId
+        if (modalId === "deleteTaskModal") {
+            confirmBtn = document.getElementById('confirmDeleteTask');
+        } else {
+            confirmBtn = document.querySelector(`#${modalId} .modal-actions .btn-primary`);
+        }
+
+        // 2. Check if button exists
+        if (!confirmBtn) {
+            throw new Error(`Confirm button not found for modal: ${modalId}`);
+        }
+
+        // 3. Store original button state
+        originalBtnText = confirmBtn.innerHTML;
         confirmBtn.disabled = true;
         confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
-        
-        // Execute the operation
+
+        // 4. Execute the operation
         const result = await operationPromise;
-        
-        // Refresh both task list and dashboard
+
+        // 5. Refresh data (parallel)
         await Promise.all([
             loadTasks(project_ID),
             fetchDashboardData(project_ID)
         ]);
-        
-        // Close modal and reset button
+
+        // 6. Close modal and reset button
         closeGenericModal(modalId);
-        confirmBtn.disabled = false;
-        confirmBtn.innerHTML = originalBtnText;
-        
+        resetButton(confirmBtn, originalBtnText);
+
         return result;
     } catch (error) {
         console.error('Operation failed:', error);
-        // Reset button even on error
-        const confirmBtn = document.querySelector(`#${modalId} .modal-actions .btn-primary`);
-        confirmBtn.disabled = false;
-        confirmBtn.innerHTML = originalBtnText;
+        
+        // 7. Reset button even on error
+        if (confirmBtn && originalBtnText) {
+            resetButton(confirmBtn, originalBtnText);
+        }
+        
         throw error;
     }
+}
+
+// Helper function to reset button state
+function resetButton(button, originalHtml) {
+    button.disabled = false;
+    button.innerHTML = originalHtml;
 }
 
 function addTask(project_ID) {
@@ -619,7 +640,11 @@ function deleteTask(task_ID) {
     })
     .then(response => response.json())
     .then(data => {
-        if (!data.success) throw new Error(data.message || 'Failed to delete task');
+        if (!data.success) {
+            throw new Error(data.message || 'Failed to delete task');
+             closeGenericModal('deleteTaskModal');
+
+        }
         return data;
     });
 
@@ -1261,13 +1286,32 @@ function createTeamContributionChart(tasks, members) {
             return color; // Return original if error
         }
     }
-
+document.addEventListener('click', function(e) {
+    // Handle all delete buttons with a single listener
+    if (e.target.closest('.delete-task-btn')) {
+        e.preventDefault();
+        const button = e.target.closest('.delete-task-btn');
+        const task_ID = button.dataset.taskId;
+        
+        if (task_ID) {
+            deleteTask(task_ID).catch(error => {
+                console.error('Delete task failed:', error);
+                // Show error to user
+                alert('Failed to delete task: ' + error.message);
+            });
+        }
+    }
+});
 
     // Get project ID from URL
     function getProjectId() {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get('project_ID');
     }
+    
+    
+   
+
 
 let currentTaskId = null;
 

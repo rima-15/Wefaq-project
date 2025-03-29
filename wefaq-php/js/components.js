@@ -109,41 +109,38 @@ document.addEventListener('DOMContentLoaded', function() {
         
         
         
-    // Add the header HTML directly
-    const headerHtml = `
-        <header class="dashboard-header">
+const headerHtml = `
+    <header class="dashboard-header">
         <div class="header-left">
-        <button type="button" id="sidebarToggle" class="sidebar-toggle">
-        <i class="fas fa-bars"></i>
-</button>
-    <h1 id="pageTitle">Dashboard</h1>
-    <p id="project-deadline-header"></p>
-    <div class="editProject" style="display: none;">
-        <button class="btn-icon edit project-edit-btns" id="editProjectBtn" title="Edit Project" >
+            <button type="button" id="sidebarToggle" class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h1 id="pageTitle">Dashboard</h1>
+            <p id="project-deadline-header"></p>
+            <div class="editProject" style="display: none !important;">
+<button class="btn-icon edit project-edit-btns" id="editProjectBtn" title="Edit Project" >
             <i class="fas fa-edit"></i>
         </button>
         <button class="btn-icon delete project-edit-btns" title="Delete Task" onclick="openGenericModal('deleteProjectModal')">
             <i class="fas fa-trash"></i>
-        </button>
-    </div>
-</div>
-    <div class="header-right">
-    <div class="team-members" style="display: none;">
-                    <div class="header-member" style="background-image: url('images/avatarF1.jpeg');"></div>
-                    <div class="header-member" style="background-image: url('images/avatarM1.jpeg');"></div>
-                    <div class="header-member" style="background-image: url('images/avatarF2.jpeg');"></div>
-                    <div class="header-member add-member" onclick="openGenericModal('invitePopup')">+</div>
-                </div>
-        <button class="btn btn-primary" id="complete-project-btn" style="display: none;" onclick="openGenericModal('completeProjectModal')">
-            Mark as Complete
-        </button>
-        <div class="user-menu">
-            <img src="images/avatarF1.jpeg" alt="User Avatar" class="user-avatar">
-                <span class="user-name">Hi, John Doe</span>
+        </button>            </div>
         </div>
-    </div>
-</header>
-    `;
+        <div class="header-right">
+            <div class="team-members" style="display: none !important;">
+<div class="header-member" style="background-image: url('images/avatarF1.jpeg');"></div>
+                    <div class="header-member" style="background-image: url('images/avatarM1.jpeg');"></div>
+                    <div class="header-member" style="background-image: url('images/avatarF2.jpeg');"></div>                <div class="header-member add-member" style="display: none !important;" onclick="openGenericModal('invitePopup')">+</div>
+            </div>
+            <button class="btn btn-primary" id="complete-project-btn" style="display: none !important;" onclick="openGenericModal('completeProjectModal')">
+                Mark as Complete
+            </button>
+            <div class="user-menu">
+                <img src="images/avatarF1.jpeg" alt="User Avatar" class="user-avatar">
+                <span class="user-name">Hi, John Doe</span>
+            </div>
+        </div>
+    </header>
+`;
 
     // Add the sidebar HTML directly
     const sidebarHtml = `
@@ -370,10 +367,19 @@ if (projectForm) {
             initializeProjectButtons(project);
         }
     }
+async function checkLeadership(project_ID) {
+    try {
+        const response = await fetch(`handleProject.php?check_leadership=true&project_ID=${project_ID}`);
+        const data = await response.json();
+        return data.isLeader || false;
+    } catch (error) {
+        console.error("Leadership check failed:", error);
+        return false;
+    }
+}
 // Function to retrieve project data from URL and database
 async function getProjectFromURL() {
     try {
-        // Get project ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const projectID = urlParams.get('project_ID');
         
@@ -382,7 +388,6 @@ async function getProjectFromURL() {
             return null;
         }
 
-        // Fetch project data from server
         const response = await fetch(`handleProject.php?get_project=true&project_ID=${projectID}`);
         const data = await response.json();
         
@@ -396,7 +401,8 @@ async function getProjectFromURL() {
             description: data.project_description,
             deadline: data.project_deadline,
             status: data.status,
-            project_ID: data.project_ID
+            project_ID: data.project_ID,
+            leader_ID: data.leader_ID // Ensure this is being returned
         };
         
     } catch (error) {
@@ -410,56 +416,74 @@ async function getProjectFromURL() {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
-
-// Function to update the project header with actual project data
+// update project header & exclusive btns
 async function updateProjectHeader() {
     try {
-        const project = await getProjectFromURL();
-        if (!project) {
-            console.error('Project not found!');
-            window.location.href = 'dashboard.html';
+        const urlParams = new URLSearchParams(window.location.search);
+        const project_ID = urlParams.get('project_ID');
+        
+        if (!project_ID) {
+            console.error('No project ID in URL');
             return;
         }
 
-        const pageTitle = document.getElementById('pageTitle');
-        const projectDeadlineHeader = document.getElementById('project-deadline-header');
-        const editProjectBtn = document.querySelector('.editProject');
-        const userMenu = document.querySelector('.user-menu');
-        const teamMembers = document.querySelector('.team-members');
-        const projectDescription = document.querySelector('.project-description p');
+        // Get project data and leadership status in parallel
+        const [project, isLeader] = await Promise.all([
+            getProjectFromURL(),
+            checkLeadership(project_ID)
+        ]);
 
-        if (pageTitle) pageTitle.textContent = project.name;
-        if (projectDeadlineHeader) projectDeadlineHeader.textContent = `Deadline: ${formatDeadline(project.deadline)}`;
-        if (projectDescription) projectDescription.textContent = project.description || "No description available";
-        if (editProjectBtn) editProjectBtn.style.display = 'flex';
-        
-             // Handle completion status
+        if (!project) {
+            console.error('Project not found!');
+            return;
+        }
+
+        // Update basic project info
+        document.getElementById('pageTitle').textContent = project.name;
+        document.getElementById('project-deadline-header').textContent = `Deadline: ${formatDeadline(project.deadline)}`;
+        document.querySelector('.project-description p').textContent = project.description || "No description available";
+
+        // Toggle leader-only elements
+        const leaderElements = [
+            '.editProject',
+            '#editProjectDescription',
+            '.add-member',
+            '#complete-project-btn'
+        ];
+
+        leaderElements.forEach(selector => {
+            const el = document.querySelector(selector);
+            if (el) el.style.display = isLeader ? 'flex' : 'none';
+        });
+
+        // Show team members section
+        document.querySelector('.team-members').style.display = 'flex';
+        document.querySelector('.user-menu').style.display = 'none';
         const isCompleted = project.status === 'completed';
         const completeBtn = document.getElementById('complete-project-btn');
+        // Update project status display
         const headerRight = document.querySelector('.header-right');
         
-        // Remove existing badge if any
-        const existingBadge = document.querySelector('.status-badge.completed');
+        const existingBadge = document.querySelector('.status-badge.project-status');
         if (existingBadge) existingBadge.remove();
-        
-        if (isCompleted) {
+
+          if (isCompleted) {
             // Project is completed
             if (completeBtn) completeBtn.style.display = 'none';
             if (headerRight) {
                 headerRight.insertAdjacentHTML('beforeend',
                     '<span class="status-badge completed">Completed</span>');
             }
-        } else {
-            // Project is not completed
-            if (completeBtn) completeBtn.style.display = 'block';
+        }else if (!isLeader) {
+            headerRight.insertAdjacentHTML('beforeend',
+                '<span class="status-badge in-progress">In Progress</span>');
+        }else {
+            
+            completeBtn.style.display = 'flex';
         }
 
-
-        if (teamMembers) teamMembers.style.display = 'flex';
-        if (userMenu) userMenu.style.display = 'none';
-        
     } catch (error) {
-        console.error("Error updating project header:", error);
+        console.error("Error updating header:", error);
     }
 }
 
