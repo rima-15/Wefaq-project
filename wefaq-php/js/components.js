@@ -17,18 +17,15 @@ window.closeProjectModal = function() {
     }
 };
 
-// Function to add project to sidebar
 async function addProjectToSidebar() {
     try {
         let response = await fetch("handleProject.php?fetch_all=true", {
-            credentials: 'include' //  for sessions
+            credentials: 'include'
         });
         
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
+        if (!response.ok) throw new Error("Network response was not ok");
+        
         let projects = await response.json();
-
         if (projects.error) {
             console.error("Error fetching projects:", projects.error);
             return;
@@ -37,38 +34,38 @@ async function addProjectToSidebar() {
         const projectsList = document.getElementById("projectsList");
         if (!projectsList) return;
 
-        // Clear existing projects but keep the "Add Project" button
-        const addProjectBtn = projectsList.querySelector('.add-project-container') || 
-            projectsList.querySelector('li:last-child');
+        // Keep the "Add Project" button reference
+        const addProjectBtn = projectsList.querySelector('.add-project-container');
         
-        projectsList.innerHTML = '';
+        // Create a temporary container
+        const tempContainer = document.createElement('div');
         
-        // Add projects
+        // Add projects to the temporary container
         projects.forEach(project => {
             const li = document.createElement('li');
             li.innerHTML = `
                 <a href="project.html?project_ID=${project.project_ID}" class="project-link">
                     <i class="fas fa-folder"></i>
-                    <span>${project.project_name}</span>
+                    <span class="project-name">${project.project_name}</span>
                 </a>
             `;
-            projectsList.appendChild(li);
+            tempContainer.appendChild(li);
         });
 
-        // Add the "Add Project" button back
-        if (addProjectBtn) {
-            projectsList.appendChild(addProjectBtn);
-        } else {
-            const addBtnLi = document.createElement('li');
-            addBtnLi.innerHTML = `
-                <button type="button" class="add-project" id="addProjectBtn">
-                    <i class="fas fa-plus"></i>
-                    <span>Add Project</span>
-                </button>
-            `;
-            projectsList.appendChild(addBtnLi);
-            addBtnLi.querySelector('#addProjectBtn').addEventListener('click', openProjectModal);
+        // Clear the projects list (keeping the Add button)
+        projectsList.innerHTML = '';
+        projectsList.appendChild(addProjectBtn);
+        
+        // Append all projects after the Add button
+        while (tempContainer.firstChild) {
+            projectsList.appendChild(tempContainer.firstChild);
         }
+
+        // Add scrollable class if many projects
+        if (projects.length > 10) {
+            projectsList.classList.add('many-projects');
+        }
+
     } catch (error) {
         console.error("Error loading projects:", error);
     }
@@ -158,21 +155,23 @@ const headerHtml = `
                     </li>
                     <li class="projects-item">
                         <a href="#" id="projectsDropdown">
-                            <div class="menu-item">
-                                <i class="fas fa-project-diagram"></i>
-                                <span>Projects</span>
-                            </div>
-                            <i class="fas fa-chevron-down dropdown-icon"></i>
-                        </a>
-                        <ul class="projects-submenu" id="projectsList">
-                        <!-- Projects will be inserted here dynamically -->
-                            <li class="add-project-container">
+                        <div class="menu-item">
+                            <i class="fas fa-project-diagram"></i>
+                            <span>Projects</span>
+                        </div>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </a>
+                    <ul class="projects-submenu" id="projectsList">
+                        <!-- Add Project button FIRST -->
+                        <li class="add-project-container">
                             <button type="button" class="add-project" id="addProjectBtn">
-                             <i class="fas fa-plus"></i>
-                             <span>Add Project</span>
-                                           </button>
-                                                 </li>
-                                                    </ul>
+                                <i class="fas fa-plus"></i>
+                                <span>Add Project</span>
+                            </button>
+                        </li>
+                        <!-- Projects will be inserted here AFTER the button -->
+                    </ul>
+                </li>
                     <li>
                         <a href="community.php">
                             <i class="fas fa-users"></i>
