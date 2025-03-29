@@ -1024,7 +1024,24 @@ input[type="tel"]::placeholder {
     align-items: center;
 }
 
-.modal-header h2 , .confirmationModal .modal-content h2{
+.RateModal-content .modal-header {
+    display: block ;
+    padding-bottom: 0;
+}
+.headerInbox-up {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.5rem;
+}
+.RateModal-content .modal-header h3 {
+    text-align: left;
+    font-size: 1.1rem;
+}
+.RateSlider-container{
+    padding-bottom: 7px;
+}
+.modal-header h2 , .confirmationModal .modal-content h2 , .modal-header h3{
     margin: 0;
     color: var(--text-color);
     font-size: 1.25rem;
@@ -1111,6 +1128,12 @@ input[type="tel"]::placeholder {
     justify-content: center;
     align-items: center;
     z-index: 999;
+}
+#processDetails {
+    font-size: 12px;
+    text-align: left;
+    padding-bottom: 0.5rem;
+    font-weight: 600;
 }
 .RateClose {
     cursor: pointer;
