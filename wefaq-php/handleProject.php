@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['create_project'])) {
     $project_name = $_POST['project_name'] ?? '';
     $project_description = $_POST['project_description'] ?? '';
     $project_deadline = $_POST['project_deadline'] ?? '';
+    $leader_ID = $_SESSION['user_id']; // Make sure this is set
 
     if (empty($project_name) || empty($project_deadline)) {
         $response = ["success" => false, "message" => "Project name and deadline are required."];
@@ -55,7 +56,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['create_project'])) {
             $project_ID = $stmt->insert_id;
             $stmt->close();
             
-            // 2. Add creator to project team
+            // 2. Create chat for the project
+            $sql = "INSERT INTO chat (project_ID) VALUES (?)";
+            $stmt = $conn->prepare($sql);
+            
+            if (!$stmt) {
+                throw new Exception("Database error: " . $conn->error);
+            }
+            
+            $stmt->bind_param("i", $project_ID);
+            
+            if (!$stmt->execute()) {
+                throw new Exception("Error creating project chat: " . $stmt->error);
+            }
+            
+            $chat_ID = $stmt->insert_id;
+            $stmt->close();
+            
+            // 3. Add creator to project team
             $sql = "INSERT INTO projectteam (project_ID, user_ID) VALUES (?, ?)";
             $stmt = $conn->prepare($sql);
             
@@ -77,7 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['create_project'])) {
             $response = [
                 "success" => true, 
                 "message" => "Project created successfully.", 
-                "project_ID" => $project_ID
+                "project_ID" => $project_ID,
+                "chat_ID" => $chat_ID
             ];
             
         } catch (Exception $e) {
