@@ -313,7 +313,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['complete_project']
         $project_ID = $_POST['project_ID'];
         
         // Verify leadership
-        $stmt = $conn->prepare("SELECT leader_ID FROM project WHERE project_ID = ?");
+        $stmt = $conn->prepare("SELECT leader_ID, project_name FROM project WHERE project_ID = ?");
         $stmt->bind_param("i", $project_ID);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -322,7 +322,10 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['complete_project']
             throw new Exception("Project not found");
         }
         
-        $leader_ID = $result->fetch_assoc()['leader_ID'];
+        $project_data = $result->fetch_assoc();
+        $leader_ID = $project_data['leader_ID'];
+        $project_name = $project_data['project_name'];
+        
         if ($leader_ID != $_SESSION['user_id']) {
             throw new Exception("Only project leaders can complete projects");
         }
@@ -331,11 +334,41 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['complete_project']
         $stmt = $conn->prepare("UPDATE project SET status = 'Completed' WHERE project_ID = ?");
         $stmt->bind_param("i", $project_ID);
         
-        if ($stmt->execute()) {
-            echo json_encode(['success' => true]);
-        } else {
+        if (!$stmt->execute()) {
             throw new Exception("Database error: " . $stmt->error);
         }
+
+        // Get all team members (including leader)
+        $stmt = $conn->prepare("SELECT user_ID FROM projectteam WHERE project_ID = ?");
+        $stmt->bind_param("i", $project_ID);
+        $stmt->execute();
+        $members_result = $stmt->get_result();
+        
+        // Prepare notification message
+        $message = 'You have received a new rating for ' . $project_name . ' project.';
+        $type = 'rate';
+        $current_time = date('Y-m-d H:i:s');
+        
+        // Prepare notification insert statement
+        $notification_stmt = $conn->prepare("
+            INSERT INTO notification (type, message, status, created_at, user_ID, related_ID) 
+            VALUES (?, ?, 'Unread', ?, ?, ?)
+        ");
+        
+        // Create notifications for each member
+        $notifications_created = 0;
+        while ($member = $members_result->fetch_assoc()) {
+            $notification_stmt->bind_param("sssii", $type, $message, $current_time, $member['user_ID'], $project_ID);
+            if ($notification_stmt->execute()) {
+                $notifications_created++;
+            }
+        }
+        
+        echo json_encode([
+            'success' => true,
+            'message' => 'Project completed and notifications sent to ' . $notifications_created . ' team members'
+        ]);
+        
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'message' => $e->getMessage()]);
     }

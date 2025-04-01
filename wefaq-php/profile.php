@@ -3,8 +3,8 @@ include 'connection.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1); 
 
-$user_ID = 5; // Get user ID dynamically
-
+session_start();
+$user_ID = $_SESSION['user_id'];
 $fixed_skills = [
     'Design' => 'fa-paint-brush',
     'Programming' => 'fa-code',

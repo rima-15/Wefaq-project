@@ -1,6 +1,7 @@
 <?php
+session_start();
+$user_id = $_SESSION['user_id'];
 include 'connection.php';
-$user_id = 2;
 
 $query_tasks = "
     SELECT 
@@ -127,7 +128,7 @@ $query = "
     SELECT s.skill_name, AVG(r.rating_value) AS avg_rating
     FROM rate r
     JOIN skill s ON r.skill_ID = s.skill_ID
-    WHERE r.rated_ID = $user_id AND r.status = 'Done'
+    WHERE r.rated_ID = $user_id 
     GROUP BY r.skill_ID
     ORDER BY s.skill_ID
 ";
