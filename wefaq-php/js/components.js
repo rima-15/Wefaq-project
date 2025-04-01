@@ -179,13 +179,13 @@ const headerHtml = `
                         </a>
                     </li>
                     <li>
-                        <a href="inbox.html">
+                        <a href="inbox.php">
                             <i class="fas fa-inbox"></i>
                             <span>Inbox</span>
                         </a>
                     </li>
                     <li>
-                        <a href="profile.html">
+                        <a href="profile.php">
                             <i class="fas fa-user"></i>
                             <span>Profile</span>
                         </a>
