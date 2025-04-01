@@ -1,5 +1,6 @@
 <?php
 require 'connection.php';
+include 'auth_check.php'; // Add centralized authentication check
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
