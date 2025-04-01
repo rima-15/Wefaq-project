@@ -1,5 +1,7 @@
 <?php
 include 'connection.php'; 
+include 'auth_check.php'; // Add centralized authentication check
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1); 
 
