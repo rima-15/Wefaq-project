@@ -1,5 +1,6 @@
 <?php
 include 'connection.php';
+include 'auth_check.php'; // Add centralized authentication check
 $user_id = 2;
 
 $query_tasks = "
