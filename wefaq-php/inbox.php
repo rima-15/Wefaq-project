@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1); // Changed to 1 to see errors during development
 include 'connection.php';
-
+include 'auth_check.php'; // Add centralized authentication check
 // Fetch skills from the database
 $query0 = "SELECT * FROM skill";
 $result0 = mysqli_query($conn, $query0);
