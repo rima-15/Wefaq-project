@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 require 'connection.php';
 session_start(); // Start session to access current user info
-
+include 'auth_check.php'; // Add centralized authentication check
 $response = ['status' => 'error', 'message' => 'Unknown error'];
 
 try {

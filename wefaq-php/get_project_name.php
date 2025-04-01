@@ -1,5 +1,6 @@
 <?php
 include 'connection.php';
+include 'auth_check.php'; // Add centralized authentication check
 if (isset($_GET['project_id'])) {
     $project_id = $_GET['project_id'];
     $query = "SELECT project_name FROM project WHERE project_id = ?";

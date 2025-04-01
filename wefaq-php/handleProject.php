@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 session_start();
 require 'connection.php';
+include 'auth_check.php'; // Add centralized authentication check
 // Get JSON input if exists
 $json = file_get_contents('php://input');
 $data = json_decode($json, true) ?? $_POST; // Fallback to regular POST if not JSON
