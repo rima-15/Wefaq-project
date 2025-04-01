@@ -1,6 +1,6 @@
 <?php
 include 'connection.php'; // Database connection
-
+include 'auth_check.php'; // Add centralized authentication check
 // Fetch search term if provided
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
