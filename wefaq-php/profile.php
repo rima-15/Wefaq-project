@@ -2,7 +2,7 @@
 include 'connection.php'; 
 error_reporting(E_ALL);
 ini_set('display_errors', 1); 
-
+include 'auth_check.php'; // Add centralized authentication check
 $user_ID = 5; // Get user ID dynamically
 
 $fixed_skills = [
