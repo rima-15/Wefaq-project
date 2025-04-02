@@ -88,7 +88,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     }
-    
+     (async function() {
+        const user = await fetchCurrentUser();
+        if (user) {
+            updateUserDisplay(user);
+        }
+    })();
     // Then load projects
     addProjectToSidebar();
     
@@ -109,9 +114,11 @@ document.addEventListener('DOMContentLoaded', function() {
 const headerHtml = `
     <header class="dashboard-header">
         <div class="header-left">
-            <button type="button" id="sidebarToggle" class="sidebar-toggle">
-                <i class="fas fa-bars"></i>
-            </button>
+            <div class="forImgSize">
+                <button type="button" id="sidebarToggle" class="sidebar-toggle">
+                    <img src="logoNOback.png" alt="logo" class="menu-icon" width="22%">
+                </button>
+            </div>
             <h1 id="pageTitle">Dashboard</h1>
             <p id="project-deadline-header"></p>
             <div class="editProject" style="display: none !important;">
@@ -133,7 +140,7 @@ const headerHtml = `
             </button>
             <div class="user-menu">
                 <img src="images/avatarF1.jpeg" alt="User Avatar" class="user-avatar">
-                <span class="user-name">Hi, John Doe</span>
+                <span class="user-name">Hi, <span id="userNameDisplay"> </span></span>
             </div>
         </div>
     </header>
@@ -365,7 +372,76 @@ if (projectForm) {
             updateProjectHeader(project);
             initializeProjectButtons(project);
         }
+    }// initialize 
+    async function fetchCurrentUser() {
+    try {
+        const response = await fetch('get_current_user.php', { // Changed path
+            credentials: 'include',
+            headers: {
+                'Cache-Control': 'no-cache'
+            }
+        });
+        
+        if (!response.ok) {
+            if (response.status === 401) {
+                window.location.href = 'login.php';
+                return null;
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error("Fetch error:", error);
+        return null;
     }
+}
+
+function updateUserDisplay(user) {
+    const userNameDisplay = document.getElementById('userNameDisplay');
+    const userAvatar = document.querySelector('.user-avatar');
+    
+    if (!userNameDisplay || !userAvatar) {
+        console.error("User display elements not found");
+        setTimeout(() => updateUserDisplay(user), 500); // Try again after delay
+        return;
+    }
+    
+    // Set username
+    const displayName = user?.username || 'Guest';
+    userNameDisplay.textContent = displayName;
+    
+    // Generate and set avatar
+    userAvatar.outerHTML = generateAvatar(displayName, '--message');
+}
+function generateAvatar(username, variant = '') {
+    if (!username) return '';
+    
+    const themeColors = ['#9096DE', '#EED442', '#886B63', '#D3D3D3','#634d47','#b0aeae','#c4c8f2','#fae987'];
+    const letter = username.charAt(0).toUpperCase();
+    
+    // Consistent color based on username hash
+    const hash = Array.from(username).reduce((hash, char) => {
+        return char.charCodeAt(0) + ((hash << 5) - hash);
+    }, 0);
+    const color = themeColors[Math.abs(hash) % themeColors.length];
+    
+    // Size variants
+    const sizes = {
+        '': 40,
+        '--invite': 36,
+        '--profile': 80,
+        '--message': 32
+    };
+    
+    const size = sizes[variant] || sizes[''];
+
+    return `
+        <div class="avatar ${variant}" style="background-color: ${color}; font-size: ${size * 0.4}px">
+            ${letter}
+        </div>
+    `;
+}
 async function checkLeadership(project_ID) {
     try {
         const response = await fetch(`handleProject.php?check_leadership=true&project_ID=${project_ID}`);
@@ -556,34 +632,34 @@ async function updateProjectHeader() {
     }
 
     function initializeSidebar() {
-        // Create overlay if it doesn't exist
-        let sidebarOverlay = document.querySelector('.sidebar-overlay');
-        if (!sidebarOverlay) {
-            sidebarOverlay = document.createElement('div');
-            sidebarOverlay.className = 'sidebar-overlay';
-            sidebarOverlay.setAttribute('data-from', 'components'); // Add data attribute
-            document.body.appendChild(sidebarOverlay);
-        }
-
-        const sidebar = document.getElementById('sidebar');
-        const sidebarToggle = document.getElementById('sidebarToggle');
-
-        if (sidebar && sidebarToggle) {
-            function toggleSidebar(e) {
-                if (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-                sidebar.classList.toggle('active');
-                sidebarOverlay.classList.toggle('active');
-                document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
-            }
-
-            sidebarToggle.addEventListener('click', toggleSidebar);
-            sidebarToggle.addEventListener('mousedown', (e) => e.preventDefault());
-            sidebarOverlay.addEventListener('click', toggleSidebar);
-        }
+    // Create overlay if it doesn't exist
+    let sidebarOverlay = document.querySelector('.sidebar-overlay');
+    if (!sidebarOverlay) {
+        sidebarOverlay = document.createElement('div');
+        sidebarOverlay.className = 'sidebar-overlay';
+        sidebarOverlay.setAttribute('data-from', 'components'); // Add data attribute
+        document.body.appendChild(sidebarOverlay);
     }
+
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+
+    if (sidebar && sidebarToggle) {
+        function toggleSidebar(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+            document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        sidebarToggle.addEventListener('mousedown', (e) => e.preventDefault());
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+    }
+}
 
     function initializeDropdown() {
         const projectsDropdown = document.getElementById('projectsDropdown');

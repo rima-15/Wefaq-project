@@ -1319,15 +1319,7 @@ function openGenericModal(modalId, taskId = null) {
     currentTaskId = taskId;
     document.getElementById(modalId).style.display = 'block';
 }
-/*
-// Modal Handling
-function openGenericModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = 'block';
-    }
-}
-*/
+
 function closeGenericModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {

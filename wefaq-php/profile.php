@@ -2,8 +2,6 @@
 include 'connection.php'; 
 include 'auth_check.php'; // Add centralized authentication check
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1); 
 
 session_start();
 $user_ID = $_SESSION['user_id'];
@@ -161,8 +159,7 @@ try {
     </div>
 
     <!-- Scripts -->
-    <script src="js/components.js"></script>
-    <script src="script.js"></script>
+
     <footer>
     <div class="footer-container">
         <div class="footer-logo">
@@ -180,6 +177,8 @@ try {
         </div>
     </div>
 </footer>
+    <script src="js/components.js"></script>
+    <script src="script.js"></script>
     <script>
     // Call the avatar function after page loads
     document.addEventListener('DOMContentLoaded', function() {

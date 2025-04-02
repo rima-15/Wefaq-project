@@ -470,7 +470,7 @@ input[type="tel"]::placeholder {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
+    padding: 2.5rem 2rem 2.5rem 2rem;
     background: var(--white);
     box-shadow: var(--shadow);
     position: relative;
@@ -3148,6 +3148,25 @@ input:focus, select:focus, textarea:focus {
 .file-table tr {
     display: table-row !important;
 }
+.menu-icon {
+    width: 24px; /* Adjust as needed */
+    height: 24px; /* Adjust as needed */
+    object-fit: contain;
+}
 
+button.sidebar-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+     width: auto; /* Reset any fixed width */
+    min-width: unset; /* Remove minimum width */
+    display:block
+}
 
-
+.sidebar-toggle img {
+    display: block;
+}
+img.menu-icon{
+    width:15%;
+}

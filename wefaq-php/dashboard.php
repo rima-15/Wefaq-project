@@ -166,9 +166,11 @@ $result = mysqli_query($conn, $query);
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <style>
-
+            * {
+                box-sizing: content-box !important;
+            }
             body {
-                font-family: 'Poppins', sans-serif;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 margin: 0;
                 padding: 0;
                 color: white;
@@ -283,7 +285,7 @@ $result = mysqli_query($conn, $query);
             .wave-divider {
                 display: block;
                 width: 100%;
-                height: 265px;
+                height: 43.5%;
             }
 
             footer {
@@ -305,7 +307,7 @@ $result = mysqli_query($conn, $query);
             }
 
             .footer-logo img {
-                width: 90px;
+                width: 91px;
                 transition: transform 0.3s ease-in-out;
             }
 
@@ -466,7 +468,6 @@ $result = mysqli_query($conn, $query);
             .my-tasks {
                 background-color: #f9f9f9;
                 text-align: center;
-                margin-bottom: 2rem;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
                 border-radius: 12px;
             }
@@ -662,7 +663,6 @@ $result = mysqli_query($conn, $query);
                 color: white;
             }
 
-            /* ألوان الحالة */
             .status.working {
                 background-color: rgba(238, 212, 66, 0.1);
                 color: #EED442;
@@ -735,8 +735,7 @@ $result = mysqli_query($conn, $query);
                 background-color: #C2C6F0;
                 border-radius: 12px;
                 padding: 0.5rem 0.75rem;
-                width: 100px; /* عرض أصغر */
-                height: 100px;
+                width: 100px; 
                 text-align: center;
                 color: white;
                 box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
@@ -770,17 +769,32 @@ $result = mysqli_query($conn, $query);
                 padding-top: 50px;
                 color:white;
             }
+            .wh {
+                background: white ;
+            }
+            main{
+                margin:0 ;
+                padding:0;
+                background:linear-gradient(135deg, #f8f9fa, #636bc1);
+            }
+            .main-content{
+                margin:0 !important;
+                padding:0 !important;
+            }
+            header{
+                margin-top: 10px;
+                margin: 1rem 2rem 0rem 2rem;
+            }
+            .dashboard-header{
+                padding: 1rem 2rem !important;
+            }
         </style>
+        <link rel="stylesheet" href="styles.css">
     </head>
-    <body> Performance Summary
-        <div class="home-container">
-            <nav class="navbar index-nav">
-                <div class="logo">
-                    <img src="logoNOback.png" alt="Logo">
-                </div>
-            </nav>
-
-            <main class="summary-section">
+    <body> 
+        <div class="home-container dashboard-container">
+            <main class="main-content">
+            <div class="summary-section ">
                 <h1 id="MainTitle">Performance Summary</h1>
                 <div class="charts-wrapper">
                     <div class="chart-card project-card">
@@ -808,14 +822,11 @@ $result = mysqli_query($conn, $query);
 
 
                 </div>
+                     
                 <svg class="wave-divider" viewBox="0 0 1440 200" xmlns="http://www.w3.org/2000/svg">
                 <path fill="white" fill-opacity="1" d="M0,256L80,234.7C120,213,240,171,360,165.3C480,160,600,192,720,186.7C840,181,960,139,1080,128C1200,117,1320,149,1380,170.7L1440,192L1440,320L0,320Z"></path>
                 </svg>
-
-
-            </main>
-
-
+            </div>
             <div class="wh">           <!-- 2. Calendar 3. Active Projects -->
                 <div class="calendar-projects-section">
                     <!-- Active Projects -->
@@ -943,10 +954,10 @@ $result = mysqli_query($conn, $query);
                         </div>
                     </div>
                 </section>
-
+                <br><br><br>
             </div>
-
-
+                
+        </main>
             <footer>
                 <div class="footer-container">
                     <div class="footer-logo">
@@ -965,6 +976,7 @@ $result = mysqli_query($conn, $query);
                 </div>
             </footer>
         </div>
+        <script src="js/components.js"></script>
 <script>
     // تسجيل بلجن رسم النص داخل الدوائر
     Chart.register({
