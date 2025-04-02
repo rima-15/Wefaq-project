@@ -12,8 +12,7 @@ while ($row = mysqli_fetch_assoc($result0)) {
     $skills[] = $row;
 }
 
-$project_id = "1";
-$user_ID = "3";
+$user_ID = $_SESSION['user_id'];
 
 // Fetch the project name from the database
 $query = "SELECT project_name FROM project WHERE project_id = ?";
@@ -24,10 +23,9 @@ mysqli_stmt_bind_result($stmt, $project_name);
 mysqli_stmt_fetch($stmt);
 mysqli_stmt_close($stmt);
 
-$query2 = "SELECT notification_ID, type, message, status, created_at, related_ID 
-          FROM Notification 
-          WHERE user_ID = ? 
-          ORDER BY created_at DESC";
+$query2 = "SELECT * FROM Notification 
+           WHERE type='rate' AND user_ID = ? 
+           ORDER BY created_at DESC";
 
 $stmt2 = $conn->prepare($query2);
 $stmt2->bind_param("i", $user_ID);
@@ -37,13 +35,21 @@ $result2 = $stmt2->get_result();
 $rate_notifications = [];
 $invite_notifications = [];
 
+$query3 = "SELECT * FROM Notification 
+           WHERE type='invite' AND status='unread' AND user_ID = ? 
+           ORDER BY created_at DESC";
+
+$stmt3 = $conn->prepare($query3);
+$stmt3->bind_param("i", $user_ID);
+$stmt3->execute();
+$result3 = $stmt3->get_result();
+
 while ($row = $result2->fetch_assoc()) {
-    if ($row['type'] === 'rate') {
         $rate_notifications[] = $row;
-    } elseif ($row['type'] === 'invite') {
+    }
+while ($row = $result3->fetch_assoc()) {
         $invite_notifications[] = $row;
     }
-}
 
 function time_elapsed_string($datetime, $full = false) {
     $now = new DateTime();
@@ -104,11 +110,11 @@ function time_elapsed_string($datetime, $full = false) {
                 <div class="inbox-section">
                     <div class="section-header">
                         <h2><i class="fas fa-envelope"></i> Invitation Notifications</h2>
-                        <span class="notification-count"><?php echo count($invite_notifications); ?></span>
+                        <span class="notification-count invite-count"><?php echo count($invite_notifications); ?></span>
                     </div>
                     <div class="messages-list">
                         <?php foreach ($invite_notifications as $notification) { ?>
-                            <div class="message-item unread">
+                            <div class="message-item unread" id="invite-<?php echo $notification['notification_ID']; ?>">
                                 <div class="message-icon">
                                     <i class="fas fa-envelope"></i>
                                 </div>
@@ -119,8 +125,8 @@ function time_elapsed_string($datetime, $full = false) {
                                     </div>
                                     <p><?php echo $notification['message']; ?></p>
                                     <div class="action-buttons">
-                                        <button class="btn btn-primary btn-sm AcceptInvite" onclick="acceptInvitation(<?php echo $notification['related_ID']; ?>)">Accept</button>
-                                        <button class="btn btn-outline btn-sm">Decline</button>
+                                        <button class="btn btn-primary btn-sm AcceptInvite" onclick="acceptInvitation(<?php echo $notification['notification_ID']; ?>, <?php echo $notification['related_ID']; ?>)">Accept</button>
+                                        <button class="btn btn-outline btn-sm" onclick="declineInvitation(<?php echo $notification['notification_ID']; ?>)">Decline</button>
                                     </div>
                                 </div>                                           
                             </div>
@@ -214,6 +220,75 @@ function time_elapsed_string($datetime, $full = false) {
             });
         });
     </script>
+    <script>
+async function handleInviteAction(notificationId, projectId, action) {
+    try {
+        // Validate inputs
+        if (!notificationId || !action) {
+            throw new Error('Missing required fields: ' + 
+                (!notificationId ? 'notification_id ' : '') + 
+                (!action ? 'action' : ''));
+        }
+
+        // Prepare request body with all required fields
+        const requestBody = {
+            action: action,
+            notification_ID: notificationId,
+            invitee_ID: <?php echo $user_ID; ?>,
+            ...(action === 'accept' && { project_ID: projectId })
+        };
+
+        console.log("Sending invite request:", requestBody);
+
+        const response = await fetch('handle_invite.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        const responseData = await response.json();
+        
+        if (!response.ok || !responseData.success) {
+            throw new Error(responseData.message || `Server error (${response.status})`);
+        }
+
+        // Success - remove notification from UI
+        const notificationElement = document.getElementById(`invite-${notificationId}`);
+        if (notificationElement) {
+            notificationElement.remove();
+            
+            // Update the notification count
+            const countElement = document.querySelector('.inbox-section .invite-count');
+            if (countElement) {
+                const currentCount = parseInt(countElement.textContent);
+                countElement.textContent = Math.max(0, currentCount - 1);
+            }
+        }
+                
+    } catch (error) {
+        console.error('Invite Action Error:', error);
+        alert(`Error: ${error.message}`);
+    }
+}
+
+function acceptInvitation(notificationId, projectId) {
+    if (!notificationId || !projectId) {
+        alert('Error: Missing required parameters for acceptance');
+        return;
+    }
+    handleInviteAction(notificationId, projectId, 'accept');
+}
+
+function declineInvitation(notificationId) {
+    if (!notificationId) {
+        alert('Error: Missing notification ID');
+        return;
+    }
+    handleInviteAction(notificationId, null, 'decline');
+}
+</script>
     <script>
         // Global variables
         const skills = <?php echo json_encode($skills); ?>;
