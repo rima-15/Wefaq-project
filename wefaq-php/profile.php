@@ -5,6 +5,9 @@ include 'auth_check.php'; // Add centralized authentication check
 
 session_start();
 $user_ID = $_SESSION['user_id'];
+// Check if the user_id is passed in the URL (this will be passed when clicking on a username from the community page)
+$viewed_user_ID = isset($_GET['user_id']) ? $_GET['user_id'] : $user_ID;
+
 $fixed_skills = [
     'Design' => 'fa-paint-brush',
     'Programming' => 'fa-code',
@@ -21,7 +24,7 @@ $custom_styles = "";
 try {
     $query = "SELECT username, gender, user_type, organization, bio, email, phone_num FROM User WHERE user_ID = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $user_ID);
+    $stmt->bind_param("i", $viewed_user_ID);
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result->fetch_assoc() ?? [];
@@ -35,7 +38,7 @@ try {
     ";
     
     $stmt = $conn->prepare($sql_skills);
-    $stmt->bind_param("i", $user_ID);
+    $stmt->bind_param("i", $viewed_user_ID);
     
     if ($stmt->execute()) {
         $skills_result = $stmt->get_result();
