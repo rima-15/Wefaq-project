@@ -436,9 +436,26 @@
     <i class="fas fa-comments fa-2x"></i>
 </div>
 
+<!-- Replace the existing chat icon script with this: -->
 <script>
     function openChatRoom() {
-        window.location.href = 'chatroom.php';
+        // Get project_ID from URL or fallback to sessionStorage
+        const urlParams = new URLSearchParams(window.location.search);
+        let project_ID = urlParams.get('project_ID');
+        
+        if (!project_ID) {
+            // Try to get from sessionStorage if not in URL
+            project_ID = sessionStorage.getItem('currentProjectID');
+        }
+
+        if (project_ID) {
+            // Store in sessionStorage as backup
+            sessionStorage.setItem('currentProjectID', project_ID);
+            window.location.href = `chatroom.php?project_ID=${project_ID}`;
+        } else {
+            alert('Error: Could not determine project. Please reopen this project.');
+            console.error('Project ID missing in both URL and sessionStorage');
+        }
     }
 </script>
     </main>
