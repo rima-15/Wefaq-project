@@ -199,9 +199,9 @@ const headerHtml = `
                     </li>
                 </ul>
                 <div class="nav-bottom">
-                    <a href="index.html" class="logout-btn">
+                    <a href="logout.php" class="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>
-                        <span style="font-weight:500;">Log noo Out</span>
+                        <span style="font-weight:500;">Log Out</span>
                     </a>
                 </div>
             </div>
