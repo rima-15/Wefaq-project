@@ -59,8 +59,9 @@ $result = $stmt->get_result();
                         <div class="user-card">
                             <img src="images/avatar<?php echo $row['gender'] == 'F' ? 'F' : 'M'; ?>1.jpeg" alt="User" class="user-avatar">
                                 <h3>
-                                    <a href="profile.php?user_id=<?php echo $row['user_ID']; ?>"><?php echo htmlspecialchars($row['username']); ?></a>
-                                </h3>
+                                    <a href="profile.php?user_id=<?php echo $row['user_ID']; ?>" style="color: black;"><?php echo htmlspecialchars($row['username']); ?></a>
+                                 </h3>
+
                             <p><?php echo htmlspecialchars($row['user_type']); ?>     <span>-<?php echo htmlspecialchars($row['organization']); ?></span></p>
                             <p class="user-rating">⭐️ <strong><?php echo number_format($row['avg_rating'], 1); ?>/5</strong></p>
                             <p class="user-projects"><i class="fas fa-project-diagram"></i> <strong><?php echo $row['project_count']; ?> Projects</strong></p>
