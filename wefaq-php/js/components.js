@@ -201,7 +201,7 @@ const headerHtml = `
                 <div class="nav-bottom">
                     <a href="index.html" class="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>
-                        <span>Log Out</span>
+                        <span style="font-weight:500;">Log noo Out</span>
                     </a>
                 </div>
             </div>
