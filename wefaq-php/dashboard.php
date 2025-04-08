@@ -788,6 +788,9 @@ $result = mysqli_query($conn, $query);
             .dashboard-header{
                 padding: 1rem 2rem !important;
             }
+            nav.sidebar{
+                box-sizing: border-box!important;
+            }
         </style>
         <link rel="stylesheet" href="styles.css">
     </head>
