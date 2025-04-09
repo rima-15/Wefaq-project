@@ -1,5 +1,5 @@
 <?php
-session_start();
+include 'auth_check.php'; // Add centralized authentication check
 $user_id = $_SESSION['user_id'];
 include 'connection.php';
 
@@ -151,9 +151,10 @@ echo "const ratingData = " . json_encode($rating_values) . ";";
 echo "const averageRating = $average_rating;";
 echo "</script>";
 
-$query = "SELECT task.*, project.project_name AS project_name FROM task 
+ $query = "SELECT task.*, project.project_name AS project_name, project.project_id AS project_id FROM task 
           JOIN project ON task.project_id = project.project_id
           WHERE task.assigned_to = '$user_id' AND task.status IN ('Not Started', 'In Progress')";
+
 $result = mysqli_query($conn, $query);
 ?> 
 <!DOCTYPE html>
@@ -930,7 +931,8 @@ $result = mysqli_query($conn, $query);
                                     echo '<div class="task-info-row">';
                                     echo '<i class="fas fa-diagram-project"></i>';
                                     echo '<span class="info-label">Project:</span>';
-                                    echo '<span class="info-value"><a href="project.html">' . $task['project_name'] . '</a></span>';
+                                    echo '<span class="info-value"><a href="project.html?project_ID=' . $task['project_id'] . '">' . $task['project_name'] . '</a></span>';
+
                                     echo '</div>';
 
                                     echo '<div class="task-info-row">';
@@ -1223,19 +1225,26 @@ $result = mysqli_query($conn, $query);
         const activeCard = document.getElementById('activeCard');
         const leaderCard = document.getElementById('leaderCard');
 
-        function displayProjects(projects) {
-            projectList.innerHTML = '';
-            if (projects.length === 0) {
-                projectList.innerHTML = '<p>No projects available</p>';
-                return;
-            }
-            projects.forEach(project => {
-                const li = document.createElement('li');
-                li.classList.add('task-info-row');
-                li.innerHTML = `<i class="fas fa-diagram-project"></i><span class="info-value"><a href="project.html">${project.project_name}</a></span>`;
-                projectList.appendChild(li);
-            });
-        }
+ function displayProjects(projects) {
+    projectList.innerHTML = '';
+    if (projects.length === 0) {
+        projectList.innerHTML = '<p>No projects available</p>';
+        return;
+    }
+    projects.forEach(project => {
+        const li = document.createElement('li');
+        li.classList.add('task-info-row');
+        li.innerHTML = `
+            <i class="fas fa-diagram-project"></i>
+            <span class="info-value">
+                <a href="project.html?project_ID=${project.project_id}">
+                    ${project.project_name}
+                </a>
+            </span>`;
+        projectList.appendChild(li);
+    });
+}
+
 
         activeCard.addEventListener("click", function () {
             displayProjects(activeProjects);

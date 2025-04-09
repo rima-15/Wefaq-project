@@ -153,7 +153,7 @@ elseif (isset($_GET['get_project'])) {
                   WHERE project_ID = ?";
         
         $stmt = $conn->prepare($query);
-        
+
         if ($stmt) {
             $stmt->bind_param("i", $project_ID);
             $stmt->execute();
