@@ -3166,4 +3166,28 @@ button.sidebar-toggle {
 .sidebar-toggle img {
     display: block;
 }
+.toast-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 24px;
+    border-radius: 4px;
+    color: white;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
 
+.toast-notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast-notification.success {
+    background-color: #4CAF50;
+}
+
+.toast-notification.error {
+    background-color: #f44336;
+}

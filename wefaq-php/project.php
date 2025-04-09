@@ -263,72 +263,21 @@ $_SESSION['current_project_id'] = $project_id;
                             <button class="close-modal" onclick="closeGenericModal('invitePopup')">&times;</button>
                         </div>
                         <div class="modal-body">
-                            <form>
+                            <form id="inviteForm" >
                                 <div id="invite-model">
-                                    <input type="text" id="inviteInput" placeholder="Enter username" required>
-                                    <button class="btn btn-primary" id="inviteBtn" onclick="sendInvite()" >Invite</button>
+                                    <input type="text" id="inviteInput"  placeholder="Enter username" required>
+                                    <button class="btn btn-primary" id="inviteBtn" type="button" >Invite</button>
                                 </div>
                             </form>
 
                             <p class="light-gray" id="members-header"> </p><br>
-                        <ul class="member-list">
-                            <li class="member-item">
-                                <div class="member-info">
-                                    <img src="images/avatarM1.jpeg" class="member-avatar" alt="Avatar">
-                                    <div>
-                                        <strong>Sara Ahmed </strong>
-                                        <div class="member-email">sara@example.com</div>
-                                    </div>
-                                </div>
-                                <span class="member-role light-gray">Leader</span>
-                                <button class="btn-icon delete you-member" title="Delete Member" >
-                                    <span class="status-badge completed" id="you-leader"> You</span>
-                                </button>
-
-                            </li>
-                            <li class="member-item">
-                                <div class="member-info">
-                                    <img src="images/avatarF2.jpeg" class="member-avatar" alt="Avatar">
-                                    <div>
-                                        <div class="member-with-delete">
-                                            <strong>John Doe</strong>
-
-                                        </div>
-
-                                        <div class="member-email">john@example.com</div>
-                                    </div>
-                                </div>
-                                <span class="member-role light-gray">Member</span>
-                                <button class="btn-icon delete delete-member-btn"  title="Delete Member"> <i class="fas fa-trash"></i>
-                                </button>
-
-                            </li>
-                            <li class="member-item">
-                                <div class="member-info">
-                                    <img src="images/avatarF1.jpeg" class="member-avatar" alt="Avatar">
-                                    <div>
-                                        <strong>Jane Smith</strong>
-                                        <div class="member-email">jane@example.com</div>
-                                    </div>
-                                </div>
-                                <span class="member-role light-gray">Member</span>
-                                <button class="btn-icon delete delete-member-btn" title="Delete Member"> <i class="fas fa-trash"></i>
-                                </button>                            </li>
-                        </ul>
-                            </div>
+                            <ul class="member-list" id="dynamic-member-list">
+                            </ul>
+                        </div>
+                    </div>
                     </div>
                 </div>
 
-                <script>
-                  
-                    function sendInvite() {
-                        let input = document.getElementById('inviteInput').value;
-                        if (input) {
-                            alert('Invite sent to ' + input);
-                            document.getElementById('inviteInput').value = '';
-                        }
-                    }
-                </script>
                 <!-- Add Task Modal (hidden by default) -->
 
                 <div id="addTaskModal" class="modal">
@@ -519,59 +468,231 @@ $_SESSION['current_project_id'] = $project_id;
         };
         const CURRENT_USER_ID = <?php echo $user_id; ?>;
     </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get project ID from URL or session
-        const urlParams = new URLSearchParams(window.location.search);
-        const project_ID = urlParams.get('project_ID');
+    <script>
+// 1. Get IDs with proper type conversion
+const urlParams = new URLSearchParams(window.location.search);
+const projectId = <?php echo $project_id; ?>; 
+const currentUserIdMeta = document.querySelector('meta[name="user-id"]');
+const currentUserId = currentUserIdMeta ? parseInt(currentUserIdMeta.content) : null;
+
+// 2. Enhanced loadTeamMembers with better ID comparison
+async function loadTeamMembers() {
+    const memberList = document.getElementById('dynamic-member-list');
+    if (!memberList) return;
+
+    try {
+        memberList.innerHTML = '<div class="loading-members">Loading team members...</div>';
         
-        if (!project_ID) {
-            console.error("Project ID not found in URL");
-            return;
+        const response = await fetch(`get_project_members.php?project_id=${projectId}&action=get_team`);
+        
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const data = await response.json();
+        
+        if (data.status !== 'success') throw new Error(data.message || 'Failed to load team data');
+        
+        memberList.innerHTML = '';
+        
+        // Process leader first
+        if (data.leader) {
+            const leaderElement = createMemberElement(
+                data.leader, 
+                true, 
+                data.leader.user_id == currentUserId
+            );
+            memberList.appendChild(leaderElement);
         }
-
-        // Fetch all data needed for dashboard
-        fetchDashboardData(project_ID);
-
-        // Tab Switching Functionality
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const tabPanes = document.querySelectorAll('.tab-pane');
-
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                tabBtns.forEach(b => b.classList.remove('active'));
-                tabPanes.forEach(p => p.classList.remove('active'));
-                btn.classList.add('active');
-                const tabId = btn.getAttribute('data-tab');
-                document.getElementById(tabId).classList.add('active');
-            });
+        
+        // Process other members
+        data.members.forEach(member => {
+            // Skip leader if already processed
+            if (member.user_id != data.leader?.user_id) {
+                const memberElement = createMemberElement(
+                    member,
+                    false,
+                    member.user_id == currentUserId
+                );
+                memberList.appendChild(memberElement);
+            }
         });
-    });
-
-  
-    
-
-
-
-
-
-    document.getElementById('addMemberCircle').addEventListener('click', function() {
-        var memberListContainer = document.getElementById('memberListContainer');
-        if (memberListContainer.style.display === 'none' || memberListContainer.style.display === '') {
-            memberListContainer.style.display = 'block';
-        } else {
-            memberListContainer.style.display = 'none';
-        }
-    });
-
-    function sendInvite() {
-        var email = document.getElementById('emailInput').value;
-        if (email) {
-            alert('Invite sent to ' + email);
-        } else {
-            alert('Please enter an email address.');
-        }
+        
+    } catch (error) {
+        console.error('Error loading team:', error);
+        memberList.innerHTML = `
+            <div class="error-message">
+                Error: ${error.message}
+                <button onclick="loadTeamMembers()" class="retry-btn">Retry</button>
+            </div>
+        `;
     }
+}
+
+// 3. Updated member element creation with leader-specific "You" badge
+function createMemberElement(user, isLeader, isCurrentUser, isCurrentLeader = false) {
+    const li = document.createElement('li');
+    li.className = 'member-item';
+    
+    const avatarHTML = generateAvatar(user.username, '--invite');
+    
+    // Determine which "You" badge to show
+    let youBadge = '';
+    if (isCurrentUser) {
+        youBadge = isCurrentLeader 
+            ? '<span class="status-badge completed leader-you" id="you-leader">You (Leader)</span>'
+            : '<span class="status-badge completed">You</span>';
+    }
+    
+    li.innerHTML = `
+        <div class="member-info">
+            ${avatarHTML}
+            <div>
+                <strong>${user.username}</strong>
+                <div class="member-email">${user.email || 'No email provided'}</div>
+            </div>
+        </div>
+        <span class="member-role light-gray">${isLeader ? 'Leader' : 'Member'}</span>
+        ${youBadge}
+        ${!isCurrentUser ? `
+            <button class="btn-icon delete delete-member-btn" 
+                    title="Delete Member" 
+                    data-user-id="${user.user_id}"
+                    onclick="deleteMember(${user.user_id}, this)">
+                ${isLeader ? '<span class="status-badge completed" id="you-leader"> You</span>' :
+                '<i class="fas fa-trash"></i>'}
+            </button>
+        ` : ''}
+    `;
+    
+    return li;
+}
+
+// 4. Initialize with checks
+document.addEventListener('DOMContentLoaded', function() {
+    if (!projectId) {
+        showError('Project ID missing from URL');
+        return;
+    }
+    
+    loadTeamMembers();
+});
+
+function showError(message) {
+    const memberList = document.getElementById('dynamic-member-list');
+    if (memberList) {
+        memberList.innerHTML = `
+            <div class="error-message">
+                ${message}
+            </div>
+        `;
+    }
+}
+async function deleteMember(userId, element) {
+    if (!confirm(`Are you sure you want to remove this member?`)) return;
+    
+    try {
+        const response = await fetch(`get_project_members.php?action=delete&project_id=${projectId}&user_id=${userId}`);
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            showToast('Member removed successfully');
+            element.closest('.member-item').remove();
+        } else {
+            throw new Error(result.message || 'Failed to remove member');
+        }
+    } catch (error) {
+        console.error('Delete error:', error);
+        showToast(error.message, 'error');
+    }
+    finally {
+    loadTeamMembers();
+        }
+}
+</script>    
+
+<script>
+ // Get projectId from PHP
+document.addEventListener('DOMContentLoaded', function() {
+
+const inviteBtn = document.getElementById('inviteBtn');
+if (!inviteBtn) {
+  console.error("ERROR: Could not find #inviteBtn element!");
+} else {
+  console.log("Button found, attaching click handler...");
+  inviteBtn.addEventListener('click', sendInvite);
+}
+async function sendInvite() {
+    const username = document.getElementById('inviteInput').value.trim();
+    console.log("Sending invite with:", {
+        project_id: CURRENT_PROJECT.id,
+        username: username
+    });
+    
+    try {
+        const response = await fetch('invite_member.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                project_id: CURRENT_PROJECT.id,
+                username: username
+            }),
+            credentials: 'include'
+        });
+        
+        console.log("Response status:", response.status);
+        const result = await response.json();
+        console.log("Response data:", result);
+        
+        if (result.status === 'success') {
+            showToast(`Invite sent to ${username}!`, 'success');
+            document.getElementById('inviteInput').value = '';
+        } else {
+            throw new Error(result.message || "Failed to send invite");
+        }
+    } catch (error) {
+        console.error("Full error details:", {
+            error: error,
+            message: error.message,
+            stack: error.stack
+        });
+        showToast(`${error.message}`, 'error');
+    }
+}
+// Initialize form
+document.getElementById('inviteForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Stop form submission
+    console.log("Form submit intercepted");
+    sendInvite();
+    return false; // Extra prevention
+});
+
+// Show toast messages
+function showToast(message, type = 'success', duration = 3000) {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${type}`;
+    toast.textContent = message;
+    
+    // Add to DOM
+    document.body.appendChild(toast);
+    
+    // Trigger animation
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+    
+    // Remove after duration
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, duration);
+}
+});
+
 </script>
 
 <footer>
@@ -593,7 +714,3 @@ $_SESSION['current_project_id'] = $project_id;
 </footer>
 </body>
 </html>
-
-
-
-
