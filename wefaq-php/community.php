@@ -84,15 +84,15 @@ $result = $stmt->get_result();
     }
     
    .avatar.\--community {  /* Escape the double dash */
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-weight: bold;
-    font-size: 60px;
+    font-size: 30px !important;
 }
 
 
