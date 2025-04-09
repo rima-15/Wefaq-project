@@ -64,6 +64,13 @@ $result = $stmt->get_result();
 $messages = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
+// Handle AJAX request for getting messages
+if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+    header('Content-Type: application/json');
+    echo json_encode(['messages' => $messages]);
+    exit;
+}
+
 // Get current user's username if not set
 if (!isset($_SESSION['username'])) {
     $stmt = $conn->prepare("SELECT username FROM user WHERE user_ID = ?");
@@ -222,7 +229,7 @@ if (!isset($_SESSION['username'])) {
                 $avatarInitial = strtoupper(substr($message['username'], 0, 1));
                 $avatarColor = $message['gender'] == 'F' ? '#ff9ff3' : '#48dbfb';
             ?>
-                <div class="chat-message <?php echo $isCurrentUser ? 'my-message' : 'other-message'; ?>">
+                <div class="chat-message <?php echo $isCurrentUser ? 'my-message' : 'other-message'; ?>" data-message-id="<?php echo $message['message_ID']; ?>">
                     <div class="chat-avatar" style="background-color: <?php echo $avatarColor; ?>">
                         <?php echo $avatarInitial; ?>
                     </div>
@@ -252,9 +259,82 @@ if (!isset($_SESSION['username'])) {
             const chatBox = document.getElementById('chatBox');
             const messageInput = document.getElementById('messageInput');
             const sendButton = document.getElementById('sendMessage');
+            let lastMessageId = <?php echo !empty($messages) ? end($messages)['message_ID'] : 0; ?>;
             
             // Auto-scroll to bottom of chat
             chatBox.scrollTop = chatBox.scrollHeight;
+            
+            // Function to escape HTML
+            function escapeHtml(unsafe) {
+                return unsafe
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+            
+            // Function to format time
+            function formatTime(timestamp) {
+                const date = new Date(timestamp);
+                let hours = date.getHours();
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                return `${hours}:${minutes} ${ampm}`;
+            }
+            
+            // Function to fetch and display messages
+            function fetchMessages() {
+                fetch(window.location.href, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.messages && data.messages.length > 0) {
+                        const newMessages = data.messages.filter(msg => msg.message_ID > lastMessageId);
+                        
+                        if (newMessages.length > 0) {
+                            lastMessageId = newMessages[newMessages.length - 1].message_ID;
+                            renderMessages(newMessages);
+                        }
+                    }
+                })
+                .catch(error => console.error('Error fetching messages:', error));
+            }
+            
+            // Function to render new messages
+            function renderMessages(messages) {
+                messages.forEach(message => {
+                    const isCurrentUser = message.user_ID == <?php echo $_SESSION['user_id']; ?>;
+                    const avatarInitial = message.username.charAt(0).toUpperCase();
+                    const avatarColor = message.gender == 'F' ? '#ff9ff3' : '#48dbfb';
+                    
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `chat-message ${isCurrentUser ? 'my-message' : 'other-message'}`;
+                    messageDiv.dataset.messageId = message.message_ID;
+                    
+                    messageDiv.innerHTML = `
+                        <div class="chat-avatar" style="background-color: ${avatarColor}">
+                            ${avatarInitial}
+                        </div>
+                        <div class="chat-content">
+                            ${!isCurrentUser ? `<div class="chat-user">${escapeHtml(message.username)}</div>` : ''}
+                            <div class="chat-text">${escapeHtml(message.message_text)}</div>
+                            <div class="chat-time">
+                                ${formatTime(message.timestamp)}
+                            </div>
+                        </div>
+                    `;
+                    
+                    chatBox.appendChild(messageDiv);
+                });
+                
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
             
             // Handle sending messages
             function sendMessage() {
@@ -273,7 +353,8 @@ if (!isset($_SESSION['username'])) {
                 .then(data => {
                     if (data.success) {
                         messageInput.value = '';
-                        location.reload(); // Refresh to show new message
+                        // Immediately fetch new messages after sending
+                        fetchMessages();
                     }
                 })
                 .catch(error => console.error('Error:', error));
@@ -291,6 +372,9 @@ if (!isset($_SESSION['username'])) {
             
             // Focus input field on load
             messageInput.focus();
+            
+            // Poll for new messages every 2 seconds
+            setInterval(fetchMessages, 2000);
         });
     </script>
 </body>
