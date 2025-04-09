@@ -3,7 +3,6 @@ include 'connection.php';
 include 'auth_check.php'; // Add centralized authentication check
 
 
-session_start();
 $user_ID = $_SESSION['user_id'];
 // Check if the user_id is passed in the URL (this will be passed when clicking on a username from the community page)
 $viewed_user_ID = isset($_GET['user_id']) ? $_GET['user_id'] : $user_ID;
