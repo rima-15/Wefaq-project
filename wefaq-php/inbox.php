@@ -78,8 +78,9 @@ function time_elapsed_string($datetime, $full = false) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inbox - Project Management Platform</title>
+    <title>Inbox - Wefaq</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="logoHand.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar/dist/simplebar.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>

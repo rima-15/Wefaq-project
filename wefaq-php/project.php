@@ -52,7 +52,8 @@ $_SESSION['current_project_id'] = $project_id;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <meta name="user-id" content="<?php echo $user_id; ?>">
     <meta name="project-id" content="<?php echo $project_id; ?>">
-    <title><?php echo htmlspecialchars($project['project_name']); ?> - Project Management Platform</title>    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="logoHand.png" type="image/png">
+    <title><?php echo htmlspecialchars($project['project_name']); ?> - Wefaq</title>    <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar/dist/simplebar.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><!-- comment -->    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
