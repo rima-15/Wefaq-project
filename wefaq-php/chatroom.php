@@ -91,7 +91,7 @@ if (!isset($_SESSION['username'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             height: 100vh;
             display: flex;
@@ -109,7 +109,7 @@ if (!isset($_SESSION['username'])) {
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         .chat-header {
-            background: #9096DE;
+            background: linear-gradient(335deg, #f8f9fa, #9096DE);
             color: white;
             padding: 15px;
             display: flex;
@@ -212,15 +212,41 @@ if (!isset($_SESSION['username'])) {
             align-items: center;
             justify-content: center;
         }
+        .btn {
+    padding: 8px 16px;
+    border-radius: var(--border-radius);
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+
+}
+.btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+    .btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+    .btn-primary {
+    background-color: #9096DE;
+    color: var(--white);
+}
+.btn:hover {
+    background-color: #777;
+}
     </style>
 </head>
 <body>
     <div class="chat-container">
         <header class="chat-header">
             <h2><?php echo $project_name; ?> Chat</h2>
-            <a href="project.html?project_ID=<?php echo $project_ID; ?>" class="back-button">
+            <button class="btn btn-primary btn-sm"><a href="project.html?project_ID=<?php echo $project_ID; ?>" class="back-button">
                 <i class="fas fa-arrow-left"></i> Back
-            </a>
+                </a></button>
         </header>
         
         <div class="chat-box" id="chatBox">
