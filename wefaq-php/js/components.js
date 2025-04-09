@@ -431,13 +431,17 @@ function generateAvatar(username, variant = '') {
         '': 40,
         '--invite': 36,
         '--profile': 80,
-        '--message': 32
+        '--message': 32,
+        '--community': 120 
     };
     
     const size = sizes[variant] || sizes[''];
 
+    // Adjust font size calculation for community avatars
+    const fontSize = variant === '--community' ? size * 0.5 : size * 0.4;
+
     return `
-        <div class="avatar ${variant}" style="background-color: ${color}; font-size: ${size * 0.4}px">
+        <div class="avatar ${variant}" style="background-color: ${color}; font-size: ${fontSize}px">
             ${letter}
         </div>
     `;
