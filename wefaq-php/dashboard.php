@@ -858,33 +858,33 @@ $result = mysqli_query($conn, $query);
                             <li class="task-info-row">
                                 <i class="fas fa-diagram-project"></i>
 
-                                <span class="info-value"><a href="project.html">Wefaq</a></span>
+                                <span class="info-value"><a href="project.php">Wefaq</a></span>
                             </li>
                             <li class="task-info-row">
                                 <i class="fas fa-diagram-project"></i>
 
-                                <span class="info-value"><a href="project.html">Network</a></span>
+                                <span class="info-value"><a href="project.php">Network</a></span>
                             </li>
                             <li class="task-info-row">
                                 <i class="fas fa-diagram-project"></i>
 
-                                <span class="info-value"><a href="project.html">Data Science</a></span>
+                                <span class="info-value"><a href="project.php">Data Science</a></span>
                             </li>
 
                             <li class="task-info-row">
                                 <i class="fas fa-diagram-project"></i>
 
-                                <span class="info-value"><a href="project.html">Data Science</a></span>
+                                <span class="info-value"><a href="project.php">Data Science</a></span>
                             </li>
                             <li class="task-info-row">
                                 <i class="fas fa-diagram-project"></i>
 
-                                <span class="info-value"><a href="project.html">Data Science</a></span>
+                                <span class="info-value"><a href="project.php">Data Science</a></span>
                             </li>
                             <li class="task-info-row">
                                 <i class="fas fa-diagram-project"></i>
 
-                                <span class="info-value"><a href="project.html">Data Science</a></span>
+                                <span class="info-value"><a href="project.php">Data Science</a></span>
                             </li>
                         </ul>
                         <button class="toggle-button">
@@ -931,7 +931,7 @@ $result = mysqli_query($conn, $query);
                                     echo '<div class="task-info-row">';
                                     echo '<i class="fas fa-diagram-project"></i>';
                                     echo '<span class="info-label">Project:</span>';
-                                    echo '<span class="info-value"><a href="project.html?project_ID=' . $task['project_id'] . '">' . $task['project_name'] . '</a></span>';
+                                    echo '<span class="info-value"><a href="project.php?project_ID=' . $task['project_id'] . '">' . $task['project_name'] . '</a></span>';
 
                                     echo '</div>';
 
@@ -1237,7 +1237,7 @@ $result = mysqli_query($conn, $query);
         li.innerHTML = `
             <i class="fas fa-diagram-project"></i>
             <span class="info-value">
-                <a href="project.html?project_ID=${project.project_id}">
+                <a href="project.php?project_ID=${project.project_id}">
                     ${project.project_name}
                 </a>
             </span>`;

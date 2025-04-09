@@ -44,7 +44,7 @@ async function addProjectToSidebar() {
         projects.forEach(project => {
             const li = document.createElement('li');
             li.innerHTML = `
-                <a href="project.html?project_ID=${project.project_ID}" class="project-link">
+                <a href="project.php?project_ID=${project.project_ID}" class="project-link">
                     <i class="fas fa-folder"></i>
                     <span class="project-name">${project.project_name}</span>
                 </a>
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
-    if (window.location.pathname.includes('project.html')) {
+    if (window.location.pathname.includes('project.php')) {
         initializeProjectDeletion();
         updateProjectHeader();
         initializeProjectNameEditing();
@@ -341,7 +341,7 @@ if (projectForm) {
                 
                 // Optionally redirect to the new project
                 if (data.project_ID) {
-                    window.location.href = `project.html?project_ID=${data.project_ID}`;
+                    window.location.href = `project.php?project_ID=${data.project_ID}`;
                 }
             } else {
                 alert(data.message || "Error creating project");
@@ -361,11 +361,11 @@ if (projectForm) {
 
 
         // Update project header if we're on the project page
-        if (path.includes('project.html')) {
+        if (path.includes('project.php')) {
             const project = getProjectFromURL();
             if (!project) {
                 console('Project not found!');
-                window.location.href = 'dashboard.html';
+                window.location.href = 'dashboard.php';
                 return;
             }
 

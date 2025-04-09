@@ -13,6 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 
     exit;
 }
+
     $leader_ID = $_SESSION['user_id'];
     $user_ID = $_SESSION['user_id'];
 
