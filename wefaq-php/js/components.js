@@ -125,7 +125,7 @@ const headerHtml = `
 <button class="btn-icon edit project-edit-btns" id="editProjectBtn" title="Edit Project" >
             <i class="fas fa-edit"></i>
         </button>
-        <button class="btn-icon delete project-edit-btns" title="Delete Task" onclick="openGenericModal('deleteProjectModal')">
+        <button class="btn-icon delete project-edit-btns" title="Delete project" onclick="openGenericModal('deleteProjectModal')">
             <i class="fas fa-trash"></i>
         </button>            </div>
         </div>
