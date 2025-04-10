@@ -47,7 +47,7 @@ try {
         if ($userId === $leaderId) {
             throw new Exception("Cannot remove project leader");
         }
-
+        
         // Delete member
         $deleteStmt = $conn->prepare("DELETE FROM projectTeam WHERE project_id = ? AND user_id = ?");
         $deleteStmt->bind_param("ii", $projectId, $userId);
@@ -57,7 +57,18 @@ try {
             throw new Exception("User was not a member of this project");
         }
         $deleteStmt->close();
-
+        
+        $stmt = $conn->prepare("UPDATE Task 
+                        SET status = 'unassigned' 
+                        WHERE (status != 'completed' OR status IS NULL) 
+                        AND assigned_to IS NULL");
+        if (!$stmt->execute()) {
+        // Handle error
+        echo "Error updating tasks: " . $stmt->error;
+        } else {
+    $affectedRows = $stmt->affected_rows;
+    echo "Successfully updated $affectedRows task(s) to 'unassigned' status";
+}
         $response = [
             'status' => 'success',
             'message' => "Member removed from project"
