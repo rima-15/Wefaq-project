@@ -131,15 +131,14 @@ const headerHtml = `
         </div>
         <div class="header-right">
             <div class="team-members" style="display: none !important;">
-<div class="header-member" style="background-image: url('images/avatarF1.jpeg');"></div>
-                    <div class="header-member" style="background-image: url('images/avatarM1.jpeg');"></div>
-                    <div class="header-member" style="background-image: url('images/avatarF2.jpeg');"></div>                <div class="header-member add-member" style="display: none !important;" onclick="openGenericModal('invitePopup')">+</div>
+                    <div class="header-member" ></div>
+                    <div class="header-member add-member" style="display: none !important;" onclick="openGenericModal('invitePopup')">+</div>
             </div>
             <button class="btn btn-primary" id="complete-project-btn" style="display: none !important;" onclick="openGenericModal('completeProjectModal')">
                 Mark as Complete
             </button>
             <div class="user-menu">
-                <img src="images/avatarF1.jpeg" alt="User Avatar" class="user-avatar">
+                <div alt="User Avatar" class="user-avatar"></div>
                 <a href="profile.php"><span class="user-name">Hi, <span id="userNameDisplay"> </span></span></a>
             </div>
         </div>

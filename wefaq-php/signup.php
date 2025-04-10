@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Check for empty fields
     if (empty($username) || empty($email) || empty($phone) || empty($gender) || 
-        empty($role) || empty($organization) || empty($bio) || empty($password)) {
+        empty($role) || empty($organization) || empty($password)) {
         $errors[] = "All fields are required";
     }
     
@@ -214,7 +214,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <div class="form-group">
                         <label for="bio">About Yourself</label>
-                        <input type="text" id="bio" name="bio" placeholder="Enter your bio" value="<?php echo htmlspecialchars($bio); ?>" required>
+                        <input type="text" id="bio" name="bio" placeholder="Enter your bio" value="<?php echo htmlspecialchars($bio); ?>" >
                     </div>
 
                     <div class="form-group">

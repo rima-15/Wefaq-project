@@ -1,0 +1,31 @@
+2025-04-10 06:46:07 - Input: {"project_id":2,"username":""}
+Decoded: Array
+(
+    [project_id] => 2
+    [username] => 
+)
+
+Missing fields: Array
+(
+    [project_id] => 2
+    [username] => 
+)
+
+Error: Missing required fields
+2025-04-10 06:46:34 - Input: {"project_id":2,"username":"razan"}
+Decoded: Array
+(
+    [project_id] => 2
+    [username] => razan
+)
+
+User not found: razan
+Error: User not found
+2025-04-10 06:46:41 - Input: {"project_id":2,"username":"razan_Saeed"}
+Decoded: Array
+(
+    [project_id] => 2
+    [username] => razan_Saeed
+)
+
+Invite successful
