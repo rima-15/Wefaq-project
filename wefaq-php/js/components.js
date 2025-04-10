@@ -227,7 +227,7 @@ const headerHtml = `
                         </div>
                         <div class="form-group">
                             <label for="projectDescription">Description</label>
-                            <textarea id="projectDescription" required name="project_description"></textarea>
+                            <textarea id="projectDescription" name="project_description"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="projectDeadline">Deadline</label>

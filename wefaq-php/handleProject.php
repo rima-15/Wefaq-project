@@ -26,7 +26,7 @@ if ($conn->connect_error) {
     exit;
 }
 
-// In the create project section of handleProject.php
+//  create project 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['create_project'])) {
     $project_name = $_POST['project_name'] ?? '';
     $project_description = $_POST['project_description'] ?? '';
