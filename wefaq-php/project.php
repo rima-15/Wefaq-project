@@ -455,6 +455,7 @@ $_SESSION['current_project_id'] = $project_id;
             console.error('Project ID missing in both URL and sessionStorage');
         }
     }
+    
 </script>
     </main>
 </div>
@@ -611,6 +612,34 @@ async function deleteMember(userId, element) {
 </script>    
 
 <script>
+    
+         document.addEventListener('DOMContentLoaded', function() {
+        // Get project ID from URL or session
+        const urlParams = new URLSearchParams(window.location.search);
+        const project_ID = urlParams.get('project_ID');
+        
+        if (!project_ID) {
+            console.error("Project ID not found in URL");
+            return;
+        }
+
+        // Fetch all data needed for dashboard
+        fetchDashboardData(project_ID);
+
+        // Tab Switching Functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabPanes.forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+    });
  // Get projectId from PHP
 document.addEventListener('DOMContentLoaded', function() {
 

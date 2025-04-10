@@ -793,6 +793,10 @@ $result = mysqli_query($conn, $query);
             nav.sidebar{
                 box-sizing: border-box!important;
             }
+            .modal-body , #newProjectModal{
+                box-sizing: border-box !important;
+                padding-right: 3rem !important;
+            }
         </style>
         <link rel="stylesheet" href="styles.css">
     </head>
