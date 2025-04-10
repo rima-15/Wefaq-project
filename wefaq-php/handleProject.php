@@ -7,6 +7,17 @@ include 'auth_check.php'; // Add centralized authentication check
 $json = file_get_contents('php://input');
 $data = json_decode($json, true) ?? $_POST; // Fallback to regular POST if not JSON
 
+$rate_messages = [
+    "How would you rate your experience working on %s?",
+    "We'd love your feedback on project: %s",
+    "Rate your collaboration experience on %s",
+    "Your opinion matters! Please rate project: %s",
+    "Time to evaluate your work on %s",
+    "How would you score your satisfaction with %s?",
+    "Help us improve! Rate your experience with %s",
+    "Share your thoughts about working on %s",
+    "Rate your overall satisfaction with project: %s"
+];
 // Authentication check
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(["success" => false, "message" => "Not authenticated"]);
@@ -339,15 +350,22 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['complete_project']
         if (!$stmt->execute()) {
             throw new Exception("Database error: " . $stmt->error);
         }
-
+        
+        
         // Get all team members (including leader)
         $stmt = $conn->prepare("SELECT user_ID FROM projectteam WHERE project_ID = ?");
         $stmt->bind_param("i", $project_ID);
         $stmt->execute();
         $members_result = $stmt->get_result();
         
-        // Prepare notification message
-        $message = 'You have received a new rating for ' . $project_name . ' project.';
+        $project_stmt = $conn->prepare("SELECT project_name FROM project WHERE project_ID = ?");    
+        $project_stmt->bind_param("i", $project_ID);
+        $project_stmt->execute();
+        $projectName = $project_stmt->get_result()->fetch_assoc();
+        
+// Prepare notification message
+        $random_rate_message = $rate_messages[array_rand($rate_messages)];
+        $message = sprintf($random_rate_message, $projectName['project_name']);
         $type = 'rate';
         $current_time = date('Y-m-d H:i:s');
         

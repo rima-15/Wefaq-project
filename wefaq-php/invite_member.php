@@ -62,6 +62,16 @@ try {
         throw new Exception('User is already in project');
     }
 
+    // Check for existing pending invite
+    $stmt = $conn->prepare("SELECT 1 FROM invite WHERE project_ID = ? AND invitee_ID = ? AND status = 'pending'");
+    $stmt->bind_param("ii", $project_id, $user['user_ID']);
+    $stmt->execute();
+    
+    if ($stmt->get_result()->num_rows > 0) {
+        file_put_contents('invite_log.txt', "Pending invite already exists\n", FILE_APPEND);
+        throw new Exception('This user already has an invitation for this project');
+    }
+    
     // Insert invitation
     $stmt = $conn->prepare("INSERT INTO invite SET 
         project_ID = ?,
