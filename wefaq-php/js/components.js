@@ -140,7 +140,7 @@ const headerHtml = `
             </button>
             <div class="user-menu">
                 <img src="images/avatarF1.jpeg" alt="User Avatar" class="user-avatar">
-                <span class="user-name">Hi, <span id="userNameDisplay"> </span></span>
+                <a href="profile.php"><span class="user-name">Hi, <span id="userNameDisplay"> </span></span></a>
             </div>
         </div>
     </header>
@@ -296,27 +296,6 @@ const headerHtml = `
         });
 
         // Handle form submission
-       /* const projectForm = document.getElementById('newProjectForm');
-        if (projectForm) {
-            projectForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const projectData = {
-                    name: document.getElementById('projectName').value,
-                    description: document.getElementById('projectDescription').value,
-                    deadline: document.getElementById('projectDeadline').value
-                };
-
-                // Add project to localStorage
-                const projects = JSON.parse(localStorage.getItem('projects') || '[]');
-                projects.push(projectData);
-                localStorage.setItem('projects', JSON.stringify(projects));
-
-                // Add to sidebar and redirect
-                addProjectToSidebar(projectData);
-                closeProjectModal();
-                window.location.href = `project.html?name=${encodeURIComponent(projectData.name)}`;
-            });
-        }*/
 
     // Handle form submission with database
 const projectForm = document.getElementById("newProjectForm");
