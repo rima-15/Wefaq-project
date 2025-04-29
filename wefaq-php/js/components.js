@@ -130,10 +130,10 @@ const headerHtml = `
         </button>            </div>
         </div>
         <div class="header-right">
-            <div class="team-members" style="display: none !important;">
-                    <div class="header-member" ></div>
-                    <div class="header-member add-member" style="display: none !important;" onclick="openGenericModal('invitePopup')">+</div>
+<div class="team-members" style="display: none;">
+                <div class="team-avatars-container"></div>                 <div class="header-member add-member" style="display: none !important;" onclick="openGenericModal('invitePopup')">+</div>
             </div>
+        
             <button class="btn btn-primary" id="complete-project-btn" style="display: none !important;" onclick="openGenericModal('completeProjectModal')">
                 Mark as Complete
             </button>
@@ -484,22 +484,31 @@ async function updateProjectHeader() {
             return;
         }
 
-        // Get project data and leadership status in parallel
-        const [project, isLeader] = await Promise.all([
+       // Get project data, leadership status, and team members in parallel
+        const [project, isLeader, teamResponse] = await Promise.all([
             getProjectFromURL(),
-            checkLeadership(project_ID)
+            checkLeadership(project_ID),
+            fetch(`get_project_members.php?project_id=${project_ID}&action=get_team`)
         ]);
 
         if (!project) {
             console.error('Project not found!');
             return;
         }
+        
+                const teamData = await teamResponse.json();
+
 
         // Update basic project info
         document.getElementById('pageTitle').textContent = project.name;
         document.getElementById('project-deadline-header').textContent = `Deadline: ${formatDeadline(project.deadline)}`;
         document.querySelector('.project-description p').textContent = project.description || "No description available";
 
+        // Update team members display
+        updateTeamMembersDisplay(teamData, isLeader);
+
+        
+        
         // Toggle leader-only elements
         const leaderElements = [
             '.editProject',
@@ -957,3 +966,153 @@ function initializeProjectCompletion() {
         });
     }
 }
+function updateTeamMembersDisplay(teamData, isLeader) {
+    const container = document.querySelector('.team-avatars-container');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    const uniqueMemberIds = new Set();
+    let bubbleCount = 0;
+
+    // Add leader first if exists
+    if (teamData.leader && !uniqueMemberIds.has(teamData.leader.user_id)) {
+        uniqueMemberIds.add(teamData.leader.user_id);
+        createMemberBubble(teamData.leader, true, container, bubbleCount++);
+    }
+
+    // Add other members
+    teamData.members.forEach(member => {
+        if (!uniqueMemberIds.has(member.user_id)) {
+            uniqueMemberIds.add(member.user_id);
+            createMemberBubble(member, false, container, bubbleCount++);
+        }
+    });
+
+    // Add the "+" button if user is leader
+    if (isLeader) {
+        const addButton = document.createElement('div');
+        addButton.className = 'header-member add-member';
+        addButton.textContent = '+';
+        addButton.onclick = () => openGenericModal('invitePopup');
+        
+        Object.assign(addButton.style, {
+            backgroundColor: 'rgba(76, 175, 80, 0.2)',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '42px',
+            height: '42px',
+            borderRadius: '50%',
+            border: '2px solid white',
+            marginLeft: bubbleCount > 0 ? '-15px' : '0',
+            zIndex: bubbleCount,
+            position: 'relative',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease'
+        });
+
+        addButton.addEventListener('mouseenter', () => {
+            addButton.style.transform = 'scale(1.1)';
+            addButton.style.zIndex = '100';
+            addButton.style.backgroundColor = '#4CAF50';
+        });
+
+        addButton.addEventListener('mouseleave', () => {
+            addButton.style.transform = '';
+            addButton.style.zIndex = bubbleCount;
+            addButton.style.backgroundColor = 'rgba(76, 175, 80, 0.2)';
+        });
+
+        container.appendChild(addButton);
+    }
+    
+    document.querySelector('.team-members').style.display = 'flex';
+}
+
+function getColorFromUsername(username, isAddButton = false) {
+    // Special case for add member button
+    if (isAddButton) {
+        return '#e8e8e8'; // Return just the normal color
+    }
+
+    // Original color generation for team members
+    const themeColors = ['#9096DE', '#EED442', '#886B63', '#D3D3D3','#634d47','#b0aeae','#c4c8f2','#fae987'];
+    const hash = Array.from(username).reduce((hash, char) => {
+        return char.charCodeAt(0) + ((hash << 5) - hash);
+    }, 0);
+    return themeColors[Math.abs(hash) % themeColors.length];
+}
+
+function createMemberBubble(member, isLeader, container, index, isAddButton = false) {
+    const bubble = document.createElement('div');
+    bubble.className = 'header-member';
+    
+    const color = isAddButton ? '#e8e8e8' : getColorFromUsername(member.username);
+    
+    Object.assign(bubble.style, {
+        backgroundColor: color,
+        color: '#333',
+        fontSize: isAddButton ? '20px' : '14px',
+        fontWeight: 'bold',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '42px',
+        height: '42px',
+        borderRadius: '50%',
+        border: '2px solid white',
+        marginLeft: index > 0 ? '-15px' : '0',
+        zIndex: index,
+        position: 'relative',
+        transition: 'all 0.3s ease',
+        cursor: 'pointer'
+    });
+    
+    bubble.textContent = isAddButton ? '+' : member.username.charAt(0).toUpperCase();
+    
+    if (isLeader && !isAddButton) {
+        const star = document.createElement('div');
+        star.className = 'leader-star';
+        bubble.appendChild(star);
+    }
+    
+    // Hover effects
+    bubble.addEventListener('mouseenter', () => {
+        bubble.style.transform = 'scale(1.1)';
+        bubble.style.zIndex = '100';
+        bubble.style.boxShadow = '0 0 8px rgba(0,0,0,0.1)';
+        if (isAddButton) {
+            bubble.style.backgroundColor = '#e3e3e3';
+        }
+    });
+    
+    bubble.addEventListener('mouseleave', () => {
+        bubble.style.transform = '';
+        bubble.style.zIndex = index;
+        bubble.style.boxShadow = '';
+        if (isAddButton) {
+            bubble.style.backgroundColor = '#e8e8e8';
+        }
+    });
+    
+    if (!isAddButton) {
+        bubble.title = member.username + (isLeader ? ' (Leader)' : '');
+    }
+    
+    container.appendChild(bubble);
+    return bubble;
+}
+
+// In your updateTeamMembersDisplay function:
+if (isLeader) {
+    createMemberBubble(
+        { username: '' }, // dummy object
+        false, // not leader
+        container, 
+        bubbleCount++,
+        true // isAddButton
+    );
+}
+

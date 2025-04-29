@@ -3191,3 +3191,45 @@ button.sidebar-toggle {
 .toast-notification.error {
     background-color: #f44336;
 }
+/* Team Members in Header */
+.team-members {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.team-avatars-container {
+    display: flex;
+    position: relative;
+    height: 42px;
+}
+
+.header-member {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+}
+
+
+.header-member.add-member {
+    background-color: #e8e8e8;
+    cursor: pointer;
+    font-size: 20px;
+    padding-bottom: 4px;
+    font-weight: 300;
+    transition: all 0.3s ease;
+}
+
+.header-member.add-member:hover {
+    background-color: #e3e3e3;
+}
+
