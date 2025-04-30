@@ -50,427 +50,540 @@ $_SESSION['current_project_id'] = $project_id;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <meta name="user-id" content="<?php echo $user_id; ?>">
+    <meta name="user-id" content="<?php echo $user_id; ?>">
     <meta name="project-id" content="<?php echo $project_id; ?>">
     <link rel="icon" href="logoHand.png" type="image/png">
-    <title><?php echo htmlspecialchars($project['project_name']); ?> - Wefaq</title>    <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar/dist/simplebar.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><!-- comment -->    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title><?php echo htmlspecialchars($project['project_name']); ?> - Wefaq</title>    
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar/dist/simplebar.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><!-- comment -->    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script src="script.js"></script>
     <style>
+        /* Chat Panel Styles */
+        .main-content-wrapper {
+            display: flex;
+            width: 100%;
+            position: relative;
+            transition: all 0.3s ease;
+        }
 
+        .main-content {
+            flex: 1;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        /* Backdrop overlay with blur */
+        .backdrop-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .backdrop-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .chat-panel {
+            width: 0;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: #fff;
+            border-left: 1px solid #ddd;
+            z-index: 1000;
+            overflow: hidden;
+            transition: width 0.3s ease;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.15);
+        }
+
+        .chat-panel.open {
+            width: 50%; /* Takes up half of the page */
+        }
+
+        .chat-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Chat Icon Styles */
+        .chat-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            color: #9096DE;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .chat-icon:hover {
+         color: #7278c7;
+         transform: scale(1.1);
+        }
+
+        .chat-icon.hidden {
+            display: none;
+        }
+
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .chat-panel.open {
+                width: 85%;
+            }
+        }
     </style>
-
 </head>
 <body>
 
 <div class="dashboard-container">
-    <main class="main-content">
-        <div class="project-content">
-            <div class="project-description">
-                <div class="project-description-header">
+    <div class="main-content-wrapper">
+        <main class="main-content">
+            <div class="project-content">
+                <div class="project-description">
+                    <div class="project-description-header">
 
-                <h3>  </h3>
-                <button class="btn-icon edit project-edit-btns" id="editProjectDescription" title="Edit Tasks">
-                    <i class="fas fa-edit"></i>
-                </button>
-                </div>
-                <p id="project-description-content">   
-                </p>
-            </div>
-
-            <!-- Improved Tabs -->
-            <div class="project-tabs">
-                <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
-                <button class="tab-btn" data-tab="tasks">Tasks</button>
-                <button class="tab-btn" data-tab="files">Files</button>
-            </div>
-
-            <div class="tab-content">
-                <div id="dashboard" class="tab-pane active">
-                    <div class="dashboard-grid">
-                        <!-- Work Distribution Chart -->
-                        <div class="card chart-box">
-                            <h3>Work Distribution</h3>
-                            <canvas id="workDistributionChart"></canvas>
-                        </div>
-
-                        <!-- Task Completion Progress Chart -->
-                        <div class="card chart-box">
-                            <h3>Task Completion Progress</h3>
-                            <canvas id="taskCompletionChart"></canvas>
-                        </div>
-
-                        <!-- Remaining Time to Deadline Chart -->
-                        <div class="card chart-box">
-                            <h3 >Remaining Time to Deadline</h3>
-                            <canvas   width="300" height="200" id="deadlineChart"></canvas>
-                            
-                        </div>
-
-                        <!-- Team Member Contribution Chart (Horizontal Bar Chart) -->
-                        <div class="card chart-box">
-                            <h3>Team Member Contribution</h3>
-                            <canvas id="teamContributionChart"></canvas>
-                        </div>
+                    <h3>  </h3>
+                    <button class="btn-icon edit project-edit-btns" id="editProjectDescription" title="Edit Tasks">
+                        <i class="fas fa-edit"></i>
+                    </button>
                     </div>
+                    <p id="project-description-content">   
+                    </p>
                 </div>
 
-                <!-- Tasks Tab -->
-                <div id="tasks" class="tab-pane">
-                    <div class="tasks-header">
-                        <h2>Project Tasks</h2>
-                        <div class="task-actions">
-                          
-                            <button class="btn btn-primary" id="addTaskBtn" onclick="openGenericModal('addTaskModal')">
-                                <i class="fas fa-plus"></i> Add
-                            </button>
+                <!-- Improved Tabs -->
+                <div class="project-tabs">
+                    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+                    <button class="tab-btn" data-tab="tasks">Tasks</button>
+                    <button class="tab-btn" data-tab="files">Files</button>
+                </div>
+
+                <div class="tab-content">
+                    <div id="dashboard" class="tab-pane active">
+                        <div class="dashboard-grid">
+                            <!-- Work Distribution Chart -->
+                            <div class="card chart-box">
+                                <h3>Work Distribution</h3>
+                                <canvas id="workDistributionChart"></canvas>
+                            </div>
+
+                            <!-- Task Completion Progress Chart -->
+                            <div class="card chart-box">
+                                <h3>Task Completion Progress</h3>
+                                <canvas id="taskCompletionChart"></canvas>
+                            </div>
+
+                            <!-- Remaining Time to Deadline Chart -->
+                            <div class="card chart-box">
+                                <h3 >Remaining Time to Deadline</h3>
+                                <canvas   width="300" height="200" id="deadlineChart"></canvas>
+                                
+                            </div>
+
+                            <!-- Team Member Contribution Chart (Horizontal Bar Chart) -->
+                            <div class="card chart-box">
+                                <h3>Team Member Contribution</h3>
+                                <canvas id="teamContributionChart"></canvas>
+                            </div>
                         </div>
                     </div>
-                    <div class="tasks-list">
-                        <table class="tasks-table">
-                            <thead>
-                            <tr>
-                                <th>Task Name</th>
-                                <th>Task Description</th>
-                                <th>Assigned Member</th>
-                                <th>Status</th>
-                                <th>Deadline</th>
-                                <th>Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>Design User Interface</td>
-                                <td class='taskDescription'>Create a visually intuitive and user-friendly layout for the system.</td>
-                                <td>
-                                    <div class="member">
-                                        <img src="images/avatarF2.jpeg" alt="Sarah" class="member-avatar">
-                                        <span>Sarah</span>
-                                    </div>
-                                </td>
-                                <td><span class="status-badge completed-task">Completed</span></td>
-                                <td>Mar 5, 2025</td>
-                                <td class="actions">
-                                    <button class="btn-icon delete" title="Delete Task" onclick="openGenericModal('deleteTaskModal')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Implement Authentication</td>
-                                <td class='taskDescription'></td>
-                                <td>
-                                    <div class="member">
-                                        <img src="images/avatarF1.jpeg" alt="John" class="member-avatar">
-                                        <span>John</span>
-                                    </div>
-                                </td>
-                                <td><span class="status-badge in-progress">In Progress</span></td>
-                                <td>Mar 10, 2025</td>
-                                <td class="actions">
-                                    <button class="btn-icon status-icons" title="Complete Task" onclick="openGenericModal('completeTaskModal')">
-                                        <i class="fas fa-flag-checkered"></i>
-                                    </button>
-                                    <button class="btn-icon delete" title="Delete Task" onclick="openGenericModal('deleteTaskModal')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Database Setup</td>
-                                <td class='taskDescription'>Define tables, relationships, and constraints to store and manage system data.</td>
-
-                                <td>
-                                    <div>
-                                        <span></span>
-                                    </div>
-                                </td>
-                                <td><span class="status-badge pending">Unassigned</span></td>
-                                <td>Mar 15, 2025</td>
-                                <td class="actions">
-
-                                    <button class="btn-icon status-icons" title="Choose Task" onclick="openGenericModal('assignTaskModal')">
-                                        <i class="fas fa-user-check"></i>
-
-                                    </button>
-
-                                    <button class="btn-icon delete" title="Delete Task" onclick="openGenericModal('deleteTaskModal')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Testing and QA</td>
-                                <td class='taskDescription'></td>
-                                <td>
-                                    <div class="member">
-                                        <img src="images/avatarM1.jpeg" alt="Emma" class="member-avatar">
-                                        <span>Emma</span>
-                                    </div>
-                                </td>
-                                <td><span class="status-badge not-started">Not Started</span></td>
-                                <td>Mar 20, 2025</td>
-                                <td class="actions">
-                                    <button class="btn-icon status-icons" title="Start Task" onclick="openGenericModal('startTaskModal')">
-                                        <i class="fas fa-play"></i>
-                                    </button>
-                                    <button class="btn-icon delete" title="Delete Task" onclick="openGenericModal('deleteTaskModal')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                                <!-- Files Tab -->
-                <div id="files" class="tab-pane">
-                        <div class="file-section">
-                            <h2>Files</h2>
-                            <label class="upload-btn">
-                                <i class="fas fa-upload"></i> Upload File
-                                <input type="file" id="fileInput" style="display:none" onchange="uploadFile()">
-                            </label>
-                            <table class="file-table" id="fileTable">
+                    <!-- Tasks Tab -->
+                    <div id="tasks" class="tab-pane">
+                        <div class="tasks-header">
+                            <h2>Project Tasks</h2>
+                            <div class="task-actions">
+                              
+                                <button class="btn btn-primary" id="addTaskBtn" onclick="openGenericModal('addTaskModal')">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                        <div class="tasks-list">
+                            <table class="tasks-table">
                                 <thead>
                                 <tr>
-                                    <th>File Name</th>
-                                    <th>Uploader</th>
-                                    <th>Upload Time</th>
+                                    <th>Task Name</th>
+                                    <th>Task Description</th>
+                                    <th>Assigned Member</th>
+                                    <th>Status</th>
+                                    <th>Deadline</th>
                                     <th>Actions</th>
                                 </tr>
                                 </thead>
-                                <tbody class="file-rows">
-                                    
+                                <tbody>
+                                <tr>
+                                    <td>Design User Interface</td>
+                                    <td class='taskDescription'>Create a visually intuitive and user-friendly layout for the system.</td>
+                                    <td>
+                                        <div class="member">
+                                            <img src="images/avatarF2.jpeg" alt="Sarah" class="member-avatar">
+                                            <span>Sarah</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge completed-task">Completed</span></td>
+                                    <td>Mar 5, 2025</td>
+                                    <td class="actions">
+                                        <button class="btn-icon delete" title="Delete Task" onclick="openGenericModal('deleteTaskModal')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Implement Authentication</td>
+                                    <td class='taskDescription'></td>
+                                    <td>
+                                        <div class="member">
+                                            <img src="images/avatarF1.jpeg" alt="John" class="member-avatar">
+                                            <span>John</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge in-progress">In Progress</span></td>
+                                    <td>Mar 10, 2025</td>
+                                    <td class="actions">
+                                        <button class="btn-icon status-icons" title="Complete Task" onclick="openGenericModal('completeTaskModal')">
+                                            <i class="fas fa-flag-checkered"></i>
+                                        </button>
+                                        <button class="btn-icon delete" title="Delete Task" onclick="openGenericModal('deleteTaskModal')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Database Setup</td>
+                                    <td class='taskDescription'>Define tables, relationships, and constraints to store and manage system data.</td>
+
+                                    <td>
+                                        <div>
+                                            <span></span>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge pending">Unassigned</span></td>
+                                    <td>Mar 15, 2025</td>
+                                    <td class="actions">
+
+                                        <button class="btn-icon status-icons" title="Choose Task" onclick="openGenericModal('assignTaskModal')">
+                                            <i class="fas fa-user-check"></i>
+
+                                        </button>
+
+                                        <button class="btn-icon delete" title="Delete Task" onclick="openGenericModal('deleteTaskModal')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Testing and QA</td>
+                                    <td class='taskDescription'></td>
+                                    <td>
+                                        <div class="member">
+                                            <img src="images/avatarM1.jpeg" alt="Emma" class="member-avatar">
+                                            <span>Emma</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge not-started">Not Started</span></td>
+                                    <td>Mar 20, 2025</td>
+                                    <td class="actions">
+                                        <button class="btn-icon status-icons" title="Start Task" onclick="openGenericModal('startTaskModal')">
+                                            <i class="fas fa-play"></i>
+                                        </button>
+                                        <button class="btn-icon delete" title="Delete Task" onclick="openGenericModal('deleteTaskModal')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                    
+                                    <!-- Files Tab -->
+                    <div id="files" class="tab-pane">
+                            <div class="file-section">
+                                <h2>Files</h2>
+                                <label class="upload-btn">
+                                    <i class="fas fa-upload"></i> Upload File
+                                    <input type="file" id="fileInput" style="display:none" onchange="uploadFile()">
+                                </label>
+                                <table class="file-table" id="fileTable">
+                                    <thead>
+                                    <tr>
+                                        <th>File Name</th>
+                                        <th>Uploader</th>
+                                        <th>Upload Time</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="file-rows">
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
 
-                </div>
+                    </div>
 
 
-                <!-- Invite Popup -->
-                <div id="invitePopup" class="popup modal">
-                    <div class="popup-content modal-content">
-                        <div class="modal-header">
-                            <h2>Add Member</h2>
-                            <button class="close-modal" onclick="closeGenericModal('invitePopup')">&times;</button>
+                    <!-- Invite Popup -->
+                    <div id="invitePopup" class="popup modal">
+                        <div class="popup-content modal-content">
+                            <div class="modal-header">
+                                <h2>Add Member</h2>
+                                <button class="close-modal" onclick="closeGenericModal('invitePopup')">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="inviteForm" >
+                                    <div id="invite-model">
+                                        <input type="text" id="inviteInput"  placeholder="Enter username" required>
+                                        <button class="btn btn-primary" id="inviteBtn" type="button" >Invite</button>
+                                    </div>
+                                </form>
+
+                                <p class="light-gray" id="members-header"> </p><br>
+                                <ul class="member-list" id="dynamic-member-list">
+                                </ul>
+                            </div>
                         </div>
-                        <div class="modal-body">
-                            <form id="inviteForm" >
-                                <div id="invite-model">
-                                    <input type="text" id="inviteInput"  placeholder="Enter username" required>
-                                    <button class="btn btn-primary" id="inviteBtn" type="button" >Invite</button>
+                        </div>
+                    </div>
+
+                    <!-- Add Task Modal (hidden by default) -->
+
+                    <div id="addTaskModal" class="modal">
+                        <div class="modal-content create-modal">
+                            <div class="modal-header">
+                                <h2>Add New Task</h2>
+                                <button class="close-modal" onclick="closeGenericModal('addTaskModal')">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="addTaskForm" >
+                                    <div class="form-group">
+                                        <label for="taskName">Task Name</label>
+                                        <input type="text" id="taskName" name="task_name" maxlength='25' required>
+                                    </div>
+                                      <div class="form-group">
+                                        <label for="taskDescription">Task Description</label>
+                                        <textarea id="taskDescription" name="task_description" maxlength="85"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="taskDeadline">Deadline</label>
+                                        <input type="date" id="taskDeadline" name="task_deadline" required>
+                                    </div>
+                                    <div id="container-btn-form">
+                                        <button type="submit"  class="btn btn-primary" >Add</button>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delete Project Popup -->
+                    <div id="deleteProjectModal" class="modal confirm-modal">
+                        <div class="modal-content modal-confirm-content">
+                            <div class="modal-header">
+                                <h2>Delete Project</h2>
+                                <button class="close-modal" onclick="closeGenericModal('deleteProjectModal')">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this project?</p>
+                                <div class="modal-actions">
+                                    <button class="btn btn-danger small-btn" id="confirmProjectDelete">Delete</button>
+                                    <button class="btn btn-secondary small-btn" id="cancelDelete" onclick="closeGenericModal('deleteProjectModal')">Cancel</button>
                                 </div>
-                            </form>
-
-                            <p class="light-gray" id="members-header"> </p><br>
-                            <ul class="member-list" id="dynamic-member-list">
-                            </ul>
+                            </div>
                         </div>
                     </div>
-                    </div>
-                </div>
 
-                <!-- Add Task Modal (hidden by default) -->
-
-                <div id="addTaskModal" class="modal">
-                    <div class="modal-content create-modal">
-                        <div class="modal-header">
-                            <h2>Add New Task</h2>
-                            <button class="close-modal" onclick="closeGenericModal('addTaskModal')">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="addTaskForm" >
-                                <div class="form-group">
-                                    <label for="taskName">Task Name</label>
-                                    <input type="text" id="taskName" name="task_name" maxlength='25' required>
+                    <!-- Mark as Complete Popup -->
+                    <div id="completeProjectModal" class="modal">
+                        <div class="modal-content modal-confirm-content">
+                            <div class="modal-header">
+                                <h2>Mark as Complete</h2>
+                                <button class="close-modal" onclick="closeGenericModal('completeProjectModal')">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <span>Are you sure you want to mark this project as complete?</span>
+                                <div class="modal-actions">
+                                    <button class="btn btn-primary small-btn" id="confirmCompleteProject">Complete</button>
+                                    <button class="btn btn-secondary small-btn" id="cancelComplete" onclick="closeGenericModal('completeProjectModal')">Cancel</button>
                                 </div>
-                                  <div class="form-group">
-                                    <label for="taskDescription">Task Description</label>
-                                    <textarea id="taskDescription" name="task_description" maxlength="85"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                      <!-- Delete task Popup -->
+                    <div id="deleteTaskModal" class="modal confirm-modal">
+                        <div class="modal-content modal-confirm-content">
+                            <div class="modal-header">
+                                <h2>Delete Task</h2>
+                                <button class="close-modal" onclick="closeGenericModal('deleteTaskModal')">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this task?</p>
+                                <div class="modal-actions">
+                                    <button class="btn btn-danger small-btn" id="confirmDeleteTask" data-task-id>Delete</button>
+                                    <button class="btn btn-secondary small-btn" id="cancelDelete" onclick="closeGenericModal('deleteTaskModal')">Cancel</button>
                                 </div>
-                                <div class="form-group">
-                                    <label for="taskDeadline">Deadline</label>
-                                    <input type="date" id="taskDeadline" name="task_deadline" required>
+                            </div>
+                        </div>
+                    </div>
+                      
+                           <!-- Delete file Popup -->
+                    <div id="deleteFileModal" class="modal confirm-modal">
+                        <div class="modal-content modal-confirm-content">
+                            <div class="modal-header">
+                                <h2>Delete File</h2>
+                                <button class="close-modal" onclick="closeGenericModal('deleteFileModal')">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this file?</p>
+                                <div class="modal-actions">
+                                    <button class="btn btn-danger small-btn" id="confirmDeleteFile" >Delete</button>
+                                    <button class="btn btn-secondary small-btn" id="cancelDelete" onclick="closeGenericModal('deleteFileModal')">Cancel</button>
                                 </div>
-                                <div id="container-btn-form">
-                                    <button type="submit"  class="btn btn-primary" >Add</button>
-
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Assign task-->
+                    <div id="assignTaskModal" class="modal">
+                        <div class="modal-content modal-confirm-content">
+                            <div class="modal-header">
+                                <h2>Assign Task</h2>
+                                <button class="close-modal" onclick="closeGenericModal('assignTaskModal')">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <span>Are you sure you want to assign this task to yourself?</span>
+                                <div class="modal-actions">
+                                    <button class="btn btn-primary small-btn" id="confirmAssignTask">Assign</button>
+                                    <button class="btn btn-secondary small-btn" id="cancelComplete" onclick="closeGenericModal('assignTaskModal')">Cancel</button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Delete Project Popup -->
-                <div id="deleteProjectModal" class="modal confirm-modal">
-                    <div class="modal-content modal-confirm-content">
-                        <div class="modal-header">
-                            <h2>Delete Project</h2>
-                            <button class="close-modal" onclick="closeGenericModal('deleteProjectModal')">&times;</button>
+                       <!-- Start task-->
+                    <div id="startTaskModal" class="modal">
+                        <div class="modal-content modal-confirm-content">
+                            <div class="modal-header">
+                                <h2>Start Task</h2>
+                                <button class="close-modal" onclick="closeGenericModal('startTaskModal')">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <span>Are you sure you want to start this task?</span>
+                                <div class="modal-actions">
+                                    <button class="btn btn-primary small-btn" id="confirmStartTask">Start</button>
+                                    <button class="btn btn-secondary small-btn" id="cancelComplete" onclick="closeGenericModal('startTaskModal')">Cancel</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="modal-body">
-                            <p>Are you sure you want to delete this project?</p>
-                            <div class="modal-actions">
-                                <button class="btn btn-danger small-btn" id="confirmProjectDelete">Delete</button>
-                                <button class="btn btn-secondary small-btn" id="cancelDelete" onclick="closeGenericModal('deleteProjectModal')">Cancel</button>
+                    </div>
+                         <!-- complete task-->
+                    <div id="completeTaskModal" class="modal">
+                        <div class="modal-content modal-confirm-content">
+                            <div class="modal-header">
+                                <h2>Complete Task</h2>
+                                <button class="close-modal" onclick="closeGenericModal('completeTaskModal')">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <span>Are you sure you want to mark this task as complete?</span>
+                                <div class="modal-actions">
+                                    <button class="btn btn-primary small-btn" id="confirmCompleteTask">Complete</button>
+                                    <button class="btn btn-secondary small-btn" id="cancelComplete"  onclick="closeGenericModal('completeTaskModal')">Cancel</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Mark as Complete Popup -->
-                <div id="completeProjectModal" class="modal">
-                    <div class="modal-content modal-confirm-content">
-                        <div class="modal-header">
-                            <h2>Mark as Complete</h2>
-                            <button class="close-modal" onclick="closeGenericModal('completeProjectModal')">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <span>Are you sure you want to mark this project as complete?</span>
-                            <div class="modal-actions">
-                                <button class="btn btn-primary small-btn" id="confirmCompleteProject">Complete</button>
-                                <button class="btn btn-secondary small-btn" id="cancelComplete" onclick="closeGenericModal('completeProjectModal')">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                  <!-- Delete task Popup -->
-                <div id="deleteTaskModal" class="modal confirm-modal">
-                    <div class="modal-content modal-confirm-content">
-                        <div class="modal-header">
-                            <h2>Delete Task</h2>
-                            <button class="close-modal" onclick="closeGenericModal('deleteTaskModal')">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Are you sure you want to delete this task?</p>
-                            <div class="modal-actions">
-                                <button class="btn btn-danger small-btn" id="confirmDeleteTask" data-task-id>Delete</button>
-                                <button class="btn btn-secondary small-btn" id="cancelDelete" onclick="closeGenericModal('deleteTaskModal')">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                  
-                       <!-- Delete file Popup -->
-                <div id="deleteFileModal" class="modal confirm-modal">
-                    <div class="modal-content modal-confirm-content">
-                        <div class="modal-header">
-                            <h2>Delete File</h2>
-                            <button class="close-modal" onclick="closeGenericModal('deleteFileModal')">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Are you sure you want to delete this file?</p>
-                            <div class="modal-actions">
-                                <button class="btn btn-danger small-btn" id="confirmDeleteFile" >Delete</button>
-                                <button class="btn btn-secondary small-btn" id="cancelDelete" onclick="closeGenericModal('deleteFileModal')">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                 <!-- Assign task-->
-                <div id="assignTaskModal" class="modal">
-                    <div class="modal-content modal-confirm-content">
-                        <div class="modal-header">
-                            <h2>Assign Task</h2>
-                            <button class="close-modal" onclick="closeGenericModal('assignTaskModal')">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <span>Are you sure you want to assign this task to yourself?</span>
-                            <div class="modal-actions">
-                                <button class="btn btn-primary small-btn" id="confirmAssignTask">Assign</button>
-                                <button class="btn btn-secondary small-btn" id="cancelComplete" onclick="closeGenericModal('assignTaskModal')">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                   <!-- Start task-->
-                <div id="startTaskModal" class="modal">
-                    <div class="modal-content modal-confirm-content">
-                        <div class="modal-header">
-                            <h2>Start Task</h2>
-                            <button class="close-modal" onclick="closeGenericModal('startTaskModal')">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <span>Are you sure you want to start this task?</span>
-                            <div class="modal-actions">
-                                <button class="btn btn-primary small-btn" id="confirmStartTask">Start</button>
-                                <button class="btn btn-secondary small-btn" id="cancelComplete" onclick="closeGenericModal('startTaskModal')">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                     <!-- complete task-->
-                <div id="completeTaskModal" class="modal">
-                    <div class="modal-content modal-confirm-content">
-                        <div class="modal-header">
-                            <h2>Complete Task</h2>
-                            <button class="close-modal" onclick="closeGenericModal('completeTaskModal')">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <span>Are you sure you want to mark this task as complete?</span>
-                            <div class="modal-actions">
-                                <button class="btn btn-primary small-btn" id="confirmCompleteTask">Complete</button>
-                                <button class="btn btn-secondary small-btn" id="cancelComplete"  onclick="closeGenericModal('completeTaskModal')">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
             </div>
+        </main>
+        
+        <!-- Backdrop overlay with blur -->
+        <div class="backdrop-overlay" id="backdropOverlay" onclick="toggleChatPanel()"></div>
+        
+        <!-- Chat Panel -->
+        <div class="chat-panel" id="chatPanel">
+
+            <iframe id="chatIframe" class="chat-iframe" src="about:blank"></iframe>
         </div>
-        <!-- Chat Icon -->
-<div class="chat-icon" onclick="openChatRoom()">
-    <i class="fas fa-comments fa-2x"></i>
+    </div>
+    
+    <!-- Chat Icon -->
+    <div class="chat-icon" id="chatIcon" onclick="toggleChatPanel()">
+        <i class="fas fa-comments fa-2x"></i>
+    </div>
 </div>
 
-<!-- Replace the existing chat icon script with this: -->
-<script>
-    function openChatRoom() {
-        // Get project_ID from URL or fallback to sessionStorage
-        const urlParams = new URLSearchParams(window.location.search);
-        let project_ID = urlParams.get('project_ID');
-        
-        if (!project_ID) {
-            // Try to get from sessionStorage if not in URL
-            project_ID = sessionStorage.getItem('currentProjectID');
-        }
+<script src="js/components.js"></script>
 
-        if (project_ID) {
-            // Store in sessionStorage as backup
-            sessionStorage.setItem('currentProjectID', project_ID);
-            window.location.href = `chatroom.php?project_ID=${project_ID}`;
+<script>
+    // Pass PHP variables to JavaScript
+    const CURRENT_PROJECT = {
+        id: <?php echo $project_id; ?>,
+        name: "<?php echo addslashes($project['project_name']); ?>",
+        isLeader: <?php echo $is_leader ? 'true' : 'false'; ?>
+    };
+    const CURRENT_USER_ID = <?php echo $user_id; ?>;
+    
+    // Chat Panel Functions
+    function toggleChatPanel() {
+        const chatPanel = document.getElementById('chatPanel');
+        const backdropOverlay = document.getElementById('backdropOverlay');
+        const chatIcon = document.getElementById('chatIcon');
+        const chatIframe = document.getElementById('chatIframe');
+        
+        chatPanel.classList.toggle('open');
+        backdropOverlay.classList.toggle('active');
+        
+        if (chatPanel.classList.contains('open')) {
+            // Only load the iframe content when opening
+            if (chatIframe.src === 'about:blank') {
+                chatIframe.src = `chatroom.php?project_ID=${CURRENT_PROJECT.id}`;
+            }
+            chatIcon.classList.add('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
         } else {
-            alert('Error: Could not determine project. Please reopen this project.');
-            console.error('Project ID missing in both URL and sessionStorage');
+            chatIcon.classList.remove('hidden');
+            document.body.style.overflow = ''; // Restore scrolling
         }
     }
     
+    // Close chat panel when pressing Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const chatPanel = document.getElementById('chatPanel');
+            if (chatPanel.classList.contains('open')) {
+                toggleChatPanel();
+            }
+        }
+    });
 </script>
-    </main>
-</div>
-<script src="js/components.js"></script>
 
-   <script>
-        // Pass PHP variables to JavaScript
-        const CURRENT_PROJECT = {
-            id: <?php echo $project_id; ?>,
-            name: "<?php echo addslashes($project['project_name']); ?>",
-            isLeader: <?php echo $is_leader ? 'true' : 'false'; ?>
-        };
-        const CURRENT_USER_ID = <?php echo $user_id; ?>;
-    </script>
-    <script>
+<script>
 // 1. Get IDs with proper type conversion
 const urlParams = new URLSearchParams(window.location.search);
 const projectId = <?php echo $project_id; ?>; 

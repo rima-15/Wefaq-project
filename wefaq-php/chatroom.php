@@ -245,9 +245,7 @@ if (!isset($_SESSION['username'])) {
     <div class="chat-container">
         <header class="chat-header">
             <h2><?php echo $project_name; ?> Chat</h2>
-            <button class="btn btn-primary btn-sm"><a href="project.php?project_ID=<?php echo $project_ID; ?>" class="back-button">
-                <i class="fas fa-arrow-left"></i> Back
-                </a></button>
+           
         </header>
         
         <div class="chat-box" id="chatBox">
